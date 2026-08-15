@@ -1,0 +1,89 @@
+{
+  "realm": "onda-rag-realm",
+  "enabled": true,
+  "registrationAllowed": false,
+  "resetPasswordAllowed": true,
+  "rememberMe": false,
+  "verifyEmail": false,
+  "loginWithEmailAllowed": true,
+  "accessTokenLifespan": 300,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "roles": {
+    "realm": [
+      {
+        "name": "ROLE_USER",
+        "description": "Standard ONDA employee. Can chat with the Agentic RAG engine, manage own conversations, and read documents.",
+        "composite": false
+      },
+      {
+        "name": "ROLE_INGESTOR",
+        "description": "Knowledge base manager. Inherits ROLE_USER. Can upload, re-index, and delete knowledge base documents.",
+        "composite": true,
+        "composites": {
+          "realm": ["ROLE_USER"]
+        }
+      },
+      {
+        "name": "ROLE_ADMIN",
+        "description": "System administrator. Full access to all endpoints including system metrics and user management.",
+        "composite": true,
+        "composites": {
+          "realm": ["ROLE_INGESTOR", "ROLE_USER"]
+        }
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "onda-rag-api",
+      "name": "ONDA Agentic RAG API",
+      "description": "Spring Boot 4.x Agentic RAG Resource Server",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": false,
+      "serviceAccountsEnabled": false,
+      "webOrigins": ["*"],
+      "redirectUris": ["*"],
+      "defaultClientScopes": [
+        "openid",
+        "profile",
+        "email",
+        "roles"
+      ],
+      "attributes": {
+        "access.token.lifespan": "300"
+      }
+    },
+    {
+      "clientId": "admin-cli",
+      "enabled": true,
+      "publicClient": false,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true
+    }
+  ],
+  "clientScopes": [
+    {
+      "name": "roles",
+      "protocol": "openid-connect",
+      "protocolMappers": [
+        {
+          "name": "realm roles",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-userinfo-idtoken-mapper",
+          "config": {
+            "claim.name": "realm_access.roles",
+            "jsonType.label": "String",
+            "multivalued": "true",
+            "usermodel.realmRoleMapping.rolePrefix": "",
+            "access.token.claim": "true",
+            "id.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ]
+}
