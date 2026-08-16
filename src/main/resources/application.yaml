@@ -1,3 +1,76 @@
 spring:
   application:
     name: onda-agentic-rag
+  config:
+    import: "optional:file:.env[.properties]"
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB:onda_rag_db}
+    username: ${POSTGRES_USER:onda_user}
+    password: ${POSTGRES_PASSWORD:onda_password}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8081/realms/onda-rag-realm}
+      client:
+        registration:
+          keycloak-admin:
+            provider: keycloak-admin
+            client-id: ${KEYCLOAK_CLIENT_ID:onda-rag-api}
+            client-secret: ${KEYCLOAK_CLIENT_SECRET}
+            authorization-grant-type: client_credentials
+            scope: openid
+
+        provider:
+          keycloak-admin:
+            token-uri: ${KEYCLOAK_TOKEN_URI:http://localhost:8081/realms/onda-rag-realm/protocol/openid-connect/token}
+
+  ai:
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY}
+        project-id: ${GEMINI_PROJECT_ID:gen-lang-client-0318410907}
+        chat:
+          model: ${GEMINI_CHAT_MODEL:gemini-3.1-flash-lite}
+        embedding:
+          api-key: ${GEMINI_API_KEY}
+          text:
+            model: ${GEMINI_EMBEDDING_MODEL:gemini-embedding-001}
+            dimensions: 768
+
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        dimensions: 768
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+
+
+
+# ====== properties for Keycloak integration ======
+keycloak:
+  server-url: ${KEYCLOAK_SERVER_URL:http://localhost:8081}
+  realm: ${KEYCLOAK_REALM:onda-rag-realm}
+  client-id: ${KEYCLOAK_CLIENT_ID:onda-rag-api}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
+
+# ===== properties for RAG (Retrieval-Augmented Generation) =====
+rag:
+  retrieval:
+    top-k: 5
+    similarity-threshold: 0.0
