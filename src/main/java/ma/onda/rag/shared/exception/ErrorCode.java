@@ -8,11 +8,16 @@ import static org.springframework.http.HttpStatus.*;
 
 @Getter
 public enum ErrorCode {
-    USER_NOT_REGISTERED("DATABASE", "User not registered in local database", NOT_FOUND),
+    USER_NOT_REGISTERED("DATABASE", "User not registered in local database (keycloakId '%s')", NOT_FOUND),
     JWT_NOT_FOUND("SECURITY", "No authenticated JWT token found in security context", NOT_FOUND),
-
-
+    ACCESS_DENIED("SECURITY", "Access denied for the requested resource", FORBIDDEN),
+    USER_ALREADY_EXISTS("DATABASE", "User %s already exists", CONFLICT),
+    KEYCLOAK_USER_CREATION_FAILED("KEYCLOAK", "Keycloak rejected user creation (HTTP %d): %s", BAD_GATEWAY),
+    KEYCLOAK_TOKEN_RESPONSE_EMPTY("KEYCLOAK", "Empty response from Keycloak token endpoint", BAD_GATEWAY),
+    KEYCLOAK_ROLE_NOT_FOUND("KEYCLOAK", "Realm role '%s' not found in Keycloak. Create it in the Keycloak Admin Console.", BAD_GATEWAY),
     ;
+
+
     private final String code;
     private final String defaultMessage;
     private final HttpStatus status;

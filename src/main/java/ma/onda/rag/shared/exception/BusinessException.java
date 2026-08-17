@@ -3,6 +3,9 @@ package ma.onda.rag.shared.exception;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+import java.util.IllegalFormatException;
+
 @Getter
 public class BusinessException extends RuntimeException {
     private final ErrorCode errorCode;
@@ -15,8 +18,12 @@ public class BusinessException extends RuntimeException {
     }
 
     private static String getFormatted(ErrorCode errorCode, Object[] args) {
-        if(args != null && args.length > 0){
-            return String.format(errorCode.getDefaultMessage(), args);
+        if (args != null && args.length > 0) {
+            try {
+                return String.format(errorCode.getDefaultMessage(), args);
+            } catch (IllegalFormatException ex) {
+                return errorCode.getDefaultMessage() + " " + Arrays.toString(args);
+            }
         }
         return errorCode.getDefaultMessage();
     }
