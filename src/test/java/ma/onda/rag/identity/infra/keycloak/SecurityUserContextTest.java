@@ -1,6 +1,7 @@
 package ma.onda.rag.identity.infra.keycloak;
 
-import ma.onda.rag.shared.exception.AccessDeniedException;
+import ma.onda.rag.shared.exception.BusinessException;
+import ma.onda.rag.shared.exception.ErrorCode;
 import ma.onda.rag.user.domain.User;
 import ma.onda.rag.user.infra.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -90,24 +91,32 @@ class SecurityUserContextTest {
     }
 
     @Test
-    @DisplayName("Should throw AccessDeniedException when local user is not registered")
-    void shouldThrowAccessDeniedExceptionWhenUserNotFound() {
+    @DisplayName("Should throw BusinessException(USER_NOT_REGISTERED) when local user is not registered")
+    void shouldThrowBusinessExceptionWhenUserNotFound() {
         Jwt jwt = createJwt("kc-sub-999", "unknown_user");
         setJwtInContext(jwt);
 
         when(userRepository.findByKeycloakId("kc-sub-999")).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> securityUserContext.getCurrentUser())
-                .isInstanceOf(AccessDeniedException.class)
-                .hasMessageContaining("User not registered in local database");
+                .isInstanceOf(BusinessException.class)
+                .satisfies(ex -> {
+                    BusinessException be = (BusinessException) ex;
+                    assertThat(be.getErrorCode()).isEqualTo(ErrorCode.USER_NOT_REGISTERED);
+                    assertThat(be.getMessage()).contains("not registered");
+                });
     }
 
     @Test
-    @DisplayName("Should throw AccessDeniedException when no security context authentication exists")
-    void shouldThrowAccessDeniedExceptionWhenNoAuthentication() {
+    @DisplayName("Should throw BusinessException(JWT_NOT_FOUND) when no security context authentication exists")
+    void shouldThrowBusinessExceptionWhenNoAuthentication() {
         assertThatThrownBy(() -> securityUserContext.getCurrentJwt())
-                .isInstanceOf(AccessDeniedException.class)
-                .hasMessageContaining("No authenticated JWT token found in security context");
+                .isInstanceOf(BusinessException.class)
+                .satisfies(ex -> {
+                    BusinessException be = (BusinessException) ex;
+                    assertThat(be.getErrorCode()).isEqualTo(ErrorCode.JWT_NOT_FOUND);
+                    assertThat(be.getMessage()).contains("No authenticated JWT token found in security context");
+                });
     }
 
     private Jwt createJwt(String subject, String preferredUsername) {
