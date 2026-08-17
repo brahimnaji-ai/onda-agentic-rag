@@ -11,9 +11,9 @@ jobs:
     name: Build and test
     runs-on: ubuntu-latest
     env:
-      GEMINI_API_KEY: dummy-ci-key
-      GEMINI_PROJECT_ID: dummy-project
-      TAVILY_API_KEY: dummy-tavily
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_PROJECT_ID: ${{ secrets.GEMINI_PROJECT_ID }}
+      TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
