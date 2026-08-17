@@ -1,12 +1,14 @@
 package ma.onda.rag.identity.infra.keycloak;
 
-import ma.onda.rag.shared.exception.AccessDeniedException;
+import ma.onda.rag.shared.exception.BusinessException;
+import ma.onda.rag.shared.exception.ErrorCode;
 import ma.onda.rag.user.domain.User;
 import ma.onda.rag.user.infra.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,13 +22,13 @@ public class SecurityUserContext {
      * the current Keycloak {@code sub} claim.
      *
      * @return the local User entity
-     * @throws AccessDeniedException if no authenticated JWT token is in context or user is not provisioned locally
+     * @throws BusinessException if no authenticated JWT token is in context or user is not provisioned locally
      */
 
     public User getCurrentUser() {
         String keycloakId = getCurrentKeycloakId();
         return userRepository.findByKeycloakId(keycloakId)
-                .orElseThrow(() -> new AccessDeniedException("User not registered in local database"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_REGISTERED, keycloakId));
     }
 
     public String getCurrentKeycloakId() {
@@ -37,9 +39,9 @@ public class SecurityUserContext {
     public Jwt getCurrentJwt() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
-            throw new AccessDeniedException("No authenticated JWT token found in security context");
+            throw new BusinessException(ErrorCode.JWT_NOT_FOUND);
         }
-        if (authentication instanceof org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken jwtAuthenticationToken) {
+        if (authentication instanceof JwtAuthenticationToken jwtAuthenticationToken) {
             return jwtAuthenticationToken.getToken();
         }
         if (authentication.getPrincipal() instanceof Jwt jwt) {
@@ -48,6 +50,6 @@ public class SecurityUserContext {
         if (authentication.getCredentials() instanceof Jwt jwt) {
             return jwt;
         }
-        throw new AccessDeniedException("No authenticated JWT token found in security context");
+        throw new BusinessException(ErrorCode.JWT_NOT_FOUND);
     }
 }

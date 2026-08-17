@@ -128,9 +128,8 @@ class SecurityConfigTest {
         mockMvc.perform(get("/api/v1/admin/dashboard")
                         .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_USER"))))
                 .andExpect(status().isForbidden())
-                .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE))
-                .andExpect(jsonPath("$.title").value("Forbidden"))
-                .andExpect(jsonPath("$.status").value(403));
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.error").value("FORBIDDEN"));
     }
 
     @Test

@@ -1,89 +1,249 @@
 {
   "realm": "onda-rag-realm",
   "enabled": true,
+
   "registrationAllowed": false,
   "resetPasswordAllowed": true,
   "rememberMe": false,
   "verifyEmail": false,
   "loginWithEmailAllowed": true,
+
   "accessTokenLifespan": 300,
   "ssoSessionIdleTimeout": 1800,
   "ssoSessionMaxLifespan": 36000,
+
+  "defaultSignatureAlgorithm": "RS256",
+
   "roles": {
     "realm": [
       {
-        "name": "ROLE_USER",
+        "name": "USER",
         "description": "Standard ONDA employee. Can chat with the Agentic RAG engine, manage own conversations, and read documents.",
         "composite": false
       },
       {
-        "name": "ROLE_INGESTOR",
-        "description": "Knowledge base manager. Inherits ROLE_USER. Can upload, re-index, and delete knowledge base documents.",
+        "name": "INGESTOR",
+        "description": "Knowledge base manager. Inherits USER and can upload, re-index, and delete knowledge base documents.",
         "composite": true,
         "composites": {
-          "realm": ["ROLE_USER"]
+          "realm": [
+            "USER"
+          ]
         }
       },
       {
-        "name": "ROLE_ADMIN",
-        "description": "System administrator. Full access to all endpoints including system metrics and user management.",
+        "name": "ADMIN",
+        "description": "System administrator. Inherits INGESTOR and USER and has full system access.",
         "composite": true,
         "composites": {
-          "realm": ["ROLE_INGESTOR", "ROLE_USER"]
+          "realm": [
+            "INGESTOR"
+          ]
         }
       }
     ]
   },
+
   "clients": [
     {
       "clientId": "onda-rag-api",
       "name": "ONDA Agentic RAG API",
-      "description": "Spring Boot 4.x Agentic RAG Resource Server",
+      "description": "Spring Boot Agentic RAG Resource Server",
+      "protocol": "openid-connect",
+
       "enabled": true,
-      "publicClient": true,
-      "directAccessGrantsEnabled": true,
+
+      "publicClient": false,
+      "bearerOnly": false,
+      "clientAuthenticatorType": "client-secret",
+
       "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
       "serviceAccountsEnabled": false,
-      "webOrigins": ["*"],
-      "redirectUris": ["*"],
+
+      "fullScopeAllowed": false,
+
+      "redirectUris": [],
+      "webOrigins": [],
+
       "defaultClientScopes": [
         "openid",
         "profile",
         "email",
         "roles"
       ],
-      "attributes": {
-        "access.token.lifespan": "300"
-      }
-    },
-    {
-      "clientId": "admin-cli",
-      "enabled": true,
-      "publicClient": false,
-      "standardFlowEnabled": false,
-      "directAccessGrantsEnabled": true,
-      "serviceAccountsEnabled": true
+
+      "optionalClientScopes": [
+        "offline_access"
+      ]
     }
   ],
+
   "clientScopes": [
+    {
+      "name": "openid",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "false"
+      },
+      "protocolMappers": [
+        {
+          "name": "subject",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-sub-mapper",
+          "config": {
+            "access.token.claim": "true",
+            "id.token.claim": "true",
+            "userinfo.token.claim": "true",
+            "introspection.token.claim": "true"
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "profile",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "true"
+      },
+      "protocolMappers": [
+        {
+          "name": "username",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "username",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "preferred_username",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "full name",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-full-name-mapper",
+          "config": {
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        },
+        {
+          "name": "given name",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "firstName",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "given_name",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "family name",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "lastName",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "family_name",
+            "jsonType.label": "String"
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "email",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "true"
+      },
+      "protocolMappers": [
+        {
+          "name": "email",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "email",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "email",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "email verified",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "config": {
+            "userinfo.token.claim": "true",
+            "user.attribute": "emailVerified",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "email_verified",
+            "jsonType.label": "boolean"
+          }
+        }
+      ]
+    },
+
     {
       "name": "roles",
       "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "false",
+        "display.on.consent.screen": "false"
+      },
       "protocolMappers": [
         {
           "name": "realm roles",
           "protocol": "openid-connect",
-          "protocolMapper": "oidc-userinfo-idtoken-mapper",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
           "config": {
             "claim.name": "realm_access.roles",
             "jsonType.label": "String",
             "multivalued": "true",
             "usermodel.realmRoleMapping.rolePrefix": "",
+            "userinfo.token.claim": "true",
             "access.token.claim": "true",
-            "id.token.claim": "true"
+            "id.token.claim": "false"
+          }
+        },
+        {
+          "name": "audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "config": {
+            "included.client.audience": "onda-rag-api",
+            "access.token.claim": "true",
+            "id.token.claim": "false"
           }
         }
       ]
     }
+  ],
+
+  "defaultDefaultClientScopes": [
+    "openid",
+    "profile",
+    "email",
+    "roles"
+  ],
+
+  "defaultOptionalClientScopes": [
+    "offline_access"
   ]
 }
