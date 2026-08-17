@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
  * and sets the principal name to Keycloak's {@code preferred_username} claim (or {@code sub} fallback).
  */
 
+
 @Component
 public class KeycloakJwtAuthenticationConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
@@ -29,30 +30,38 @@ public class KeycloakJwtAuthenticationConverter implements Converter<Jwt, Abstra
 
     @Override
     public AbstractAuthenticationToken convert(Jwt jwt) {
+
         Collection<GrantedAuthority> authorities = extractRealmRoles(jwt);
         String principalName = extractPrincipalName(jwt);
+
         return new JwtAuthenticationToken(jwt, authorities, principalName);
     }
 
     private String extractPrincipalName(Jwt jwt) {
         String preferredUsername = jwt.getClaimAsString(PREFERRED_USERNAME_CLAIM);
+
         if (preferredUsername!=null && !preferredUsername.isBlank()){
             return preferredUsername;
         }
+
         return jwt.getSubject();
     }
 
     @SuppressWarnings("unchecked")
     private Collection<GrantedAuthority> extractRealmRoles(Jwt jwt) {
+
         Map<String, Object> realmAccess = jwt.getClaim(REALM_ACCESS_CLAIM);
+
         if (realmAccess == null || !realmAccess.containsKey(ROLES_CLAIM)) {
             return Collections.emptyList();
         }
 
         Object rolesObject =  realmAccess.get(ROLES_CLAIM);
+
         if (!(rolesObject instanceof List<?> rolesList)) {
             return Collections.emptyList();
         }
+
         return rolesList.stream()
                 .filter(String.class::isInstance)
                 .map(String.class::cast)
