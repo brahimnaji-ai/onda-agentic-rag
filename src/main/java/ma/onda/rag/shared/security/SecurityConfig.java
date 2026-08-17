@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -25,6 +26,15 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private static final String[] PUBLIC_PATHS = {
+            "/api/v1/auth/register",
+            "/api/v1/auth/login",
+            "/api/v1/auth/refresh",
+            "/actuator/health",
+            "/swagger-ui/**",
+            "/v3/api-docs/**"
+    };
+
     private final KeycloakJwtAuthenticationConverter jwtAuthenticationConverter;
 
     @Bean
@@ -33,12 +43,27 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/register", "/api/v1/auth/login", "/api/v1/auth/refresh").permitAll()
-                        .requestMatchers("/actuator/health", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers(PUBLIC_PATHS).permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
+                        // Skip JWT decoding entirely for public endpoints.
+                        // Without this, BearerTokenAuthenticationFilter runs before permitAll()
+                        // and a stale/invalid Bearer header on /register or /login causes a 401.
+                        .bearerTokenResolver(request -> {
+                            String uri = request.getRequestURI();
+                            for (String path : PUBLIC_PATHS) {
+                                boolean matches = path.endsWith("/**")
+                                        ? uri.startsWith(path.substring(0, path.length() - 3))
+                                        : uri.equals(path);
+                                if (matches) {
+                                    return null; // no token extraction → request is anonymous
+                                }
+                            }
+                            return new DefaultBearerTokenResolver().resolve(request);
+                        })
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter))
+                        .authenticationEntryPoint(authenticationEntryPoint())
                 )
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(authenticationEntryPoint())
