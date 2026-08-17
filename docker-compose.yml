@@ -35,7 +35,7 @@ services:
   #    Roles:  ROLE_USER, ROLE_INGESTOR, ROLE_ADMIN
   #    Port:   8081 (host) → 8080 (container) to free 8080 for Spring Boot
   keycloak:
-    image: quay.io/keycloak/keycloak:24.0
+    image: quay.io/keycloak/keycloak:26.7
     container_name: onda-keycloak
     command: start-dev --import-realm
     environment:
@@ -83,8 +83,8 @@ services:
       SPRING_AI_VECTORSTORE_PGVECTOR_DIMENSION: 768
       SPRING_AI_VECTORSTORE_PGVECTOR_DISTANCE_TYPE: COSINE_DISTANCE
       SPRING_AI_VECTORSTORE_PGVECTOR_INDEX_TYPE: HNSW
-      SPRING_AI_VERTEX_AI_GEMINI_API_KEY: ${GEMINI_API_KEY:-replace_me}
-      TAVILY_API_KEY: ${TAVILY_API_KEY:-replace_me}
+      SPRING_AI_VERTEX_AI_GEMINI_API_KEY: ${GEMINI_API_KEY}
+      TAVILY_API_KEY: ${TAVILY_API_KEY}
     depends_on:
       postgres:
         condition: service_healthy

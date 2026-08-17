@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class OndaAgenticRagApplication {
+public class OndaRagApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(OndaAgenticRagApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(OndaRagApplication.class, args);
+    }
 
 }
