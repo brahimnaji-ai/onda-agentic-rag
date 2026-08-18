@@ -4,7 +4,7 @@ package ma.onda.rag.user.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import ma.onda.rag.conversation.domain.Conversation;
-import ma.onda.rag.document.domain.Document;
+import ma.onda.rag.document.domain.DocumentEntity;
 import ma.onda.rag.shared.persistance.BaseEntity;
 
 import java.util.ArrayList;
@@ -54,5 +54,5 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "uploadedBy")
     @Builder.Default
-    private List<Document> documents = new ArrayList<>();
+    private List<DocumentEntity> documentEntities = new ArrayList<>();
 }

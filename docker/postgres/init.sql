@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS documents (
 --
 --    metadata structure (JSONB):
 --    {
---      "document_id": "uuid-of-document-record",
+--      "document_id": "uuid-of-documentEntity-record",
 --      "chunk_index": 12,
 --      "source":      "onda-security-policy.pdf"
 --    }
@@ -157,6 +157,6 @@ CREATE INDEX IF NOT EXISTS idx_vector_store_metadata_gin
     ON vector_store
     USING gin (metadata);
 
--- --- Vector store: fast lookup of all chunks belonging to a document ---
+-- --- Vector store: fast lookup of all chunks belonging to a documentEntity ---
 CREATE INDEX IF NOT EXISTS idx_vector_store_document_id
     ON vector_store ((metadata->>'document_id'));
