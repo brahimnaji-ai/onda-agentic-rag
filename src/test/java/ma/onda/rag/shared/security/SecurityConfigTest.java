@@ -98,6 +98,15 @@ class SecurityConfigTest {
     }
 
     @Test
+    @DisplayName("Public endpoint should ignore a bearer token when the application has a context path")
+    void publicEndpoint_withContextPathAndBearerToken_shouldBePermitted() throws Exception {
+        mockMvc.perform(get("/onda/api/v1/auth/login")
+                        .contextPath("/onda")
+                        .header("Authorization", "Bearer stale-token"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     @DisplayName("Authenticated request with valid JWT should access protected endpoint /api/v1/users/me")
     void authenticatedRequest_shouldSucceed() throws Exception {
         UserResponse mockResponse = new UserResponse(

@@ -33,7 +33,7 @@
       },
       {
         "name": "ADMIN",
-        "description": "System administrator. Inherits INGESTOR and USER and has full system access.",
+        "description": "System administrator. Inherits INGESTOR and has full system access.",
         "composite": true,
         "composites": {
           "realm": [
@@ -44,11 +44,39 @@
     ]
   },
 
+  "users": [
+    {
+      "username": "service-account-onda-rag-api",
+      "enabled": true,
+      "serviceAccountClientId": "onda-rag-api",
+      "clientRoles": {
+        "realm-management": [
+          "manage-users",
+          "view-users",
+          "query-users",
+          "view-realm"
+        ]
+      }
+    }
+  ],
+
+  "scopeMappings": [
+    {
+      "client": "onda-rag-api",
+      "roles": [
+        "manage-users",
+        "view-users",
+        "query-users",
+        "view-realm"
+      ]
+    }
+  ],
+
   "clients": [
     {
       "clientId": "onda-rag-api",
       "name": "ONDA Agentic RAG API",
-      "description": "Spring Boot Agentic RAG Resource Server",
+      "description": "Spring Boot  Agentic RAG Resource Server",
       "protocol": "openid-connect",
 
       "enabled": true,
@@ -56,13 +84,14 @@
       "publicClient": false,
       "bearerOnly": false,
       "clientAuthenticatorType": "client-secret",
+      "secret": "${KEYCLOAK_CLIENT_SECRET}",
 
       "standardFlowEnabled": false,
       "implicitFlowEnabled": false,
       "directAccessGrantsEnabled": true,
       "serviceAccountsEnabled": true,
 
-      "fullScopeAllowed": false,
+      "fullScopeAllowed": true,
 
       "redirectUris": [],
       "webOrigins": [],
@@ -84,15 +113,18 @@
     {
       "name": "openid",
       "protocol": "openid-connect",
+
       "attributes": {
         "include.in.token.scope": "true",
         "display.on.consent.screen": "false"
       },
+
       "protocolMappers": [
         {
           "name": "subject",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-sub-mapper",
+
           "config": {
             "access.token.claim": "true",
             "id.token.claim": "true",
@@ -106,15 +138,18 @@
     {
       "name": "profile",
       "protocol": "openid-connect",
+
       "attributes": {
         "include.in.token.scope": "true",
         "display.on.consent.screen": "true"
       },
+
       "protocolMappers": [
         {
           "name": "username",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-usermodel-property-mapper",
+
           "config": {
             "userinfo.token.claim": "true",
             "user.attribute": "username",
@@ -128,6 +163,7 @@
           "name": "full name",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-full-name-mapper",
+
           "config": {
             "id.token.claim": "true",
             "access.token.claim": "true",
@@ -138,6 +174,7 @@
           "name": "given name",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-usermodel-property-mapper",
+
           "config": {
             "userinfo.token.claim": "true",
             "user.attribute": "firstName",
@@ -151,6 +188,7 @@
           "name": "family name",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-usermodel-property-mapper",
+
           "config": {
             "userinfo.token.claim": "true",
             "user.attribute": "lastName",
@@ -166,15 +204,18 @@
     {
       "name": "email",
       "protocol": "openid-connect",
+
       "attributes": {
         "include.in.token.scope": "true",
         "display.on.consent.screen": "true"
       },
+
       "protocolMappers": [
         {
           "name": "email",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-usermodel-property-mapper",
+
           "config": {
             "userinfo.token.claim": "true",
             "user.attribute": "email",
@@ -188,6 +229,7 @@
           "name": "email verified",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-usermodel-property-mapper",
+
           "config": {
             "userinfo.token.claim": "true",
             "user.attribute": "emailVerified",
@@ -203,15 +245,18 @@
     {
       "name": "roles",
       "protocol": "openid-connect",
+
       "attributes": {
         "include.in.token.scope": "false",
         "display.on.consent.screen": "false"
       },
+
       "protocolMappers": [
         {
           "name": "realm roles",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-usermodel-realm-role-mapper",
+
           "config": {
             "claim.name": "realm_access.roles",
             "jsonType.label": "String",
@@ -226,6 +271,7 @@
           "name": "audience",
           "protocol": "openid-connect",
           "protocolMapper": "oidc-audience-mapper",
+
           "config": {
             "included.client.audience": "onda-rag-api",
             "access.token.claim": "true",

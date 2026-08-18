@@ -35,12 +35,13 @@ services:
   #    Roles:  ROLE_USER, ROLE_INGESTOR, ROLE_ADMIN
   #    Port:   8081 (host) → 8080 (container) to free 8080 for Spring Boot
   keycloak:
-    image: quay.io/keycloak/keycloak:26.7
+    image: quay.io/keycloak/keycloak:26.7.1
     container_name: onda-keycloak
     command: start-dev --import-realm
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USER:-admin}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin_password}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET:-PbFRHqc2lOgQSsAWmLNSd9h8kklsSwuE}
       KC_HTTP_PORT: 8080
     ports:
       - "8081:8080"
@@ -72,14 +73,11 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-onda_password}
       # Keycloak resource server — internal docker network uses container port 8080
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI: http://keycloak:8080/realms/${KEYCLOAK_REALM:-onda-rag-realm}
-      # Keycloak Admin Client (for dual-write user registration + saga rollback)
-      KEYCLOAK_ADMIN_SERVER_URL: http://keycloak:8080
-      KEYCLOAK_ADMIN_REALM: master
-      KEYCLOAK_ADMIN_CLIENT_ID: admin-cli
-      KEYCLOAK_ADMIN_USERNAME: ${KEYCLOAK_ADMIN_USER:-admin}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin_password}
-      KEYCLOAK_TARGET_REALM: ${KEYCLOAK_REALM:-onda-rag-realm}
-      KEYCLOAK_TARGET_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-onda-rag-api}
+      # Keycloak service account used by the identity module.
+      KEYCLOAK_SERVER_URL: http://keycloak:8080
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM:-onda-rag-realm}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-onda-rag-api}
+      KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET:-PbFRHqc2lOgQSsAWmLNSd9h8kklsSwuE}
       SPRING_AI_VECTORSTORE_PGVECTOR_DIMENSION: 768
       SPRING_AI_VECTORSTORE_PGVECTOR_DISTANCE_TYPE: COSINE_DISTANCE
       SPRING_AI_VECTORSTORE_PGVECTOR_INDEX_TYPE: HNSW

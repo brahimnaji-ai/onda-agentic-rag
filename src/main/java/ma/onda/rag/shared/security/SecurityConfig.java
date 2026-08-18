@@ -1,6 +1,7 @@
 package ma.onda.rag.shared.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import ma.onda.rag.identity.infra.keycloak.KeycloakJwtAuthenticationConverter;
 import org.springframework.context.annotation.Bean;
@@ -17,8 +18,11 @@ import org.springframework.security.oauth2.server.resource.web.DefaultBearerToke
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Stream;
 
 @Configuration
 @EnableWebSecurity
@@ -35,6 +39,10 @@ public class SecurityConfig {
             "/v3/api-docs/**"
     };
 
+    private static final List<PathPatternRequestMatcher> PUBLIC_REQUEST_MATCHERS = Stream.of(PUBLIC_PATHS)
+            .map(path -> PathPatternRequestMatcher.withDefaults().matcher(path))
+            .toList();
+
     private final KeycloakJwtAuthenticationConverter jwtAuthenticationConverter;
 
     @Bean
@@ -47,21 +55,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
-                        // Skip JWT decoding entirely for public endpoints.
-                        // Without this, BearerTokenAuthenticationFilter runs before permitAll()
-                        // and a stale/invalid Bearer header on /register or /login causes a 401.
-                        .bearerTokenResolver(request -> {
-                            String uri = request.getRequestURI();
-                            for (String path : PUBLIC_PATHS) {
-                                boolean matches = path.endsWith("/**")
-                                        ? uri.startsWith(path.substring(0, path.length() - 3))
-                                        : uri.equals(path);
-                                if (matches) {
-                                    return null; // no token extraction → request is anonymous
-                                }
-                            }
-                            return new DefaultBearerTokenResolver().resolve(request);
-                        })
+                        .bearerTokenResolver(this::resolveBearerToken)
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter))
                         .authenticationEntryPoint(authenticationEntryPoint())
                 )
@@ -71,6 +65,17 @@ public class SecurityConfig {
                 );
 
         return http.build();
+    }
+
+    private String resolveBearerToken(HttpServletRequest request) {
+        if (isPublicRequest(request)) {
+            return null;
+        }
+        return new DefaultBearerTokenResolver().resolve(request);
+    }
+
+    private boolean isPublicRequest(HttpServletRequest request) {
+        return PUBLIC_REQUEST_MATCHERS.stream().anyMatch(matcher -> matcher.matches(request));
     }
 
     @Bean

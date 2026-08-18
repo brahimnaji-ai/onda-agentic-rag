@@ -1,34 +1,26 @@
 package ma.onda.rag.identity.infra.keycloak;
 
-import lombok.Data;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.annotation.Validated;
 
-/**
- * Typed binding for the {@code keycloak.*} block in {@code application.yaml}.
- *
- * <pre>
- * keycloak:
- *   server-url: http://localhost:8081
- *   realm:      onda-rag-realm
- *   client-id:  onda-rag-api
- *   client-secret: <secret>
- * </pre>
- */
-@Data
-@Configuration
+@Validated
 @ConfigurationProperties(prefix = "keycloak")
-public class KeycloakProperties {
+public record KeycloakProperties(
 
     /** Base URL of the Keycloak server (no trailing slash). */
-    private String serverUrl;
+
+    @NotBlank String serverUrl,
 
     /** Realm name. */
-    private String realm;
+
+    @NotBlank String realm,
 
     /** Confidential client ID used for Admin REST calls and token exchange. */
-    private String clientId;
+
+    @NotBlank String clientId,
 
     /** Client secret. */
-    private String clientSecret;
-}
+
+    @NotBlank String clientSecret
+) {}
