@@ -18,7 +18,11 @@ public enum ErrorCode {
     CONVERSATION_NOT_FOUND("CONVERSATION", "Conversation with ID '%s' was not found", NOT_FOUND),
     CONVERSATION_TITLE_BLANK("CONVERSATION", "Conversation title must not be blank", BAD_REQUEST),
     CONVERSATION_TITLE_TOO_LONG("CONVERSATION", "Conversation title must not exceed %d characters", BAD_REQUEST),
-    MESSAGE_CONTENT_BLANK("CONVERSATION", "Message content must not be blank", BAD_REQUEST);
+    MESSAGE_CONTENT_BLANK("CONVERSATION", "Message content must not be blank", BAD_REQUEST),
+    DOCUMENT_NOT_FOUND("DOCUMENT", "Document with ID '%s' was not found", NOT_FOUND),
+    DOCUMENT_EMPTY_FILE("DOCUMENT", "Uploaded document file must not be empty", BAD_REQUEST),
+    DOCUMENT_INVALID_TYPE("DOCUMENT", "Unsupported document type '%s'. Supported types: PDF, TXT, MD", BAD_REQUEST),
+    DOCUMENT_PROCESSING_FAILED("DOCUMENT", "Failed to process document: %s", INTERNAL_SERVER_ERROR);
 
 
 
