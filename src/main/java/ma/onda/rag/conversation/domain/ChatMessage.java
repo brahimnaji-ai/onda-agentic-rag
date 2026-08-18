@@ -3,6 +3,8 @@ package ma.onda.rag.conversation.domain;
 import ma.onda.rag.shared.persistance.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.UUID;
 
@@ -40,7 +42,8 @@ public class ChatMessage extends BaseEntity {
     @Column(name = "content", columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column(name = "metadata", columnDefinition = "jsonb")
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "metadata")
     private String metadata;
 }
 

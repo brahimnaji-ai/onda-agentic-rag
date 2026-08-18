@@ -15,7 +15,11 @@ public enum ErrorCode {
     KEYCLOAK_USER_CREATION_FAILED("KEYCLOAK", "Keycloak rejected user creation (HTTP %d): %s", BAD_GATEWAY),
     KEYCLOAK_TOKEN_RESPONSE_EMPTY("KEYCLOAK", "Empty response from Keycloak token endpoint", BAD_GATEWAY),
     KEYCLOAK_ROLE_NOT_FOUND("KEYCLOAK", "Realm role '%s' not found in Keycloak. Create it in the Keycloak Admin Console.", BAD_GATEWAY),
-    ;
+    CONVERSATION_NOT_FOUND("CONVERSATION", "Conversation with ID '%s' was not found", NOT_FOUND),
+    CONVERSATION_TITLE_BLANK("CONVERSATION", "Conversation title must not be blank", BAD_REQUEST),
+    CONVERSATION_TITLE_TOO_LONG("CONVERSATION", "Conversation title must not exceed %d characters", BAD_REQUEST),
+    MESSAGE_CONTENT_BLANK("CONVERSATION", "Message content must not be blank", BAD_REQUEST);
+
 
 
     private final String code;
