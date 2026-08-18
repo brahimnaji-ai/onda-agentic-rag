@@ -11,9 +11,12 @@ jobs:
     name: Build and test
     runs-on: ubuntu-latest
     env:
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      GEMINI_PROJECT_ID: ${{ secrets.GEMINI_PROJECT_ID }}
-      TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+      # The test suite only needs these properties to bind; it does not call
+      # external AI services. Keeping placeholders makes PR runs reproducible
+      # and avoids exposing repository secrets to the test process.
+      GEMINI_API_KEY: dummy-ci-key
+      GEMINI_PROJECT_ID: dummy-project
+      TAVILY_API_KEY: dummy-tavily
     steps:
       - name: Checkout
         uses: actions/checkout@v4

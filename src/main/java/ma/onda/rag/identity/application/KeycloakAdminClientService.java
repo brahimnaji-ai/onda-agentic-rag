@@ -8,6 +8,7 @@ import ma.onda.rag.identity.api.dto.response.TokenResponse;
 import ma.onda.rag.identity.infra.keycloak.KeycloakProperties;
 import ma.onda.rag.shared.exception.BusinessException;
 import ma.onda.rag.shared.exception.ErrorCode;
+import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
@@ -262,7 +263,7 @@ public class KeycloakAdminClientService {
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
         user.setEnabled(true);
-        user.setEmailVerified(true);
+        user.setEmailVerified(false);
         user.setCredentials(List.of(buildPasswordCredential(request.password())));
         return user;
     }
@@ -279,7 +280,7 @@ public class KeycloakAdminClientService {
         return KeycloakBuilder.builder()
                 .serverUrl(props.getServerUrl())
                 .realm(props.getRealm())
-                .grantType("client_credentials")
+                .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
                 .clientId(props.getClientId())
                 .clientSecret(props.getClientSecret())
                 .build();
