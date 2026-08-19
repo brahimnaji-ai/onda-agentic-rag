@@ -72,5 +72,5 @@ keycloak:
 # ===== properties for RAG (Retrieval-Augmented Generation) =====
 rag:
   retrieval:
-    top-k: 5
-    similarity-threshold: 0.0
+    top-k: 4
+    similarity-threshold: 0.7
