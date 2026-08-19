@@ -74,3 +74,7 @@ rag:
   retrieval:
     top-k: 4
     similarity-threshold: 0.7
+
+# ===== properties for Tavily integration =====
+tavily:
+  api-key: ${TAVILY_API_KEY}

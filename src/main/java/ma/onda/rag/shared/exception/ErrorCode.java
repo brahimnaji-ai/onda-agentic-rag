@@ -22,7 +22,8 @@ public enum ErrorCode {
     DOCUMENT_NOT_FOUND("DOCUMENT", "Document with ID '%s' was not found", NOT_FOUND),
     DOCUMENT_EMPTY_FILE("DOCUMENT", "Uploaded document file must not be empty", BAD_REQUEST),
     DOCUMENT_INVALID_TYPE("DOCUMENT", "Unsupported document type '%s'. Supported types: PDF, TXT, MD", BAD_REQUEST),
-    DOCUMENT_PROCESSING_FAILED("DOCUMENT", "Failed to process document: %s", INTERNAL_SERVER_ERROR);
+    DOCUMENT_PROCESSING_FAILED("DOCUMENT", "Failed to process document: %s", INTERNAL_SERVER_ERROR),
+    TOOL_EXECUTION_FAILED("AGENT", "External tool execution failed: %s", INTERNAL_SERVER_ERROR);
 
 
 
