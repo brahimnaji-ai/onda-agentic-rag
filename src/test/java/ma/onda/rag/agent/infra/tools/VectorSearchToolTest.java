@@ -1,0 +1,154 @@
+package ma.onda.rag.agent.infra.tools;
+
+import ma.onda.rag.document.infra.VectorMetadataKeys;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.ai.document.Document;
+import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.VectorStore;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class VectorSearchToolTest {
+
+    @Mock
+    private VectorStore vectorStore;
+
+    private VectorSearchProperties properties;
+
+    private VectorSearchTool vectorSearchTool;
+
+    @BeforeEach
+    void setUp() {
+        properties = new VectorSearchProperties(4, 0.7);
+        vectorSearchTool = new VectorSearchTool(vectorStore, properties);
+    }
+
+    @Test
+    @DisplayName("Should execute similarity search with topK=4 and similarityThreshold=0.7 and return document snippets")
+    void testApply_SuccessfulSearch() {
+        // Given
+        String searchQuery = "What is the policy for remote work?";
+
+        Document doc1 = Document.builder()
+                .id("chunk-1")
+                .text("Remote work policy content chunk 1")
+                .metadata(Map.of(
+                        VectorMetadataKeys.DOCUMENT_ID, "doc-uuid-101",
+                        VectorMetadataKeys.SOURCE, "employee_handbook.pdf"
+                ))
+                .score(0.88)
+                .build();
+
+        Document doc2 = Document.builder()
+                .id("chunk-2")
+                .text("Remote work policy content chunk 2")
+                .metadata(Map.of(
+                        VectorMetadataKeys.DOCUMENT_ID, "doc-uuid-101",
+                        VectorMetadataKeys.SOURCE, "employee_handbook.pdf"
+                ))
+                .score(0.75)
+                .build();
+
+        when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(List.of(doc1, doc2));
+
+        VectorSearchTool.Request request = new VectorSearchTool.Request(searchQuery);
+
+        // When
+        VectorSearchTool.Response response = vectorSearchTool.apply(request);
+
+        // Then
+        ArgumentCaptor<SearchRequest> searchRequestCaptor = ArgumentCaptor.forClass(SearchRequest.class);
+        verify(vectorStore, times(1)).similaritySearch(searchRequestCaptor.capture());
+
+        SearchRequest capturedRequest = searchRequestCaptor.getValue();
+        assertThat(capturedRequest.getQuery()).isEqualTo(searchQuery);
+        assertThat(capturedRequest.getTopK()).isEqualTo(4);
+        assertThat(capturedRequest.getSimilarityThreshold()).isEqualTo(0.7);
+
+        assertThat(response).isNotNull();
+        assertThat(response.snippets()).hasSize(2);
+
+        VectorSearchTool.DocumentSnippet snippet1 = response.snippets().get(0);
+        assertThat(snippet1.documentId()).isEqualTo("doc-uuid-101");
+        assertThat(snippet1.sourceFilename()).isEqualTo("employee_handbook.pdf");
+        assertThat(snippet1.chunkContent()).isEqualTo("Remote work policy content chunk 1");
+        assertThat(snippet1.relevanceScore()).isEqualTo(0.88);
+
+        VectorSearchTool.DocumentSnippet snippet2 = response.snippets().get(1);
+        assertThat(snippet2.documentId()).isEqualTo("doc-uuid-101");
+        assertThat(snippet2.sourceFilename()).isEqualTo("employee_handbook.pdf");
+        assertThat(snippet2.chunkContent()).isEqualTo("Remote work policy content chunk 2");
+        assertThat(snippet2.relevanceScore()).isEqualTo(0.75);
+    }
+
+    @Test
+    @DisplayName("Should return empty list gracefully when similarity search yields no results")
+    void testApply_EmptyResultSet() {
+        // Given
+        String searchQuery = "Non-existent query";
+        when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(Collections.emptyList());
+
+        VectorSearchTool.Request request = new VectorSearchTool.Request(searchQuery);
+
+        // When
+        VectorSearchTool.Response response = vectorSearchTool.apply(request);
+
+        // Then
+        verify(vectorStore, times(1)).similaritySearch(any(SearchRequest.class));
+        assertThat(response).isNotNull();
+        assertThat(response.snippets()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Should return empty list gracefully when vectorStore returns null")
+    void testApply_NullVectorStoreResult() {
+        // Given
+        String searchQuery = "Query returning null";
+        when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(null);
+
+        VectorSearchTool.Request request = new VectorSearchTool.Request(searchQuery);
+
+        // When
+        VectorSearchTool.Response response = vectorSearchTool.apply(request);
+
+        // Then
+        verify(vectorStore, times(1)).similaritySearch(any(SearchRequest.class));
+        assertThat(response).isNotNull();
+        assertThat(response.snippets()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Should handle empty, blank, or null search query without calling vectorStore")
+    void testApply_InvalidQuery() {
+        // Null request
+        VectorSearchTool.Response responseNullReq = vectorSearchTool.apply(null);
+        assertThat(responseNullReq).isNotNull();
+        assertThat(responseNullReq.snippets()).isEmpty();
+
+        // Null query
+        VectorSearchTool.Response responseNullQuery = vectorSearchTool.apply(new VectorSearchTool.Request(null));
+        assertThat(responseNullQuery).isNotNull();
+        assertThat(responseNullQuery.snippets()).isEmpty();
+
+        // Blank query
+        VectorSearchTool.Response responseBlankQuery = vectorSearchTool.apply(new VectorSearchTool.Request("   "));
+        assertThat(responseBlankQuery).isNotNull();
+        assertThat(responseBlankQuery.snippets()).isEmpty();
+
+        verifyNoInteractions(vectorStore);
+    }
+}
