@@ -26,6 +26,16 @@ public class VectorSearchTool implements Function<VectorSearchTool.Request, Vect
     private final VectorStore vectorStore;
     private final VectorSearchProperties properties;
 
+    private static final ThreadLocal<List<DocumentSnippet>> lastSnippets = new ThreadLocal<>();
+
+    public static List<DocumentSnippet> getLastSnippets() {
+        return lastSnippets.get();
+    }
+
+    public static void clearLastSnippets() {
+        lastSnippets.remove();
+    }
+
     public record Request(
             @JsonPropertyDescription("The natural language search query")
             String query
@@ -71,6 +81,14 @@ public class VectorSearchTool implements Function<VectorSearchTool.Request, Vect
                 .toList();
 
         log.info("VectorSearchTool returned {} document snippets", snippets.size());
+        
+        List<DocumentSnippet> currentSnippets = lastSnippets.get();
+        if (currentSnippets == null) {
+            currentSnippets = new java.util.ArrayList<>();
+        }
+        currentSnippets.addAll(snippets);
+        lastSnippets.set(currentSnippets);
+
         return new Response(snippets);
     }
 
