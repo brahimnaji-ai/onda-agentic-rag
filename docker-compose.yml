@@ -83,12 +83,78 @@ services:
       SPRING_AI_VECTORSTORE_PGVECTOR_INDEX_TYPE: HNSW
       SPRING_AI_VERTEX_AI_GEMINI_API_KEY: ${GEMINI_API_KEY}
       TAVILY_API_KEY: ${TAVILY_API_KEY}
+      MANAGEMENT_OPENTELEMETRY_TRACING_EXPORT_OTLP_ENDPOINT: http://tempo:4318/v1/traces
     depends_on:
       postgres:
         condition: service_healthy
       keycloak:
         condition: service_healthy
 
+  # 4. Local observability stack. Prometheus scrapes a Spring Boot process
+  # running on the host at http://host.docker.internal:8080/actuator/prometheus.
+  prometheus:
+    image: prom/prometheus:v3.9.1
+    container_name: onda-prometheus
+    profiles: ["observability"]
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  tempo:
+    image: grafana/tempo:2.9.0
+    container_name: onda-tempo
+    profiles: ["observability"]
+    restart: unless-stopped
+    command: ["-config.file=/etc/tempo.yaml"]
+    ports:
+      - "3200:3200"
+      - "4318:4318"
+    volumes:
+      - ./docker/observability/tempo/tempo.yaml:/etc/tempo.yaml:ro
+      - tempo_data:/var/tempo
+
+  grafana:
+    image: grafana/grafana:12.3.2
+    container_name: onda-grafana
+    profiles: ["observability"]
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./docker/observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./docker/observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      prometheus:
+        condition: service_healthy
+      tempo:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "http://localhost:3000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
 volumes:
   postgres_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+  tempo_data:
     driver: local

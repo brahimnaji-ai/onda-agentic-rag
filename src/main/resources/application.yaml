@@ -73,8 +73,48 @@ keycloak:
 rag:
   retrieval:
     top-k: 4
-    similarity-threshold: 0.7
+    similarity-threshold: 0.5
 
 # ===== properties for Tavily integration =====
 tavily:
   api-key: ${TAVILY_API_KEY}
+
+# ===== observability =====
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: when_authorized
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  otlp:
+    metrics:
+      export:
+        # Prometheus pulls metrics from /actuator/prometheus; no local OTLP
+        # collector is part of this development stack.
+        enabled: false
+  tracing:
+    sampling:
+      probability: ${MANAGEMENT_TRACING_SAMPLING_PROBABILITY:1.0}
+    export:
+      otlp:
+        enabled: true
+  opentelemetry:
+    tracing:
+      export:
+        otlp:
+          endpoint: ${OTEL_EXPORTER_OTLP_TRACES_ENDPOINT:http://localhost:4318/v1/traces}
+
+logging:
+  pattern:
+    correlation: "[${spring.application.name:},%X{traceId:-},%X{spanId:-}] "
+  include-application-name: false

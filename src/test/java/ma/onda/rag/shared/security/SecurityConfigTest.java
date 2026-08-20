@@ -107,6 +107,13 @@ class SecurityConfigTest {
     }
 
     @Test
+    @DisplayName("Prometheus scrape endpoint should be public for the monitoring agent")
+    void prometheusEndpoint_shouldBePermitted() throws Exception {
+        mockMvc.perform(get("/actuator/prometheus"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     @DisplayName("Authenticated request with valid JWT should access protected endpoint /api/v1/users/me")
     void authenticatedRequest_shouldSucceed() throws Exception {
         UserResponse mockResponse = new UserResponse(
