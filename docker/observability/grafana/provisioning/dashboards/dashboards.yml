@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+  - name: onda-observability
+    orgId: 1
+    folder: ONDA
+    type: file
+    disableDeletion: true
+    editable: true
+    options:
+      path: /var/lib/grafana/dashboards
