@@ -73,7 +73,7 @@ keycloak:
 rag:
   retrieval:
     top-k: 4
-    similarity-threshold: 0.7
+    similarity-threshold: 0.5
 
 # ===== properties for Tavily integration =====
 tavily:

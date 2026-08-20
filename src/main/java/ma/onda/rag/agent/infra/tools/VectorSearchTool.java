@@ -11,6 +11,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +85,7 @@ public class VectorSearchTool implements Function<VectorSearchTool.Request, Vect
         
         List<DocumentSnippet> currentSnippets = lastSnippets.get();
         if (currentSnippets == null) {
-            currentSnippets = new java.util.ArrayList<>();
+            currentSnippets = new ArrayList<>();
         }
         currentSnippets.addAll(snippets);
         lastSnippets.set(currentSnippets);
