@@ -2,8 +2,10 @@ package ma.onda.rag.agent.application;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import ma.onda.rag.agent.infra.tools.OndaWebsiteSearchTool;
 import ma.onda.rag.agent.infra.tools.VectorSearchTool;
 import ma.onda.rag.agent.infra.tools.VectorSearchTool.DocumentSnippet;
+import ma.onda.rag.agent.infra.tools.WebSearchTool;
 import ma.onda.rag.conversation.api.ChatRequest;
 import ma.onda.rag.conversation.api.ChatResponse;
 import ma.onda.rag.conversation.api.CitedSourceDTO;
@@ -23,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -41,18 +44,24 @@ public class AgenticRagService {
         List<Message> messages = loadChatHistory(request.conversationId());
         
         VectorSearchTool.clearLastSnippets();
+        WebSearchTool.clearLastResults();
+        OndaWebsiteSearchTool.clearLastResults();
 
-        org.springframework.ai.chat.model.ChatResponse aiResponse = callLlm(messages);
-        String answer = aiResponse.getResult().getOutput().getText();
+        try {
+            org.springframework.ai.chat.model.ChatResponse aiResponse = callLLM(messages);
+            String answer = aiResponse.getResult().getOutput().getText();
 
-        persistAssistantResponse(request.conversationId(), answer);
+            persistAssistantResponse(request.conversationId(), answer);
 
-        TokenUsageDTO tokenUsage = extractTokenUsage(aiResponse);
-        List<CitedSourceDTO> sources = extractCitedSources();
+            TokenUsageDTO tokenUsage = extractTokenUsage(aiResponse);
+            List<CitedSourceDTO> sources = extractCitedSources();
 
-        VectorSearchTool.clearLastSnippets();
-
-        return new ChatResponse(answer, sources, tokenUsage);
+            return new ChatResponse(answer, sources, tokenUsage);
+        } finally {
+            VectorSearchTool.clearLastSnippets();
+            WebSearchTool.clearLastResults();
+            OndaWebsiteSearchTool.clearLastResults();
+        }
     }
 
     private void persistUserMessage(ChatRequest request) {
@@ -61,7 +70,7 @@ public class AgenticRagService {
         conversationService.appendMessage(request.conversationId(), MessageType.USER, request.message(), null);
     }
 
-    private List<Message> loadChatHistory(java.util.UUID conversationId) {
+    private List<Message> loadChatHistory(UUID conversationId) {
         List<ChatMessage> history = chatMessageRepository.findByConversationIdOrderBySequenceNumberAsc(conversationId);
         List<Message> messages = new ArrayList<>();
         for (ChatMessage msg : history) {
@@ -76,7 +85,7 @@ public class AgenticRagService {
         return messages;
     }
 
-    private org.springframework.ai.chat.model.ChatResponse callLlm(List<Message> messages) {
+    private org.springframework.ai.chat.model.ChatResponse callLLM(List<Message> messages) {
         return chatClient.prompt()
                 .messages(messages)
                 .call()
@@ -105,12 +114,24 @@ public class AgenticRagService {
         if (snippets != null) {
             for (DocumentSnippet s : snippets) {
                 sources.add(new CitedSourceDTO(
+                        "DOCUMENT",
                         s.documentId(),
                         s.sourceFilename(),
+                        null,
                         s.chunkContent(),
                         s.relevanceScore()
                 ));
             }
+        }
+        List<WebSearchTool.WebSearchSnippet> generalWebResults = WebSearchTool.getLastResults();
+        if (generalWebResults != null) {
+            generalWebResults.forEach(result -> sources.add(new CitedSourceDTO(
+                    "WEB", null, result.title(), result.url(), result.content(), result.relevanceScore())));
+        }
+        List<OndaWebsiteSearchTool.WebSearchResult> ondaWebResults = OndaWebsiteSearchTool.getLastResults();
+        if (ondaWebResults != null) {
+            ondaWebResults.forEach(result -> sources.add(new CitedSourceDTO(
+                    "ONDA_WEB", null, result.title(), result.url(), result.content(), result.relevanceScore())));
         }
         return sources;
     }
