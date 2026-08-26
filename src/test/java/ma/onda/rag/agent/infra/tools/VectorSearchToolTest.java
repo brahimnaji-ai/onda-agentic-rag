@@ -10,8 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ai.document.Document;
-import org.springframework.ai.rag.Query;
-import org.springframework.ai.rag.preretrieval.query.transformation.QueryTransformer;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 
@@ -29,9 +27,6 @@ class VectorSearchToolTest {
     @Mock
     private VectorStore vectorStore;
 
-    @Mock
-    private QueryTransformer queryTransformer;
-
     private VectorSearchProperties properties;
 
     private VectorSearchTool vectorSearchTool;
@@ -39,8 +34,7 @@ class VectorSearchToolTest {
     @BeforeEach
     void setUp() {
         properties = new VectorSearchProperties(4, 0.7);
-        vectorSearchTool = new VectorSearchTool(vectorStore, properties, queryTransformer);
-        lenient().when(queryTransformer.transform(any(Query.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        vectorSearchTool = new VectorSearchTool(vectorStore, properties);
     }
 
     @Test
@@ -99,21 +93,6 @@ class VectorSearchToolTest {
         assertThat(snippet2.sourceFilename()).isEqualTo("employee_handbook.pdf");
         assertThat(snippet2.chunkContent()).isEqualTo("Remote work policy content chunk 2");
         assertThat(snippet2.relevanceScore()).isEqualTo(0.75);
-    }
-
-    @Test
-    @DisplayName("Should search using the French-preserving pre-retrieval query")
-    void testApply_UsesTransformedQuery() {
-        String originalQuery = "C'est quoi les conditions pour l'aérogare de Casablanca ?";
-        String rewrittenQuery = "conditions aérogare Casablanca";
-        when(queryTransformer.transform(new Query(originalQuery))).thenReturn(new Query(rewrittenQuery));
-        when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(Collections.emptyList());
-
-        vectorSearchTool.apply(new VectorSearchTool.Request(originalQuery));
-
-        ArgumentCaptor<SearchRequest> searchRequestCaptor = ArgumentCaptor.forClass(SearchRequest.class);
-        verify(vectorStore).similaritySearch(searchRequestCaptor.capture());
-        assertThat(searchRequestCaptor.getValue().getQuery()).isEqualTo(rewrittenQuery);
     }
 
     @Test

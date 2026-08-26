@@ -1,17 +1,14 @@
 package ma.onda.rag.agent.infra.tools;
 
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ma.onda.rag.document.infra.VectorMetadataKeys;
 import org.springframework.ai.document.Document;
-import org.springframework.ai.rag.Query;
-import org.springframework.ai.rag.preretrieval.query.transformation.QueryTransformer;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Description;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -24,24 +21,13 @@ import java.util.function.Function;
 @Component("vectorSearchTool")
 @EnableConfigurationProperties(VectorSearchProperties.class)
 @Description("Search PostgreSQL pgvector vector store for relevant document snippets")
+@RequiredArgsConstructor
 public class VectorSearchTool implements Function<VectorSearchTool.Request, VectorSearchTool.Response> {
 
     private final VectorStore vectorStore;
     private final VectorSearchProperties properties;
-    private final QueryTransformer queryTransformer;
 
     private static final ThreadLocal<List<DocumentSnippet>> lastSnippets = new ThreadLocal<>();
-
-    public VectorSearchTool(VectorStore vectorStore, VectorSearchProperties properties,
-                            @Qualifier("frenchQueryTransformer") ObjectProvider<QueryTransformer> queryTransformerProvider) {
-        this(vectorStore, properties, queryTransformerProvider.getIfAvailable(() -> query -> query));
-    }
-
-    VectorSearchTool(VectorStore vectorStore, VectorSearchProperties properties, QueryTransformer queryTransformer) {
-        this.vectorStore = vectorStore;
-        this.properties = properties;
-        this.queryTransformer = queryTransformer;
-    }
 
     public static List<DocumentSnippet> getLastSnippets() {
         return lastSnippets.get();
@@ -74,12 +60,11 @@ public class VectorSearchTool implements Function<VectorSearchTool.Request, Vect
             return new Response(Collections.emptyList());
         }
 
-        String searchQuery = transformQuery(request.query());
-        log.info("Executing vector similarity search with topK={} and threshold={}",
-                properties.topK(), properties.similarityThreshold());
+        log.info("Executing vector similarity search for query: '{}' with topK={} and threshold={}",
+                request.query(), properties.topK(), properties.similarityThreshold());
 
         SearchRequest searchRequest = SearchRequest.builder()
-                .query(searchQuery)
+                .query(request.query())
                 .topK(properties.topK())
                 .similarityThreshold(properties.similarityThreshold())
                 .build();
@@ -87,7 +72,8 @@ public class VectorSearchTool implements Function<VectorSearchTool.Request, Vect
         List<Document> documents = vectorStore.similaritySearch(searchRequest);
 
         if (documents == null || documents.isEmpty()) {
-            log.info("No documents found above similarity threshold {}", properties.similarityThreshold());
+            log.info("No documents found matching query: '{}' above similarity threshold {}",
+                    request.query(), properties.similarityThreshold());
             return new Response(Collections.emptyList());
         }
 
@@ -119,14 +105,5 @@ public class VectorSearchTool implements Function<VectorSearchTool.Request, Vect
         Double score = doc.getScore();
 
         return new DocumentSnippet(documentId, sourceFilename, content, score);
-    }
-
-    private String transformQuery(String originalQuery) {
-        Query transformedQuery = queryTransformer.transform(new Query(originalQuery));
-        if (transformedQuery == null || transformedQuery.text() == null || transformedQuery.text().isBlank()) {
-            log.warn("Pre-retrieval query transformation returned an empty query; using the original query");
-            return originalQuery;
-        }
-        return transformedQuery.text();
     }
 }

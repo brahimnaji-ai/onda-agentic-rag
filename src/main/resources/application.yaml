@@ -73,9 +73,6 @@ keycloak:
 
 # ===== properties for RAG (Retrieval-Augmented Generation) =====
 rag:
-  pre-retrieval:
-    rewrite:
-      enabled: true
   retrieval:
     top-k: 4
     similarity-threshold: 0.5
