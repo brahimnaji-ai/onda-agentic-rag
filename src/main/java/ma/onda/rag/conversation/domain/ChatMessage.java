@@ -36,6 +36,7 @@ public class ChatMessage extends BaseEntity {
     private int sequenceNumber;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "message_type", nullable = false)
     private MessageType messageType;
 

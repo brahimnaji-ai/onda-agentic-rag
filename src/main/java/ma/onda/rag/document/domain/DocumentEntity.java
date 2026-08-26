@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import ma.onda.rag.shared.persistance.BaseEntity;
 import ma.onda.rag.user.domain.User;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.UUID;
 
@@ -33,6 +35,7 @@ public class DocumentEntity extends BaseEntity {
     private long sizeBytes;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "status", nullable = false)
     private DocumentStatus status;
 
