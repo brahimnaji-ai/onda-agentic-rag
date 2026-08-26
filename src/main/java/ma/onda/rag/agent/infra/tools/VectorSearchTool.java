@@ -6,11 +6,12 @@ import ma.onda.rag.document.infra.VectorMetadataKeys;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.rag.Query;
 import org.springframework.ai.rag.preretrieval.query.transformation.QueryTransformer;
-import org.springframework.ai.rag.retrieval.search.DocumentRetriever;
+import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Description;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -21,24 +22,23 @@ import java.util.function.Function;
 
 @Slf4j
 @Component("vectorSearchTool")
+@EnableConfigurationProperties(VectorSearchProperties.class)
 @Description("Search PostgreSQL pgvector vector store for relevant document snippets")
 public class VectorSearchTool implements Function<VectorSearchTool.Request, VectorSearchTool.Response> {
 
-    private final DocumentRetriever documentRetriever;
+    private final VectorStore vectorStore;
     private final VectorSearchProperties properties;
     private final QueryTransformer queryTransformer;
 
     private static final ThreadLocal<List<DocumentSnippet>> lastSnippets = new ThreadLocal<>();
 
-    @Autowired
-    public VectorSearchTool(@Qualifier("ondaDocumentRetriever") DocumentRetriever documentRetriever,
-                            VectorSearchProperties properties,
+    public VectorSearchTool(VectorStore vectorStore, VectorSearchProperties properties,
                             @Qualifier("frenchQueryTransformer") ObjectProvider<QueryTransformer> queryTransformerProvider) {
-        this(documentRetriever, properties, queryTransformerProvider.getIfAvailable(() -> query -> query));
+        this(vectorStore, properties, queryTransformerProvider.getIfAvailable(() -> query -> query));
     }
 
-    VectorSearchTool(DocumentRetriever documentRetriever, VectorSearchProperties properties, QueryTransformer queryTransformer) {
-        this.documentRetriever = documentRetriever;
+    VectorSearchTool(VectorStore vectorStore, VectorSearchProperties properties, QueryTransformer queryTransformer) {
+        this.vectorStore = vectorStore;
         this.properties = properties;
         this.queryTransformer = queryTransformer;
     }
@@ -78,7 +78,13 @@ public class VectorSearchTool implements Function<VectorSearchTool.Request, Vect
         log.info("Executing vector similarity search with topK={} and threshold={}",
                 properties.topK(), properties.similarityThreshold());
 
-        List<Document> documents = documentRetriever.retrieve(new Query(searchQuery));
+        SearchRequest searchRequest = SearchRequest.builder()
+                .query(searchQuery)
+                .topK(properties.topK())
+                .similarityThreshold(properties.similarityThreshold())
+                .build();
+
+        List<Document> documents = vectorStore.similaritySearch(searchRequest);
 
         if (documents == null || documents.isEmpty()) {
             log.info("No documents found above similarity threshold {}", properties.similarityThreshold());
