@@ -9,6 +9,11 @@ import ma.onda.rag.identity.infra.keycloak.SecurityUserContext;
 import ma.onda.rag.shared.exception.BusinessException;
 import ma.onda.rag.shared.exception.ErrorCode;
 import ma.onda.rag.user.domain.User;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +26,7 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.filter.Filter;
 import org.springframework.mock.web.MockMultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
@@ -116,6 +122,52 @@ class DocumentEntityIngestionServiceTest {
         assertThat(firstChunk.getMetadata()).containsEntry(VectorMetadataKeys.UPLOADED_BY, userId.toString());
         assertThat(firstChunk.getMetadata()).containsEntry(VectorMetadataKeys.SOURCE, "sample.txt");
         assertThat(firstChunk.getMetadata()).containsKey(VectorMetadataKeys.CHUNK_INDEX);
+    }
+
+    @Test
+    @DisplayName("ingestDocument - Should extract PDF text instead of storing binary PDF content")
+    void ingestDocument_pdf_extractsTextBeforeEmbedding() throws Exception {
+        when(securityUserContext.getCurrentUser()).thenReturn(mockUser);
+
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "sample.pdf",
+                "application/pdf",
+                createPdf("ONDA document ingestion ".repeat(20))
+        );
+
+        when(documentRepository.save(any(DocumentEntity.class))).thenAnswer(invocation -> {
+            DocumentEntity document = invocation.getArgument(0);
+            if (document.getId() == null) {
+                document.setId(documentId);
+            }
+            return document;
+        });
+
+        documentIngestionService.ingestDocument(file);
+
+        @SuppressWarnings("unchecked")
+        ArgumentCaptor<List<org.springframework.ai.document.Document>> chunksCaptor = ArgumentCaptor.forClass(List.class);
+        verify(vectorStore).add(chunksCaptor.capture());
+
+        assertThat(chunksCaptor.getValue())
+                .extracting(org.springframework.ai.document.Document::getText)
+                .allSatisfy(text -> assertThat(text).doesNotContain("%PDF").doesNotContain("\u0000"));
+    }
+
+    private byte[] createPdf(String text) throws Exception {
+        try (PDDocument document = new PDDocument(); ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+            document.addPage(new PDPage());
+            try (PDPageContentStream content = new PDPageContentStream(document, document.getPage(0))) {
+                content.beginText();
+                content.setFont(new PDType1Font(Standard14Fonts.FontName.HELVETICA), 12);
+                content.newLineAtOffset(50, 700);
+                content.showText(text);
+                content.endText();
+            }
+            document.save(output);
+            return output.toByteArray();
+        }
     }
 
     @Test
