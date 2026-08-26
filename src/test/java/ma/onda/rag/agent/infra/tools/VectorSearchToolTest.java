@@ -12,8 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.rag.Query;
 import org.springframework.ai.rag.preretrieval.query.transformation.QueryTransformer;
-import org.springframework.ai.vectorstore.SearchRequest;
-import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.ai.rag.retrieval.search.DocumentRetriever;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +26,7 @@ import static org.mockito.Mockito.*;
 class VectorSearchToolTest {
 
     @Mock
-    private VectorStore vectorStore;
+    private DocumentRetriever documentRetriever;
 
     @Mock
     private QueryTransformer queryTransformer;
@@ -39,7 +38,7 @@ class VectorSearchToolTest {
     @BeforeEach
     void setUp() {
         properties = new VectorSearchProperties(4, 0.7);
-        vectorSearchTool = new VectorSearchTool(vectorStore, properties, queryTransformer);
+        vectorSearchTool = new VectorSearchTool(documentRetriever, properties, queryTransformer);
         lenient().when(queryTransformer.transform(any(Query.class))).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
@@ -69,7 +68,7 @@ class VectorSearchToolTest {
                 .score(0.75)
                 .build();
 
-        when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(List.of(doc1, doc2));
+        when(documentRetriever.retrieve(any(Query.class))).thenReturn(List.of(doc1, doc2));
 
         VectorSearchTool.Request request = new VectorSearchTool.Request(searchQuery);
 
@@ -77,13 +76,10 @@ class VectorSearchToolTest {
         VectorSearchTool.Response response = vectorSearchTool.apply(request);
 
         // Then
-        ArgumentCaptor<SearchRequest> searchRequestCaptor = ArgumentCaptor.forClass(SearchRequest.class);
-        verify(vectorStore, times(1)).similaritySearch(searchRequestCaptor.capture());
+        ArgumentCaptor<Query> queryCaptor = ArgumentCaptor.forClass(Query.class);
+        verify(documentRetriever, times(1)).retrieve(queryCaptor.capture());
 
-        SearchRequest capturedRequest = searchRequestCaptor.getValue();
-        assertThat(capturedRequest.getQuery()).isEqualTo(searchQuery);
-        assertThat(capturedRequest.getTopK()).isEqualTo(4);
-        assertThat(capturedRequest.getSimilarityThreshold()).isEqualTo(0.7);
+        assertThat(queryCaptor.getValue().text()).isEqualTo(searchQuery);
 
         assertThat(response).isNotNull();
         assertThat(response.snippets()).hasSize(2);
@@ -107,13 +103,13 @@ class VectorSearchToolTest {
         String originalQuery = "C'est quoi les conditions pour l'aérogare de Casablanca ?";
         String rewrittenQuery = "conditions aérogare Casablanca";
         when(queryTransformer.transform(new Query(originalQuery))).thenReturn(new Query(rewrittenQuery));
-        when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(Collections.emptyList());
+        when(documentRetriever.retrieve(any(Query.class))).thenReturn(Collections.emptyList());
 
         vectorSearchTool.apply(new VectorSearchTool.Request(originalQuery));
 
-        ArgumentCaptor<SearchRequest> searchRequestCaptor = ArgumentCaptor.forClass(SearchRequest.class);
-        verify(vectorStore).similaritySearch(searchRequestCaptor.capture());
-        assertThat(searchRequestCaptor.getValue().getQuery()).isEqualTo(rewrittenQuery);
+        ArgumentCaptor<Query> queryCaptor = ArgumentCaptor.forClass(Query.class);
+        verify(documentRetriever).retrieve(queryCaptor.capture());
+        assertThat(queryCaptor.getValue().text()).isEqualTo(rewrittenQuery);
     }
 
     @Test
@@ -121,7 +117,7 @@ class VectorSearchToolTest {
     void testApply_EmptyResultSet() {
         // Given
         String searchQuery = "Non-existent query";
-        when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(Collections.emptyList());
+        when(documentRetriever.retrieve(any(Query.class))).thenReturn(Collections.emptyList());
 
         VectorSearchTool.Request request = new VectorSearchTool.Request(searchQuery);
 
@@ -129,7 +125,7 @@ class VectorSearchToolTest {
         VectorSearchTool.Response response = vectorSearchTool.apply(request);
 
         // Then
-        verify(vectorStore, times(1)).similaritySearch(any(SearchRequest.class));
+        verify(documentRetriever, times(1)).retrieve(any(Query.class));
         assertThat(response).isNotNull();
         assertThat(response.snippets()).isEmpty();
     }
@@ -139,7 +135,7 @@ class VectorSearchToolTest {
     void testApply_NullVectorStoreResult() {
         // Given
         String searchQuery = "Query returning null";
-        when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(null);
+        when(documentRetriever.retrieve(any(Query.class))).thenReturn(null);
 
         VectorSearchTool.Request request = new VectorSearchTool.Request(searchQuery);
 
@@ -147,13 +143,13 @@ class VectorSearchToolTest {
         VectorSearchTool.Response response = vectorSearchTool.apply(request);
 
         // Then
-        verify(vectorStore, times(1)).similaritySearch(any(SearchRequest.class));
+        verify(documentRetriever, times(1)).retrieve(any(Query.class));
         assertThat(response).isNotNull();
         assertThat(response.snippets()).isEmpty();
     }
 
     @Test
-    @DisplayName("Should handle empty, blank, or null search query without calling vectorStore")
+    @DisplayName("Should handle empty, blank, or null search query without calling the document retriever")
     void testApply_InvalidQuery() {
         // Null request
         VectorSearchTool.Response responseNullReq = vectorSearchTool.apply(null);
@@ -170,6 +166,6 @@ class VectorSearchToolTest {
         assertThat(responseBlankQuery).isNotNull();
         assertThat(responseBlankQuery.snippets()).isEmpty();
 
-        verifyNoInteractions(vectorStore);
+        verifyNoInteractions(documentRetriever);
     }
 }
