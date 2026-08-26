@@ -84,6 +84,7 @@ public abstract class AbstractIntegrationTest {
 
         registry.add("spring.ai.google.genai.api-key", () -> "dummy-key");
         registry.add("spring.ai.google.genai.embedding.api-key", () -> "dummy-key");
+        registry.add("rag.pre-retrieval.rewrite.enabled", () -> "false");
         registry.add("tavily.api-key", () -> "dummy-tavily-key");
     }
 
