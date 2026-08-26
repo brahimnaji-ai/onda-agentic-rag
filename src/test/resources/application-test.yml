@@ -1,6 +1,9 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:onda_test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
+    # Each Spring test context needs an isolated schema. A shared named H2
+    # database lets one @DataJpaTest context close or drop the database while
+    # another context is still using it in the same Maven JVM.
+    url: jdbc:h2:mem:onda_test_${random.uuid};DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
     driver-class-name: org.h2.Driver
     username: sa
     password:
