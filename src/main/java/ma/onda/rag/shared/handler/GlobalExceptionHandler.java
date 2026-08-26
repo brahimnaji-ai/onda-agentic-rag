@@ -18,24 +18,34 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final String GENERIC_SERVER_ERROR_MESSAGE =
+            "The request could not be completed. Please try again later.";
+
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
         ErrorCode errorCode = ex.getErrorCode();
         ErrorResponse body = ErrorResponse.of(
                 errorCode.getStatus().value(),
                 errorCode.name(),
-                ex.getMessage()
+                clientMessage(ex)
         );
 
         return ResponseEntity.status(Objects.nonNull(errorCode.getStatus())? errorCode.getStatus() : BAD_REQUEST)
                 .body(body);
     }
 
+    private String clientMessage(BusinessException ex) {
+        return ex.getErrorCode().getStatus().is5xxServerError()
+                ? GENERIC_SERVER_ERROR_MESSAGE
+                : ex.getMessage();
+    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleSpringAccessDeniedException(
             org.springframework.security.access.AccessDeniedException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(ErrorResponse.of(HttpStatus.FORBIDDEN.value(), "FORBIDDEN", ex.getMessage()));
+                .body(ErrorResponse.of(HttpStatus.FORBIDDEN.value(), "FORBIDDEN",
+                        "You do not have permission to perform this action."));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

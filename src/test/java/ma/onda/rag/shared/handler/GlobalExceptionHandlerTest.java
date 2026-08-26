@@ -54,6 +54,12 @@ class GlobalExceptionHandlerTest {
             throw new BusinessException(ErrorCode.KEYCLOAK_USER_CREATION_FAILED, 409, "conflict");
         }
 
+        @GetMapping("/document-processing-error")
+        public void documentProcessingError() {
+            throw new BusinessException(ErrorCode.DOCUMENT_PROCESSING_FAILED,
+                    "PreparedStatementCallback; SQL [INSERT INTO public.vector_store ...]");
+        }
+
         record ValidBody(@NotBlank String name) {}
 
         @PostMapping("/validate")
@@ -101,13 +107,22 @@ class GlobalExceptionHandlerTest {
     // -----------------------------------------------------------------------
 
     @Test
-    @DisplayName("BusinessException with KEYCLOAK_USER_CREATION_FAILED should map to 502 ErrorResponse")
+    @DisplayName("BusinessException with KEYCLOAK_USER_CREATION_FAILED should map to a safe 502 ErrorResponse")
     void keycloakError_returns502ErrorResponse() throws Exception {
         mockMvc.perform(get("/test/keycloak-error"))
                 .andExpect(status().isBadGateway())
                 .andExpect(jsonPath("$.status").value(502))
                 .andExpect(jsonPath("$.error").value("KEYCLOAK_USER_CREATION_FAILED"))
-                .andExpect(jsonPath("$.message").value("Keycloak rejected user creation (HTTP 409): conflict"));
+                .andExpect(jsonPath("$.message").value("The request could not be completed. Please try again later."));
+    }
+
+    @Test
+    @DisplayName("Server errors must not expose SQL or exception details")
+    void documentProcessingError_returnsSafeMessage() throws Exception {
+        mockMvc.perform(get("/test/document-processing-error"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.error").value("DOCUMENT_PROCESSING_FAILED"))
+                .andExpect(jsonPath("$.message").value("The request could not be completed. Please try again later."));
     }
 
     // -----------------------------------------------------------------------
