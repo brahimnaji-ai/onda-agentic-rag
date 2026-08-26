@@ -41,17 +41,19 @@ spring:
             token-uri: ${KEYCLOAK_TOKEN_URI:http://localhost:8081/realms/onda-rag-realm/protocol/openid-connect/token}
 
   ai:
+    model:
+      chat: google-genai
+      embedding: ollama
     google:
       genai:
         api-key: ${GEMINI_API_KEY}
         project-id: ${GEMINI_PROJECT_ID:gen-lang-client-0318410907}
         chat:
           model: ${GEMINI_CHAT_MODEL:gemini-3.1-flash-lite}
-        embedding:
-          api-key: ${GEMINI_API_KEY}
-          text:
-            model: ${GEMINI_EMBEDDING_MODEL:gemini-embedding-001}
-            dimensions: 768
+    ollama:
+      base-url: http://localhost:11434
+      embedding:
+        model: nomic-embed-text
 
     vectorstore:
       pgvector:
