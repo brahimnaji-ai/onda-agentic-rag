@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.rag.Query;
+import org.springframework.ai.rag.postretrieval.document.DocumentPostProcessor;
 import org.springframework.ai.rag.preretrieval.query.transformation.QueryTransformer;
 import org.springframework.ai.rag.retrieval.search.DocumentRetriever;
 
@@ -29,6 +30,9 @@ class VectorSearchToolTest {
     private DocumentRetriever documentRetriever;
 
     @Mock
+    private DocumentPostProcessor documentPostProcessor;
+
+    @Mock
     private QueryTransformer queryTransformer;
 
     private VectorSearchProperties properties;
@@ -38,8 +42,10 @@ class VectorSearchToolTest {
     @BeforeEach
     void setUp() {
         properties = new VectorSearchProperties(4, 0.7);
-        vectorSearchTool = new VectorSearchTool(documentRetriever, properties, queryTransformer);
+        vectorSearchTool = new VectorSearchTool(documentRetriever, documentPostProcessor, properties, queryTransformer);
         lenient().when(queryTransformer.transform(any(Query.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        lenient().when(documentPostProcessor.process(any(Query.class), anyList()))
+                .thenAnswer(invocation -> invocation.getArgument(1));
     }
 
     @Test

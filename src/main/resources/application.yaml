@@ -77,8 +77,10 @@ rag:
     rewrite:
       enabled: true
   retrieval:
-    top-k: 4
+    top-k: 8
     similarity-threshold: 0.5
+  post-retrieval:
+    max-documents: 4
 
 # ===== properties for Tavily integration =====
 tavily:

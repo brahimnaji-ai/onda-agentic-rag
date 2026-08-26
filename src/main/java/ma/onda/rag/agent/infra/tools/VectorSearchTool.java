@@ -6,6 +6,7 @@ import ma.onda.rag.document.infra.VectorMetadataKeys;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.rag.Query;
 import org.springframework.ai.rag.preretrieval.query.transformation.QueryTransformer;
+import org.springframework.ai.rag.postretrieval.document.DocumentPostProcessor;
 import org.springframework.ai.rag.retrieval.search.DocumentRetriever;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,21 +25,25 @@ import java.util.function.Function;
 @Description("Search PostgreSQL pgvector vector store for relevant document snippets")
 public class VectorSearchTool implements Function<VectorSearchTool.Request, VectorSearchTool.Response> {
 
-    private final DocumentRetriever documentRetriever;
     private final VectorSearchProperties properties;
     private final QueryTransformer queryTransformer;
+    private final DocumentRetriever documentRetriever;
+    private final DocumentPostProcessor documentPostProcessor;
 
     private static final ThreadLocal<List<DocumentSnippet>> lastSnippets = new ThreadLocal<>();
 
     @Autowired
     public VectorSearchTool(@Qualifier("ondaDocumentRetriever") DocumentRetriever documentRetriever,
+                            @Qualifier("ondaDocumentPostProcessor") DocumentPostProcessor documentPostProcessor,
                             VectorSearchProperties properties,
                             @Qualifier("frenchQueryTransformer") ObjectProvider<QueryTransformer> queryTransformerProvider) {
-        this(documentRetriever, properties, queryTransformerProvider.getIfAvailable(() -> query -> query));
+        this(documentRetriever, documentPostProcessor, properties, queryTransformerProvider.getIfAvailable(() -> query -> query));
     }
 
-    VectorSearchTool(DocumentRetriever documentRetriever, VectorSearchProperties properties, QueryTransformer queryTransformer) {
+    VectorSearchTool(DocumentRetriever documentRetriever, DocumentPostProcessor documentPostProcessor,
+                     VectorSearchProperties properties, QueryTransformer queryTransformer) {
         this.documentRetriever = documentRetriever;
+        this.documentPostProcessor = documentPostProcessor;
         this.properties = properties;
         this.queryTransformer = queryTransformer;
     }
@@ -78,10 +83,17 @@ public class VectorSearchTool implements Function<VectorSearchTool.Request, Vect
         log.info("Executing vector similarity search with topK={} and threshold={}",
                 properties.topK(), properties.similarityThreshold());
 
-        List<Document> documents = documentRetriever.retrieve(new Query(searchQuery));
+        Query retrievalQuery = new Query(searchQuery);
+        List<Document> documents = documentRetriever.retrieve(retrievalQuery);
 
         if (documents == null || documents.isEmpty()) {
             log.info("No documents found above similarity threshold {}", properties.similarityThreshold());
+            return new Response(Collections.emptyList());
+        }
+
+        documents = documentPostProcessor.process(retrievalQuery, documents);
+        if (documents.isEmpty()) {
+            log.info("No documents remained after post-retrieval processing");
             return new Response(Collections.emptyList());
         }
 
