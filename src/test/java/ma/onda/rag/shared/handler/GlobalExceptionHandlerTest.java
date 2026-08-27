@@ -1,10 +1,14 @@
 package ma.onda.rag.shared.handler;
 
+import ma.onda.rag.agent.application.AgenticRagService;
+import ma.onda.rag.conversation.api.ChatController;
 import ma.onda.rag.shared.exception.BusinessException;
 import ma.onda.rag.shared.exception.ErrorCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -17,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -24,12 +30,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Standalone MockMvc tests for {@link GlobalExceptionHandler}.
  *
- * <p>Each test drives a fake controller endpoint to trigger a specific exception
- * and verifies that the handler produces the correct {@code ErrorResponse}.
+ * <p>Tests drive fake exception endpoints and the real chat controller to verify
+ * that the handler produces the correct {@code ErrorResponse}.
  */
 class GlobalExceptionHandlerTest {
 
     private MockMvc mockMvc;
+    private final AgenticRagService agenticRagService = mock(AgenticRagService.class);
 
     // -----------------------------------------------------------------------
     // Fake controllers to trigger exceptions
@@ -69,7 +76,7 @@ class GlobalExceptionHandlerTest {
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders
-                .standaloneSetup(new FakeController())
+                .standaloneSetup(new FakeController(), new ChatController(agenticRagService))
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .build();
     }
@@ -140,5 +147,31 @@ class GlobalExceptionHandlerTest {
                 .andExpect(jsonPath("$.error").value("VALIDATION_FAILED"))
                 .andExpect(jsonPath("$.validationErrors[0].field").value("name"))
                 .andExpect(jsonPath("$.validationErrors[0].message").value(org.hamcrest.Matchers.containsString("must not be blank")));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"null", "\"\"", "\"   \""})
+    void blankChatMessage_returnsFriendlyValidationMessage(String messageJson) throws Exception {
+        mockMvc.perform(post("/api/v1/chat")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"conversationId":"7a839bb2-8b49-4a5c-b187-a59fc09d5138","message":%s}
+                                """.formatted(messageJson)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("VALIDATION_FAILED"))
+                .andExpect(jsonPath("$.validationErrors[0].field").value("message"))
+                .andExpect(jsonPath("$.validationErrors[0].message").value("Message is required"));
+        verifyNoInteractions(agenticRagService);
+    }
+
+    @Test
+    void missingConversationId_returnsFriendlyValidationMessage() throws Exception {
+        mockMvc.perform(post("/api/v1/chat")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"message\":\"Hello\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.validationErrors[0].field").value("conversationId"))
+                .andExpect(jsonPath("$.validationErrors[0].message").value("Conversation ID is required"));
+        verifyNoInteractions(agenticRagService);
     }
 }
