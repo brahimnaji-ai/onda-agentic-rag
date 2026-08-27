@@ -148,8 +148,72 @@ Default retrieval configuration:
 | Embedding dimensions | 768 |
 | Vector index | HNSW |
 | Distance | Cosine |
-| Top K results | 4 |
+| Dense candidates (top K) | 8 |
 | Similarity threshold | 0.5 |
+| Selected context documents | 4 |
+
+### Modular private-document retrieval
+
+`VectorSearchTool` maps tool input/output and delegates to
+`agent.application.retrieval.OndaRetrievalPipeline`. The initial `FAST` profile runs:
+
+```text
+QueryTransformer chain -> QueryExpander -> DocumentRetriever -> DocumentJoiner
+    -> DocumentPostProcessor chain -> RetrievalResult
+```
+
+The default has no query transformers and expands to the single original query.
+`VectorStoreDocumentRetriever` retrieves dense candidates, `ConcatenationDocumentJoiner`
+joins results by chunk ID and score, and `OndaDocumentPostProcessor` removes blank
+and normalized-text duplicate chunks before applying the context limit. It does
+not perform semantic reranking, lexical search, or LLM query expansion.
+
+```yaml
+rag:
+  pre-retrieval:
+    rewrite:
+      enabled: false
+  retrieval:
+    top-k: 8
+    similarity-threshold: 0.5
+  post-retrieval:
+    max-documents: 4
+```
+
+Setting `rag.pre-retrieval.rewrite.enabled=true` opts into the earlier
+French-preserving rewrite experiment through a dedicated client with no tools.
+This adds an LLM call. A missing transformed query retains the previous query;
+an empty expansion retains the transformed query. Provider failures propagate
+instead of returning a misleading successful empty result.
+
+Application callers can use `pipeline.retrieve(new RetrievalRequest("accès CMN"))`.
+The result contains selected Spring AI documents (including their metadata), typed
+source evidence, executed query texts, the profile, and stage/total durations.
+Null or blank input returns empty evidence without running retrieval. An optional
+application-supplied request context is preserved across query stages, including
+Spring AI vector-store filter expressions; the tool does not expose that context
+to the model. This feature does not introduce corpus authorization policy.
+
+Micrometer timer `rag.retrieval.stage` records `TRANSFORM`, `EXPAND`, `RETRIEVE`,
+`JOIN`, `POST_PROCESS`, and `TOTAL`, with only `profile`, `stage`, and `outcome`
+tags. Failed stages and failed totals are recorded too. DEBUG logs under
+`ma.onda.rag.agent.application.retrieval` contain stage timings, never query text,
+document/user IDs, or exception messages. Executed queries are available only in
+the explicit result and should not be logged.
+
+Each chat passes its own `RetrievalResults` through Spring AI `ToolContext`, so
+vector citations derive from explicit results even when tools execute on worker
+threads. The tool's `query` input and `snippets` output and the chat's `DOCUMENT`
+source format remain unchanged. Web and ONDA-web citation transports still use
+their existing `ThreadLocal` state; migrating those is separate work.
+
+No `RetrievalAugmentationAdvisor` is installed: the agent still chooses whether
+to use private documents, official ONDA web content, general web search, or no
+retrieval. New strategies belong behind the pipeline, not in the tool adapter.
+
+The stage contracts and request context follow the
+[Spring AI modular RAG reference](https://docs.spring.io/spring-ai/reference/api/retrieval-augmented-generation.html)
+and [tool context reference](https://docs.spring.io/spring-ai/reference/api/tools.html#_tool_context).
 
 ### Agentic chat
 
