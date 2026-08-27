@@ -1,6 +1,8 @@
 package ma.onda.rag.agent.infra.tools;
 
 import ma.onda.rag.document.infra.VectorMetadataKeys;
+import ma.onda.rag.agent.infra.springai.OndaDocumentPostProcessor;
+import ma.onda.rag.agent.infra.springai.PostRetrievalProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +36,7 @@ class VectorSearchToolTest {
     @BeforeEach
     void setUp() {
         properties = new VectorSearchProperties(4, 0.7);
-        vectorSearchTool = new VectorSearchTool(vectorStore, properties);
+        vectorSearchTool = new VectorSearchTool(vectorStore, properties, new OndaDocumentPostProcessor(new PostRetrievalProperties(4)));
     }
 
     @Test

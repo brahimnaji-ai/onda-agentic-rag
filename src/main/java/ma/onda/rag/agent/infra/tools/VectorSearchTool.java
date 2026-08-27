@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ma.onda.rag.document.infra.VectorMetadataKeys;
 import org.springframework.ai.document.Document;
+import org.springframework.ai.rag.Query;
+import org.springframework.ai.rag.postretrieval.document.DocumentPostProcessor;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -26,6 +28,7 @@ public class VectorSearchTool implements Function<VectorSearchTool.Request, Vect
 
     private final VectorStore vectorStore;
     private final VectorSearchProperties properties;
+    private final DocumentPostProcessor documentPostProcessor;
 
     private static final ThreadLocal<List<DocumentSnippet>> lastSnippets = new ThreadLocal<>();
 
@@ -76,6 +79,8 @@ public class VectorSearchTool implements Function<VectorSearchTool.Request, Vect
                     request.query(), properties.similarityThreshold());
             return new Response(Collections.emptyList());
         }
+
+        documents = documentPostProcessor.process(new Query(request.query()), documents);
 
         List<DocumentSnippet> snippets = documents.stream()
                 .map(this::mapToSnippet)
