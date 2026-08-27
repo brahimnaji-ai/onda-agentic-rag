@@ -16,6 +16,8 @@ import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.model.Generation;
+import org.springframework.ai.chat.model.ToolContext;
+import org.springframework.ai.model.tool.ToolCallingChatOptions;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.embedding.Embedding;
@@ -156,13 +158,18 @@ public abstract class AbstractIntegrationTest {
 
         @Bean
         @Primary
-        public ChatModel chatModel(VectorSearchTool vectorSearchTool) {
+        public ChatModel chatModel() {
             ChatModel model = mock(ChatModel.class);
-            org.springframework.ai.chat.prompt.ChatOptions defaultOptions = org.springframework.ai.chat.prompt.ChatOptions.builder().build();
+            ToolCallingChatOptions defaultOptions = ToolCallingChatOptions.builder().build();
             when(model.getOptions()).thenReturn(defaultOptions);
             when(model.getDefaultOptions()).thenReturn(defaultOptions);
             when(model.call(any(Prompt.class))).thenAnswer(invocation -> {
-                vectorSearchTool.apply(new VectorSearchTool.Request("test query"));
+                Prompt prompt = invocation.getArgument(0);
+                ToolCallingChatOptions options = (ToolCallingChatOptions) prompt.getOptions();
+                options.getToolCallbacks().stream()
+                        .filter(callback -> callback.getToolDefinition().name().equals("vectorSearchTool"))
+                        .findFirst().orElseThrow()
+                        .call("{\"query\":\"test query\"}", new ToolContext(options.getToolContext()));
                 AssistantMessage assistantMessage = new AssistantMessage("Based on official ONDA documents, security policy requires double authentication.");
                 Generation generation = new Generation(assistantMessage);
                 return new ChatResponse(List.of(generation));

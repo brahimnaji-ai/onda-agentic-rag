@@ -1,156 +1,80 @@
 package ma.onda.rag.agent.infra.tools;
 
+import ma.onda.rag.agent.application.retrieval.OndaRetrievalPipeline;
+import ma.onda.rag.agent.application.retrieval.RetrievalProfile;
+import ma.onda.rag.agent.application.retrieval.RetrievalRequest;
+import ma.onda.rag.agent.application.retrieval.RetrievalResult;
+import ma.onda.rag.agent.application.retrieval.RetrievalResults;
 import ma.onda.rag.document.infra.VectorMetadataKeys;
-import ma.onda.rag.agent.infra.springai.OndaDocumentPostProcessor;
-import ma.onda.rag.agent.infra.springai.PostRetrievalProperties;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.document.Document;
-import org.springframework.ai.vectorstore.SearchRequest;
-import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.ai.tool.function.FunctionToolCallback;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class VectorSearchToolTest {
 
-    @Mock
-    private VectorStore vectorStore;
+    private final OndaRetrievalPipeline pipeline = mock(OndaRetrievalPipeline.class);
+    private final VectorSearchTool tool = new VectorSearchTool(pipeline);
 
-    private VectorSearchProperties properties;
+    @Test
+    void mapsExplicitEvidenceToTheExistingSnippetShape() {
+        Document document = Document.builder().id("chunk-1").text("Conditions d'accès")
+                .metadata(Map.of(VectorMetadataKeys.DOCUMENT_ID, "doc-1", VectorMetadataKeys.SOURCE, "guide.pdf"))
+                .score(0.88).build();
+        RetrievalResult result = RetrievalResult.fromDocuments(List.of(document), List.of("accès"),
+                RetrievalProfile.FAST, Map.of());
+        when(pipeline.retrieve(new RetrievalRequest("accès"))).thenReturn(result);
 
-    private VectorSearchTool vectorSearchTool;
+        VectorSearchTool.Response response = tool.apply(new VectorSearchTool.Request("accès"));
 
-    @BeforeEach
-    void setUp() {
-        properties = new VectorSearchProperties(4, 0.7);
-        vectorSearchTool = new VectorSearchTool(vectorStore, properties, new OndaDocumentPostProcessor(new PostRetrievalProperties(4)));
+        assertThat(response.snippets()).containsExactly(new VectorSearchTool.DocumentSnippet(
+                "doc-1", "guide.pdf", "Conditions d'accès", 0.88));
+        verify(pipeline).retrieve(new RetrievalRequest("accès"));
     }
 
     @Test
-    @DisplayName("Should execute similarity search with topK=4 and similarityThreshold=0.7 and return document snippets")
-    void testApply_SuccessfulSearch() {
-        // Given
-        String searchQuery = "What is the policy for remote work?";
-
-        Document doc1 = Document.builder()
-                .id("chunk-1")
-                .text("Remote work policy content chunk 1")
-                .metadata(Map.of(
-                        VectorMetadataKeys.DOCUMENT_ID, "doc-uuid-101",
-                        VectorMetadataKeys.SOURCE, "employee_handbook.pdf"
-                ))
-                .score(0.88)
-                .build();
-
-        Document doc2 = Document.builder()
-                .id("chunk-2")
-                .text("Remote work policy content chunk 2")
-                .metadata(Map.of(
-                        VectorMetadataKeys.DOCUMENT_ID, "doc-uuid-101",
-                        VectorMetadataKeys.SOURCE, "employee_handbook.pdf"
-                ))
-                .score(0.75)
-                .build();
-
-        when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(List.of(doc1, doc2));
-
-        VectorSearchTool.Request request = new VectorSearchTool.Request(searchQuery);
-
-        // When
-        VectorSearchTool.Response response = vectorSearchTool.apply(request);
-
-        // Then
-        ArgumentCaptor<SearchRequest> searchRequestCaptor = ArgumentCaptor.forClass(SearchRequest.class);
-        verify(vectorStore, times(1)).similaritySearch(searchRequestCaptor.capture());
-
-        SearchRequest capturedRequest = searchRequestCaptor.getValue();
-        assertThat(capturedRequest.getQuery()).isEqualTo(searchQuery);
-        assertThat(capturedRequest.getTopK()).isEqualTo(4);
-        assertThat(capturedRequest.getSimilarityThreshold()).isEqualTo(0.7);
-
-        assertThat(response).isNotNull();
-        assertThat(response.snippets()).hasSize(2);
-
-        VectorSearchTool.DocumentSnippet snippet1 = response.snippets().get(0);
-        assertThat(snippet1.documentId()).isEqualTo("doc-uuid-101");
-        assertThat(snippet1.sourceFilename()).isEqualTo("employee_handbook.pdf");
-        assertThat(snippet1.chunkContent()).isEqualTo("Remote work policy content chunk 1");
-        assertThat(snippet1.relevanceScore()).isEqualTo(0.88);
-
-        VectorSearchTool.DocumentSnippet snippet2 = response.snippets().get(1);
-        assertThat(snippet2.documentId()).isEqualTo("doc-uuid-101");
-        assertThat(snippet2.sourceFilename()).isEqualTo("employee_handbook.pdf");
-        assertThat(snippet2.chunkContent()).isEqualTo("Remote work policy content chunk 2");
-        assertThat(snippet2.relevanceScore()).isEqualTo(0.75);
+    void leavesInputValidationToThePipeline() {
+        when(pipeline.retrieve(new RetrievalRequest(null))).thenReturn(
+                RetrievalResult.fromDocuments(List.of(), List.of(), RetrievalProfile.FAST, Map.of()));
+        assertThat(tool.apply(null).snippets()).isEmpty();
+        assertThat(tool.apply(new VectorSearchTool.Request(null)).snippets()).isEmpty();
+        verify(pipeline, times(2)).retrieve(new RetrievalRequest(null));
     }
 
     @Test
-    @DisplayName("Should return empty list gracefully when similarity search yields no results")
-    void testApply_EmptyResultSet() {
-        // Given
-        String searchQuery = "Non-existent query";
-        when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(Collections.emptyList());
+    void propagatesRepeatedCallbackResultsAcrossThreadsWithoutMixingRequests() throws Exception {
+        RetrievalResult first = RetrievalResult.fromDocuments(List.of(new Document("first evidence")),
+                List.of("first"), RetrievalProfile.FAST, Map.of());
+        RetrievalResult second = RetrievalResult.fromDocuments(List.of(new Document("second evidence")),
+                List.of("second"), RetrievalProfile.FAST, Map.of());
+        when(pipeline.retrieve(new RetrievalRequest("first"))).thenReturn(first);
+        when(pipeline.retrieve(new RetrievalRequest("second"))).thenReturn(second);
+        RetrievalResults firstChat = new RetrievalResults();
+        RetrievalResults secondChat = new RetrievalResults();
+        var callback = FunctionToolCallback.builder("vectorSearchTool", tool)
+                .inputType(VectorSearchTool.Request.class).build();
+        ToolContext firstContext = new ToolContext(Map.of(RetrievalResults.TOOL_CONTEXT_KEY, firstChat));
+        ToolContext secondContext = new ToolContext(Map.of(RetrievalResults.TOOL_CONTEXT_KEY, secondChat));
 
-        VectorSearchTool.Request request = new VectorSearchTool.Request(searchQuery);
+        try (var executor = Executors.newFixedThreadPool(2)) {
+            var firstCall = executor.submit(() -> callback.call("{\"query\":\"first\"}", firstContext));
+            var secondCall = executor.submit(() -> callback.call("{\"query\":\"second\"}", secondContext));
+            assertThat(firstCall.get()).contains("snippets", "first evidence").doesNotContain("executedQueries", "timings");
+            assertThat(secondCall.get()).contains("second evidence").doesNotContain("first evidence");
+            executor.submit(() -> callback.call("{\"query\":\"first\"}", firstContext)).get();
+        }
 
-        // When
-        VectorSearchTool.Response response = vectorSearchTool.apply(request);
-
-        // Then
-        verify(vectorStore, times(1)).similaritySearch(any(SearchRequest.class));
-        assertThat(response).isNotNull();
-        assertThat(response.snippets()).isEmpty();
-    }
-
-    @Test
-    @DisplayName("Should return empty list gracefully when vectorStore returns null")
-    void testApply_NullVectorStoreResult() {
-        // Given
-        String searchQuery = "Query returning null";
-        when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(null);
-
-        VectorSearchTool.Request request = new VectorSearchTool.Request(searchQuery);
-
-        // When
-        VectorSearchTool.Response response = vectorSearchTool.apply(request);
-
-        // Then
-        verify(vectorStore, times(1)).similaritySearch(any(SearchRequest.class));
-        assertThat(response).isNotNull();
-        assertThat(response.snippets()).isEmpty();
-    }
-
-    @Test
-    @DisplayName("Should handle empty, blank, or null search query without calling vectorStore")
-    void testApply_InvalidQuery() {
-        // Null request
-        VectorSearchTool.Response responseNullReq = vectorSearchTool.apply(null);
-        assertThat(responseNullReq).isNotNull();
-        assertThat(responseNullReq.snippets()).isEmpty();
-
-        // Null query
-        VectorSearchTool.Response responseNullQuery = vectorSearchTool.apply(new VectorSearchTool.Request(null));
-        assertThat(responseNullQuery).isNotNull();
-        assertThat(responseNullQuery.snippets()).isEmpty();
-
-        // Blank query
-        VectorSearchTool.Response responseBlankQuery = vectorSearchTool.apply(new VectorSearchTool.Request("   "));
-        assertThat(responseBlankQuery).isNotNull();
-        assertThat(responseBlankQuery.snippets()).isEmpty();
-
-        verifyNoInteractions(vectorStore);
+        assertThat(firstChat.snapshot()).containsExactly(first, first);
+        assertThat(secondChat.snapshot()).containsExactly(second);
+        assertThat(callback.getToolDefinition().inputSchema()).contains("query").doesNotContain("TOOL_CONTEXT_KEY", "profile");
+        assertThat(tool.apply(new VectorSearchTool.Request("first")).snippets()).hasSize(1);
+        assertThat(firstChat.snapshot()).hasSize(2);
     }
 }

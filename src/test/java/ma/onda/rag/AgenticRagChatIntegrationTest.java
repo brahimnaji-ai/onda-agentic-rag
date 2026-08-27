@@ -1,5 +1,10 @@
 package ma.onda.rag;
 
+import ma.onda.rag.agent.application.retrieval.OndaRetrievalPipeline;
+import ma.onda.rag.agent.application.retrieval.RetrievalProfile;
+import ma.onda.rag.agent.application.retrieval.RetrievalRequest;
+import ma.onda.rag.agent.application.retrieval.RetrievalResult;
+import ma.onda.rag.agent.application.retrieval.RetrievalStage;
 import ma.onda.rag.conversation.api.ChatRequest;
 import ma.onda.rag.conversation.api.ChatResponse;
 import ma.onda.rag.conversation.api.dto.ConversationResponse;
@@ -10,6 +15,7 @@ import ma.onda.rag.shared.exception.ErrorResponse;
 import ma.onda.rag.user.api.UserResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -23,6 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AgenticRagChatIntegrationTest extends AbstractIntegrationTest {
+
+    @Autowired
+    private OndaRetrievalPipeline retrievalPipeline;
 
     @Test
     @DisplayName("Should execute full end-to-end chat loop: Document ingestion -> Conversation creation -> Agentic RAG chat execution with vector search tool invocation -> Cited answer")
@@ -57,6 +66,18 @@ public class AgenticRagChatIntegrationTest extends AbstractIntegrationTest {
         DocumentResponse doc = objectMapper.readValue(docResult.getResponse().getContentAsString(), DocumentResponse.class);
         assertThat(doc).isNotNull();
 
+        // Exercise the configured FAST pipeline against actual pgvector and ingested metadata.
+        RetrievalResult retrieval = retrievalPipeline.retrieve(new RetrievalRequest("emergency evacuation"));
+        assertThat(retrieval.profile()).isEqualTo(RetrievalProfile.FAST);
+        assertThat(retrieval.executedQueries()).containsExactly("emergency evacuation");
+        assertThat(retrieval.documents()).isNotEmpty();
+        assertThat(retrieval.sources()).anySatisfy(source -> {
+            assertThat(source.documentId()).isEqualTo(doc.id().toString());
+            assertThat(source.sourceFilename()).isEqualTo("onda_security_manual.txt");
+            assertThat(source.chunkContent()).contains("Terminal 1 Gate 4");
+        });
+        assertThat(retrieval.timings()).containsOnlyKeys(RetrievalStage.values());
+
         // Step 2: Create Conversation
         MvcResult convResult = mockMvc.perform(post("/api/v1/conversations")
                         .param("title", "ONDA Safety Inquiry")
@@ -83,7 +104,11 @@ public class AgenticRagChatIntegrationTest extends AbstractIntegrationTest {
         assertThat(response.answer()).isNotBlank();
         assertThat(response.sources()).isNotNull();
         assertThat(response.sources()).isNotEmpty();
-        assertThat(response.sources().get(0).title()).isEqualTo("onda_security_manual.txt");
+        assertThat(response.sources()).anySatisfy(source -> {
+            assertThat(source.type()).isEqualTo("DOCUMENT");
+            assertThat(source.documentId()).isEqualTo(doc.id().toString());
+            assertThat(source.title()).isEqualTo("onda_security_manual.txt");
+        });
     }
 
     @Test
