@@ -73,6 +73,9 @@ keycloak:
 
 # ===== properties for RAG (Retrieval-Augmented Generation) =====
 rag:
+  pre-retrieval:
+    rewrite:
+      enabled: false # FAST avoids an additional LLM call by default
   retrieval:
     top-k: 8
     similarity-threshold: 0.5

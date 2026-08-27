@@ -1,0 +1,82 @@
+package ma.onda.rag.agent.infra.springai;
+
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import ma.onda.rag.agent.application.retrieval.OndaRetrievalPipeline;
+import ma.onda.rag.agent.application.retrieval.RetrievalProfile;
+import ma.onda.rag.agent.application.retrieval.RetrievalRequest;
+import org.junit.jupiter.api.Test;
+import org.springframework.ai.chat.messages.AssistantMessage;
+import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.model.Generation;
+import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.document.Document;
+import org.springframework.ai.model.tool.ToolCallingChatOptions;
+import org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever;
+import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.ai.vectorstore.filter.FilterExpressionTextParser;
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+
+import java.util.List;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+class RetrievalConfigTest {
+
+    private final VectorStore vectorStore = mock(VectorStore.class);
+    private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
+            .withUserConfiguration(RetrievalConfig.class, OndaDocumentPostProcessor.class)
+            .withBean(VectorStore.class, () -> vectorStore)
+            .withBean(MeterRegistry.class, SimpleMeterRegistry::new);
+
+    @Test
+    void defaultFastWiringNeedsNoChatModelAndHonorsCandidateAndContextLimits() {
+        when(vectorStore.similaritySearch(any(SearchRequest.class)))
+                .thenReturn(List.of(Document.builder().text("first").score(0.9).build(),
+                        Document.builder().text("second").score(0.8).build()));
+
+        contextRunner.withPropertyValues("rag.retrieval.top-k=6", "rag.retrieval.similarity-threshold=0.4",
+                "rag.post-retrieval.max-documents=1").run(context -> {
+            assertThat(context).hasNotFailed().hasSingleBean(OndaRetrievalPipeline.class)
+                    .doesNotHaveBean("frenchQueryTransformer");
+            var result = context.getBean(OndaRetrievalPipeline.class).retrieve(new RetrievalRequest("CMN",
+                    RetrievalProfile.FAST, Map.of(VectorStoreDocumentRetriever.FILTER_EXPRESSION, "uploaded_by == 'owner'")));
+            assertThat(result.documents()).extracting(Document::getText).containsExactly("first");
+            assertThat(result.executedQueries()).containsExactly("CMN");
+            var captor = org.mockito.ArgumentCaptor.forClass(SearchRequest.class);
+            verify(vectorStore).similaritySearch(captor.capture());
+            assertThat(captor.getValue().getTopK()).isEqualTo(6);
+            assertThat(captor.getValue().getSimilarityThreshold()).isEqualTo(0.4);
+            assertThat(captor.getValue().getFilterExpression())
+                    .isEqualTo(new FilterExpressionTextParser().parse("uploaded_by == 'owner'"));
+        });
+    }
+
+    @Test
+    void optionalFrenchRewriteUsesDedicatedClientWithoutTools() {
+        ChatModel model = mock(ChatModel.class);
+        when(model.getOptions()).thenReturn(ToolCallingChatOptions.builder().build());
+        when(model.call(any(Prompt.class))).thenReturn(
+                new ChatResponse(List.of(new Generation(new AssistantMessage("accès CMN")))));
+        when(vectorStore.similaritySearch(any(SearchRequest.class))).thenReturn(List.of());
+
+        contextRunner.withBean(ChatModel.class, () -> model)
+                .withPropertyValues("rag.pre-retrieval.rewrite.enabled=true").run(context -> {
+            assertThat(context).hasNotFailed().hasBean("frenchQueryTransformer");
+            var result = context.getBean(OndaRetrievalPipeline.class)
+                    .retrieve(new RetrievalRequest("Quelles sont les conditions d'accès à CMN ?"));
+            assertThat(result.executedQueries()).containsExactly("accès CMN");
+            var prompt = org.mockito.ArgumentCaptor.forClass(Prompt.class);
+            verify(model).call(prompt.capture());
+            assertThat(prompt.getValue().getOptions().getTemperature()).isEqualTo(0.0);
+            if (prompt.getValue().getOptions() instanceof ToolCallingChatOptions options) {
+                assertThat(options.getToolCallbacks()).isNullOrEmpty();
+            }
+        });
+    }
+}
