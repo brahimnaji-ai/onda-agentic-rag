@@ -13,13 +13,22 @@ public record RetrievalResult(
         List<Source> sources,
         List<String> executedQueries,
         RetrievalProfile profile,
-        Map<RetrievalStage, Duration> timings
+        Map<RetrievalStage, Duration> timings,
+        List<String> candidateChunkIds,
+        MeasuredQueryExpander.Diagnostics expansion
 ) {
     public RetrievalResult {
         documents = List.copyOf(documents);
         sources = List.copyOf(sources);
         executedQueries = List.copyOf(executedQueries);
         timings = Map.copyOf(timings);
+        candidateChunkIds = List.copyOf(candidateChunkIds);
+    }
+
+    public RetrievalResult(List<Document> documents, List<Source> sources, List<String> executedQueries,
+                           RetrievalProfile profile, Map<RetrievalStage, Duration> timings) {
+        this(documents, sources, executedQueries, profile, timings,
+                documents.stream().map(Document::getId).toList(), MeasuredQueryExpander.Diagnostics.none());
     }
 
     public static RetrievalResult fromDocuments(List<Document> documents, List<String> executedQueries,

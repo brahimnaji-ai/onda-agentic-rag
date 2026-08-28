@@ -30,6 +30,48 @@ import static org.mockito.Mockito.*;
 class RetrievalConfigTest {
 
     @Test
+    void reviewedPassingReportEnablesOnlyItsSelectedStrategy(@org.junit.jupiter.api.io.TempDir java.nio.file.Path directory)
+            throws java.io.IOException {
+        var baseline = new DeepApproval.Metrics(60, 60, .8, .6, .98, .98, 2000., 0., 0., 0.);
+        var candidate = new DeepApproval.Metrics(60, 60, .8, .7, .98, .98, 3000., 1., 0., 0.);
+        var approval = new DeepApproval("onda-v1", "a".repeat(64), "b".repeat(64), true, true, true,
+                "test-reviewer", ma.onda.rag.agent.infra.retrieval.DeepQueryExpander.Strategy.MULTI_QUERY,
+                baseline, candidate, new DeepApproval.Limits(.05, 5000, 2, 1, 1, .05, .95, .95));
+        var report = directory.resolve("approval.json");
+        java.nio.file.Files.writeString(report, tools.jackson.databind.json.JsonMapper.builder().build().writeValueAsString(approval));
+        ChatModel model = mock(ChatModel.class);
+        when(model.getOptions()).thenReturn(ToolCallingChatOptions.builder().build());
+        var enabled = contextRunner.withBean(ChatModel.class, () -> model).withPropertyValues(
+                "rag.retrieval.profile=DEEP", "rag.retrieval.deep.enabled=true",
+                "rag.retrieval.deep.multi-query-enabled=true", "rag.retrieval.deep.approval-report=" + report.toUri());
+        enabled.run(context -> {
+            assertThat(context).hasNotFailed().hasBean("deepQueryExpander");
+            assertThat(context.getBean(OndaRetrievalPipeline.class).retrieve(new RetrievalRequest(null)).profile())
+                    .isEqualTo(RetrievalProfile.DEEP);
+            verify(model, never()).call(any(Prompt.class));
+        });
+        enabled.withPropertyValues("rag.retrieval.deep.multi-query-enabled=false", "rag.retrieval.deep.hyde-enabled=true",
+                        "rag.retrieval.deep.strategy=HYDE")
+                .run(context -> assertThat(context).hasFailed());
+    }
+
+    @Test
+    void deepIsUnavailableWithoutReviewedApprovalAndFlagsAreMutuallyExclusive() {
+        contextRunner.run(context -> {
+            assertThat(context).hasNotFailed().doesNotHaveBean("deepQueryExpander");
+            org.assertj.core.api.Assertions.assertThatThrownBy(() -> context.getBean(OndaRetrievalPipeline.class)
+                    .retrieve(new RetrievalRequest("q", RetrievalProfile.DEEP, Map.of())))
+                    .isInstanceOf(IllegalArgumentException.class).hasMessageContaining("DEEP");
+        });
+        contextRunner.withPropertyValues("rag.retrieval.deep.enabled=true")
+                .run(context -> assertThat(context).hasFailed());
+        contextRunner.withPropertyValues("rag.retrieval.deep.multi-query-enabled=true", "rag.retrieval.deep.hyde-enabled=true")
+                .run(context -> assertThat(context).hasFailed());
+        contextRunner.withPropertyValues("rag.retrieval.profile=DEEP")
+                .run(context -> assertThat(context).hasFailed());
+    }
+
+    @Test
     void enabledProviderIsResilientAndConfigurationIsValidatedWithoutMakingNetworkCalls() {
         contextRunner.withPropertyValues("rag.post-retrieval.reranking.enabled=true",
                 "rag.post-retrieval.reranking.api-key=test-key", "rag.post-retrieval.context-token-budget=1234",
@@ -102,7 +144,7 @@ class RetrievalConfigTest {
             assertThat(context).hasNotFailed().hasBean("frenchQueryTransformer");
             var result = context.getBean(OndaRetrievalPipeline.class)
                     .retrieve(new RetrievalRequest("Quelles sont les conditions d'accès à CMN ?"));
-            assertThat(result.executedQueries()).containsExactly("accès CMN");
+            assertThat(result.executedQueries()).containsExactly("Quelles sont les conditions d'accès à CMN ?", "accès CMN");
             var prompt = org.mockito.ArgumentCaptor.forClass(Prompt.class);
             verify(model).call(prompt.capture());
             assertThat(prompt.getValue().getOptions().getTemperature()).isEqualTo(0.0);

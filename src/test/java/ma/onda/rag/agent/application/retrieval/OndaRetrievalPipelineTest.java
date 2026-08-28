@@ -33,6 +33,21 @@ import static org.mockito.Mockito.*;
 
 class OndaRetrievalPipelineTest {
 
+    @Test
+    void keepsPreselectionCandidatesForRecallAndFallsBackWhenOnlyAnExtraSearchFails() {
+        List<Document> candidates = java.util.stream.IntStream.range(0, 25)
+                .mapToObj(i -> document("candidate-" + i, "evidence " + i, 1.0 - i * .01)).toList();
+        var pipeline = new OndaRetrievalPipeline(List.of(), query -> List.of(new Query("extra")), query -> {
+            if (query.text().equals("extra")) throw new IllegalStateException("extra arm offline");
+            return candidates;
+        }, new ConcatenationDocumentJoiner(), List.of(new OndaDocumentPostProcessor(new PostRetrievalProperties(4))), meters);
+        var result = pipeline.retrieve(new RetrievalRequest("original"));
+        assertThat(result.candidateChunkIds()).hasSize(20).contains("candidate-19").doesNotContain("candidate-20");
+        assertThat(result.documents()).hasSize(4);
+        assertThat(result.expansion().status()).isEqualTo("RETRIEVAL_ERROR");
+        assertThat(result.expansion().fallback()).isTrue();
+    }
+
     private final VectorStore vectorStore = mock(VectorStore.class);
     private final SimpleMeterRegistry meters = new SimpleMeterRegistry();
     private final OndaRetrievalPipeline fast = new OndaRetrievalPipeline(List.of(), List::of,
@@ -114,7 +129,7 @@ class OndaRetrievalPipelineTest {
         }, query -> {
             calls.add("retrieve:" + query.text());
             assertThat(query.context()).isEqualTo(context);
-            return List.of(query.text().equals("CMN") ? one : two);
+            return List.of(query.text().equals("Casablanca") ? two : one);
         }, candidates -> {
             calls.add("join");
             return new ConcatenationDocumentJoiner().join(candidates);
@@ -131,9 +146,9 @@ class OndaRetrievalPipelineTest {
 
         RetrievalResult result = pipeline.retrieve(new RetrievalRequest("original", RetrievalProfile.FAST, context));
 
-        assertThat(calls).containsExactly("transform1", "transform2", "expand", "retrieve:CMN",
+        assertThat(calls).containsExactly("transform1", "transform2", "expand", "retrieve:original", "retrieve:CMN",
                 "retrieve:Casablanca", "join", "post1", "post2");
-        assertThat(result.executedQueries()).containsExactly("CMN", "Casablanca");
+        assertThat(result.executedQueries()).containsExactly("original", "CMN", "Casablanca");
         assertThat(result.documents()).containsExactly(two);
     }
 

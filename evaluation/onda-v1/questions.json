@@ -1,0 +1,1167 @@
+{
+  "version": "onda-v1",
+  "labelsReviewed": false,
+  "questions": [
+    {
+      "id": "bus-1",
+      "language": "fr",
+      "question": "À quelle fréquence passe le bus de l'aéroport de Rabat-Salé et quel est son tarif ?",
+      "history": [],
+      "hard": false,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "0552d9a6-5b2c-512f-a0fe-37b60f7909de",
+          "chunkId": "875de64f-ad34-5aa6-ab97-bef3106f89ac",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "bus-2",
+      "language": "en",
+      "question": "How often does the bus leave RBA and can I pay by bank card?",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "airport-operations",
+        "airport-code"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "0552d9a6-5b2c-512f-a0fe-37b60f7909de",
+          "chunkId": "875de64f-ad34-5aa6-ab97-bef3106f89ac",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "bus-3",
+      "language": "ar",
+      "question": "ما ثمن حافلة مطار الرباط سلا وما وتيرة انطلاقها؟",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "0552d9a6-5b2c-512f-a0fe-37b60f7909de",
+          "chunkId": "875de64f-ad34-5aa6-ab97-bef3106f89ac",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "bus-4",
+      "language": "fr",
+      "question": "Et est-ce que je peux payer le bus par carte ?",
+      "history": [
+        "Nous parlons de RBA / Rabat-Salé."
+      ],
+      "hard": true,
+      "tags": [
+        "airport-operations",
+        "follow-up"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "0552d9a6-5b2c-512f-a0fe-37b60f7909de",
+          "chunkId": "875de64f-ad34-5aa6-ab97-bef3106f89ac",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "taxi-1",
+      "language": "fr",
+      "question": "Quel service de taxi numérique est annoncé à l'aéroport de Rabat-Salé ?",
+      "history": [],
+      "hard": false,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "0552d9a6-5b2c-512f-a0fe-37b60f7909de",
+          "chunkId": "8b9e9a05-6548-56b8-8d10-861d0d58cd6d",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "taxi-2",
+      "language": "en",
+      "question": "What regulated digital taxi option serves Rabat-Salé airport?",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "0552d9a6-5b2c-512f-a0fe-37b60f7909de",
+          "chunkId": "8b9e9a05-6548-56b8-8d10-861d0d58cd6d",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "taxi-3",
+      "language": "ar",
+      "question": "ما خدمة سيارات الأجرة الرقمية المتاحة في مطار الرباط سلا؟",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "0552d9a6-5b2c-512f-a0fe-37b60f7909de",
+          "chunkId": "8b9e9a05-6548-56b8-8d10-861d0d58cd6d",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "taxi-4",
+      "language": "fr",
+      "question": "Et quelle alternative numérique au bus est proposée ?",
+      "history": [
+        "Nous parlons de le transport à Rabat-Salé."
+      ],
+      "hard": true,
+      "tags": [
+        "airport-operations",
+        "follow-up"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "0552d9a6-5b2c-512f-a0fe-37b60f7909de",
+          "chunkId": "8b9e9a05-6548-56b8-8d10-861d0d58cd6d",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "apoc-1",
+      "language": "fr",
+      "question": "Quels processus l'APOC de Casablanca coordonne-t-il et quand fonctionne-t-il ?",
+      "history": [],
+      "hard": false,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "200deca1-18e0-54d3-8e66-addd4bd55346",
+          "chunkId": "26806618-e84a-54e9-a38b-f5364f88e4f5",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "apoc-2",
+      "language": "en",
+      "question": "Does CMN's APOC operate around the clock and coordinate baggage flows?",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "airport-operations",
+        "airport-code"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "200deca1-18e0-54d3-8e66-addd4bd55346",
+          "chunkId": "26806618-e84a-54e9-a38b-f5364f88e4f5",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "apoc-3",
+      "language": "ar",
+      "question": "هل يعمل مركز APOC بمطار محمد الخامس طوال اليوم وما مهامه؟",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "200deca1-18e0-54d3-8e66-addd4bd55346",
+          "chunkId": "26806618-e84a-54e9-a38b-f5364f88e4f5",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "apoc-4",
+      "language": "fr",
+      "question": "Et fonctionne-t-il aussi la nuit ?",
+      "history": [
+        "Nous parlons de l'APOC à CMN."
+      ],
+      "hard": true,
+      "tags": [
+        "airport-operations",
+        "follow-up"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "200deca1-18e0-54d3-8e66-addd4bd55346",
+          "chunkId": "26806618-e84a-54e9-a38b-f5364f88e4f5",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "terminal-1",
+      "language": "fr",
+      "question": "Quelle capacité, quel investissement et quelle année de livraison sont annoncés pour le nouveau terminal de CMN ?",
+      "history": [],
+      "hard": false,
+      "tags": [
+        "airport-operations",
+        "airport-code"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "7ee88453-76db-52ec-94a4-e45f9c79a2dd",
+          "chunkId": "6decadec-46f6-5779-9525-28bfe89e234d",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "terminal-2",
+      "language": "en",
+      "question": "What capacity and delivery year were announced for the new Casablanca hub terminal?",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "7ee88453-76db-52ec-94a4-e45f9c79a2dd",
+          "chunkId": "6decadec-46f6-5779-9525-28bfe89e234d",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "terminal-3",
+      "language": "ar",
+      "question": "ما الطاقة الاستيعابية وتكلفة وموعد تسليم مبنى مطار محمد الخامس الجديد حسب الإعلان؟",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "7ee88453-76db-52ec-94a4-e45f9c79a2dd",
+          "chunkId": "6decadec-46f6-5779-9525-28bfe89e234d",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "terminal-4",
+      "language": "fr",
+      "question": "Et combien de passagers pourra-t-il accueillir par an ?",
+      "history": [
+        "Nous parlons de le futur terminal de CMN."
+      ],
+      "hard": true,
+      "tags": [
+        "airport-operations",
+        "follow-up"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "7ee88453-76db-52ec-94a4-e45f9c79a2dd",
+          "chunkId": "6decadec-46f6-5779-9525-28bfe89e234d",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "gates-1",
+      "language": "fr",
+      "question": "Quel double contrôle a été supprimé à Casablanca grâce aux portillons automatiques ?",
+      "history": [],
+      "hard": false,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "e5a48457-eb00-5c11-9fa1-989f0dbe4614",
+          "chunkId": "728fb598-ae5a-5fc2-a7a0-6334a6bad8e6",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "gates-2",
+      "language": "en",
+      "question": "Which repeated passport check do the automatic gates replace at CMN?",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "airport-operations",
+        "airport-code"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "e5a48457-eb00-5c11-9fa1-989f0dbe4614",
+          "chunkId": "728fb598-ae5a-5fc2-a7a0-6334a6bad8e6",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "gates-3",
+      "language": "ar",
+      "question": "ما المراقبة المزدوجة التي ألغتها البوابات الآلية في مطار محمد الخامس؟",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "e5a48457-eb00-5c11-9fa1-989f0dbe4614",
+          "chunkId": "728fb598-ae5a-5fc2-a7a0-6334a6bad8e6",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "gates-4",
+      "language": "fr",
+      "question": "Et quel contrôle remplaçaient-ils exactement ?",
+      "history": [
+        "Nous parlons de les portillons automatiques de Casablanca."
+      ],
+      "hard": true,
+      "tags": [
+        "airport-operations",
+        "follow-up"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "e5a48457-eb00-5c11-9fa1-989f0dbe4614",
+          "chunkId": "728fb598-ae5a-5fc2-a7a0-6334a6bad8e6",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "entry-1",
+      "language": "fr",
+      "question": "Selon le communiqué n°02-2025, qu'est-il arrivé aux scanners et portiques aux entrées de Mohammed V ?",
+      "history": [],
+      "hard": false,
+      "tags": [
+        "policy-reference"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "e4ef5b6a-c645-5722-86b6-27d272fbac80",
+          "chunkId": "115ac40c-8592-5047-9e65-3c8f54b1d2d7",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "entry-2",
+      "language": "en",
+      "question": "Under press release n°02-2025, were entrance scanners at CMN relocated?",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "policy-reference",
+        "airport-code"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "e4ef5b6a-c645-5722-86b6-27d272fbac80",
+          "chunkId": "115ac40c-8592-5047-9e65-3c8f54b1d2d7",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "entry-3",
+      "language": "ar",
+      "question": "وفق البلاغ رقم 02-2025، ماذا تغير في أجهزة التفتيش عند مداخل مطار محمد الخامس؟",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "policy-reference"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "e4ef5b6a-c645-5722-86b6-27d272fbac80",
+          "chunkId": "115ac40c-8592-5047-9e65-3c8f54b1d2d7",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "entry-4",
+      "language": "fr",
+      "question": "Et quel changement aux entrées décrit ce communiqué ?",
+      "history": [
+        "Nous parlons de le communiqué n°02-2025 et l'entrée de CMN."
+      ],
+      "hard": true,
+      "tags": [
+        "policy-reference",
+        "follow-up"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "e4ef5b6a-c645-5722-86b6-27d272fbac80",
+          "chunkId": "115ac40c-8592-5047-9e65-3c8f54b1d2d7",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "queues-1",
+      "language": "fr",
+      "question": "Quels temps moyens au départ et à l'arrivée sont indiqués pour Casablanca au premier semestre 2026 ?",
+      "history": [],
+      "hard": false,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "60f4c9da-f1da-5bb0-8914-90c3f885c393",
+          "chunkId": "a08b01c7-99c6-537a-91ad-88cf02e12f5b",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "queues-2",
+      "language": "en",
+      "question": "How long did CMN departure and arrival border checks take in the first half of 2026?",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "airport-operations",
+        "airport-code"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "60f4c9da-f1da-5bb0-8914-90c3f885c393",
+          "chunkId": "a08b01c7-99c6-537a-91ad-88cf02e12f5b",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "queues-3",
+      "language": "ar",
+      "question": "كم بلغ متوسط مدة مراقبة الحدود عند المغادرة والوصول في الدار البيضاء خلال النصف الأول من 2026؟",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "60f4c9da-f1da-5bb0-8914-90c3f885c393",
+          "chunkId": "a08b01c7-99c6-537a-91ad-88cf02e12f5b",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "queues-4",
+      "language": "fr",
+      "question": "Et quelle était la durée moyenne au départ ?",
+      "history": [
+        "Nous parlons de les temps de contrôle à CMN au premier semestre 2026."
+      ],
+      "hard": true,
+      "tags": [
+        "airport-operations",
+        "follow-up"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "60f4c9da-f1da-5bb0-8914-90c3f885c393",
+          "chunkId": "a08b01c7-99c6-537a-91ad-88cf02e12f5b",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "traffic-1",
+      "language": "fr",
+      "question": "Quel trafic national est annoncé pour 2025 et comment évolue-t-il par rapport à 2024 ?",
+      "history": [],
+      "hard": false,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "2f539a01-025c-5af8-8e6e-df16a3188ec3",
+          "chunkId": "914f2f82-2c18-5b9e-838e-be860e1920c8",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "traffic-2",
+      "language": "en",
+      "question": "What passenger total and year-on-year growth did ONDA report for 2025?",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "2f539a01-025c-5af8-8e6e-df16a3188ec3",
+          "chunkId": "914f2f82-2c18-5b9e-838e-be860e1920c8",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "traffic-3",
+      "language": "ar",
+      "question": "كم بلغ عدد المسافرين سنة 2025 وما نسبة الزيادة مقارنة بسنة 2024؟",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "2f539a01-025c-5af8-8e6e-df16a3188ec3",
+          "chunkId": "914f2f82-2c18-5b9e-838e-be860e1920c8",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "traffic-4",
+      "language": "fr",
+      "question": "Et de combien a-t-il progressé par rapport à 2024 ?",
+      "history": [
+        "Nous parlons de le trafic aérien national 2025."
+      ],
+      "hard": true,
+      "tags": [
+        "airport-operations",
+        "follow-up"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "2f539a01-025c-5af8-8e6e-df16a3188ec3",
+          "chunkId": "914f2f82-2c18-5b9e-838e-be860e1920c8",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "mobile-1",
+      "language": "fr",
+      "question": "Comment un passager reçoit-il sa carte d'embarquement mobile avec Pax Check ?",
+      "history": [],
+      "hard": false,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "cf00a7a3-9731-50fe-9b1d-2e1adb125bb5",
+          "chunkId": "68f7959d-eb14-520c-a6be-1c8e7b01efd4",
+          "grade": 1
+        },
+        {
+          "documentId": "cf00a7a3-9731-50fe-9b1d-2e1adb125bb5",
+          "chunkId": "d54d793e-e36e-598f-bad7-14a295ebd0f8",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "mobile-2",
+      "language": "en",
+      "question": "Do passengers need a printed boarding pass after online check-in under Pax Check?",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "cf00a7a3-9731-50fe-9b1d-2e1adb125bb5",
+          "chunkId": "68f7959d-eb14-520c-a6be-1c8e7b01efd4",
+          "grade": 1
+        },
+        {
+          "documentId": "cf00a7a3-9731-50fe-9b1d-2e1adb125bb5",
+          "chunkId": "d54d793e-e36e-598f-bad7-14a295ebd0f8",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "mobile-3",
+      "language": "ar",
+      "question": "هل يحتاج المسافر إلى بطاقة صعود مطبوعة بعد التسجيل عبر الإنترنت مع Pax Check؟",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "airport-operations"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "cf00a7a3-9731-50fe-9b1d-2e1adb125bb5",
+          "chunkId": "68f7959d-eb14-520c-a6be-1c8e7b01efd4",
+          "grade": 1
+        },
+        {
+          "documentId": "cf00a7a3-9731-50fe-9b1d-2e1adb125bb5",
+          "chunkId": "d54d793e-e36e-598f-bad7-14a295ebd0f8",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "mobile-4",
+      "language": "fr",
+      "question": "Et faut-il encore imprimer la carte ?",
+      "history": [
+        "Nous parlons de la carte d'embarquement mobile Pax Check."
+      ],
+      "hard": true,
+      "tags": [
+        "airport-operations",
+        "follow-up"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "cf00a7a3-9731-50fe-9b1d-2e1adb125bb5",
+          "chunkId": "68f7959d-eb14-520c-a6be-1c8e7b01efd4",
+          "grade": 1
+        },
+        {
+          "documentId": "cf00a7a3-9731-50fe-9b1d-2e1adb125bb5",
+          "chunkId": "d54d793e-e36e-598f-bad7-14a295ebd0f8",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "confidentiality-1",
+      "language": "fr",
+      "question": "Selon la section II.6 du Code d'éthique, la confidentialité continue-t-elle après le départ de l'Office ?",
+      "history": [],
+      "hard": false,
+      "tags": [
+        "policy-reference"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+          "chunkId": "c0c7acbe-cc5d-5862-89d2-7f94cfb28799",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "confidentiality-2",
+      "language": "en",
+      "question": "Does section II.6 of ONDA's ethics code require confidentiality after leaving the Office?",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "policy-reference"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+          "chunkId": "c0c7acbe-cc5d-5862-89d2-7f94cfb28799",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "confidentiality-3",
+      "language": "ar",
+      "question": "هل يستمر واجب السرية بعد مغادرة المكتب حسب القسم II.6 من مدونة الأخلاق؟",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "policy-reference"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+          "chunkId": "c0c7acbe-cc5d-5862-89d2-7f94cfb28799",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "confidentiality-4",
+      "language": "fr",
+      "question": "Et cette obligation continue-t-elle après le départ de l'Office ?",
+      "history": [
+        "Nous parlons de la section II.6 du Code d'éthique."
+      ],
+      "hard": true,
+      "tags": [
+        "policy-reference",
+        "follow-up"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+          "chunkId": "c0c7acbe-cc5d-5862-89d2-7f94cfb28799",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "conflicts-1",
+      "language": "fr",
+      "question": "Quels conflits d'intérêts les collaborateurs doivent-ils éviter selon la section II.7 ?",
+      "history": [],
+      "hard": false,
+      "tags": [
+        "policy-reference"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+          "chunkId": "c0c7acbe-cc5d-5862-89d2-7f94cfb28799",
+          "grade": 1
+        },
+        {
+          "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+          "chunkId": "e01fe944-bbb7-5a0d-a5fe-06d83a8586e4",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "conflicts-2",
+      "language": "en",
+      "question": "What personal or financial conflicts must staff avoid under ethics section II.7?",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "policy-reference"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+          "chunkId": "c0c7acbe-cc5d-5862-89d2-7f94cfb28799",
+          "grade": 1
+        },
+        {
+          "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+          "chunkId": "e01fe944-bbb7-5a0d-a5fe-06d83a8586e4",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "conflicts-3",
+      "language": "ar",
+      "question": "ما تضارب المصالح الشخصية أو المالية الواجب تجنبه حسب القسم II.7؟",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "policy-reference"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+          "chunkId": "c0c7acbe-cc5d-5862-89d2-7f94cfb28799",
+          "grade": 1
+        },
+        {
+          "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+          "chunkId": "e01fe944-bbb7-5a0d-a5fe-06d83a8586e4",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "conflicts-4",
+      "language": "fr",
+      "question": "Et cela concerne-t-il aussi la sélection des fournisseurs ?",
+      "history": [
+        "Nous parlons de la section II.7 du Code d'éthique."
+      ],
+      "hard": true,
+      "tags": [
+        "policy-reference",
+        "follow-up"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+          "chunkId": "c0c7acbe-cc5d-5862-89d2-7f94cfb28799",
+          "grade": 1
+        },
+        {
+          "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+          "chunkId": "e01fe944-bbb7-5a0d-a5fe-06d83a8586e4",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "gifts-1",
+      "language": "fr",
+      "question": "Quels cadeaux et faveurs sont visés par la section II.9.1 du Code d'éthique ?",
+      "history": [],
+      "hard": false,
+      "tags": [
+        "policy-reference"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+          "chunkId": "4303aa4b-bca0-568e-9a04-ea42c4541942",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "gifts-2",
+      "language": "en",
+      "question": "How does ethics section II.9.1 describe gifts and favours from business partners?",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "policy-reference"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+          "chunkId": "4303aa4b-bca0-568e-9a04-ea42c4541942",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "gifts-3",
+      "language": "ar",
+      "question": "كيف يعرّف القسم II.9.1 الهدايا والمزايا المقدمة من شركاء الأعمال؟",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "policy-reference"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+          "chunkId": "4303aa4b-bca0-568e-9a04-ea42c4541942",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "gifts-4",
+      "language": "fr",
+      "question": "Et comment les cadeaux et faveurs y sont-ils définis ?",
+      "history": [
+        "Nous parlons de la section II.9.1 du Code d'éthique."
+      ],
+      "hard": true,
+      "tags": [
+        "policy-reference",
+        "follow-up"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+          "chunkId": "4303aa4b-bca0-568e-9a04-ea42c4541942",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "multipart-1",
+      "language": "fr",
+      "question": "À RBA, comparez le bus et Wetaxi : fréquence, prix connu et paiement par carte.",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "multi-part"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "0552d9a6-5b2c-512f-a0fe-37b60f7909de",
+          "chunkId": "875de64f-ad34-5aa6-ab97-bef3106f89ac",
+          "grade": 1
+        },
+        {
+          "documentId": "0552d9a6-5b2c-512f-a0fe-37b60f7909de",
+          "chunkId": "8b9e9a05-6548-56b8-8d10-861d0d58cd6d",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "multipart-2",
+      "language": "fr",
+      "question": "À CMN, distinguez la suppression du double contrôle et le déplacement des scanners d'entrée.",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "multi-part"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "e5a48457-eb00-5c11-9fa1-989f0dbe4614",
+          "chunkId": "728fb598-ae5a-5fc2-a7a0-6334a6bad8e6",
+          "grade": 1
+        },
+        {
+          "documentId": "e4ef5b6a-c645-5722-86b6-27d272fbac80",
+          "chunkId": "115ac40c-8592-5047-9e65-3c8f54b1d2d7",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "multipart-3",
+      "language": "en",
+      "question": "Compare Casablanca's planned terminal capacity with the operating role of its APOC.",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "multi-part"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "7ee88453-76db-52ec-94a4-e45f9c79a2dd",
+          "chunkId": "6decadec-46f6-5779-9525-28bfe89e234d",
+          "grade": 1
+        },
+        {
+          "documentId": "200deca1-18e0-54d3-8e66-addd4bd55346",
+          "chunkId": "26806618-e84a-54e9-a38b-f5364f88e4f5",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "multipart-4",
+      "language": "en",
+      "question": "Compare the 2025 passenger growth with CMN border waiting times in the first half of 2026.",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "multi-part"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "2f539a01-025c-5af8-8e6e-df16a3188ec3",
+          "chunkId": "914f2f82-2c18-5b9e-838e-be860e1920c8",
+          "grade": 1
+        },
+        {
+          "documentId": "60f4c9da-f1da-5bb0-8914-90c3f885c393",
+          "chunkId": "a08b01c7-99c6-537a-91ad-88cf02e12f5b",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "multipart-5",
+      "language": "ar",
+      "question": "ما واجبات السرية وتجنب تضارب المصالح حسب II.6 وII.7؟",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "multi-part"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+          "chunkId": "c0c7acbe-cc5d-5862-89d2-7f94cfb28799",
+          "grade": 1
+        },
+        {
+          "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+          "chunkId": "e01fe944-bbb7-5a0d-a5fe-06d83a8586e4",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "multipart-6",
+      "language": "ar",
+      "question": "كيف تختلف بطاقة الصعود الرقمية عن البوابات التي تعوض المراقبة المزدوجة؟",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "multi-part"
+      ],
+      "answerable": true,
+      "relevance": [
+        {
+          "documentId": "cf00a7a3-9731-50fe-9b1d-2e1adb125bb5",
+          "chunkId": "68f7959d-eb14-520c-a6be-1c8e7b01efd4",
+          "grade": 1
+        },
+        {
+          "documentId": "cf00a7a3-9731-50fe-9b1d-2e1adb125bb5",
+          "chunkId": "d54d793e-e36e-598f-bad7-14a295ebd0f8",
+          "grade": 1
+        },
+        {
+          "documentId": "e5a48457-eb00-5c11-9fa1-989f0dbe4614",
+          "chunkId": "728fb598-ae5a-5fc2-a7a0-6334a6bad8e6",
+          "grade": 1
+        }
+      ]
+    },
+    {
+      "id": "unanswerable-1",
+      "language": "fr",
+      "question": "Quel est le mot de passe Wi-Fi privé du bureau du directeur de CMN ?",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "unanswerable"
+      ],
+      "answerable": false,
+      "relevance": []
+    },
+    {
+      "id": "unanswerable-2",
+      "language": "en",
+      "question": "What is the exact taxi fare to every hotel in Rabat in 2035?",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "unanswerable"
+      ],
+      "answerable": false,
+      "relevance": []
+    },
+    {
+      "id": "unanswerable-3",
+      "language": "ar",
+      "question": "ما رقم جواز سفر مدير مطار محمد الخامس؟",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "unanswerable"
+      ],
+      "answerable": false,
+      "relevance": []
+    },
+    {
+      "id": "unanswerable-4",
+      "language": "fr",
+      "question": "Donnez le texte de la politique ONDA-SEC-9999 absente des documents fournis.",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "unanswerable"
+      ],
+      "answerable": false,
+      "relevance": []
+    },
+    {
+      "id": "unanswerable-5",
+      "language": "en",
+      "question": "What gate will tomorrow's flight AT999 use at RAK?",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "unanswerable"
+      ],
+      "answerable": false,
+      "relevance": []
+    },
+    {
+      "id": "unanswerable-6",
+      "language": "ar",
+      "question": "ما العدد النهائي للمسافرين في سنة 2040؟",
+      "history": [],
+      "hard": true,
+      "tags": [
+        "unanswerable"
+      ],
+      "answerable": false,
+      "relevance": []
+    }
+  ]
+}

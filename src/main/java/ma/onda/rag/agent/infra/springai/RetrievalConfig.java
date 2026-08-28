@@ -36,12 +36,31 @@ import java.net.http.HttpClient;
 
 import java.util.List;
 import java.util.Map;
+import java.util.EnumMap;
+import ma.onda.rag.agent.infra.retrieval.DeepQueryExpander;
+import ma.onda.rag.agent.application.retrieval.MeasuredQueryExpander;
+import org.springframework.core.io.ResourceLoader;
+import tools.jackson.databind.json.JsonMapper;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Configuration(proxyBeanMethods = false)
-@EnableConfigurationProperties({VectorSearchProperties.class, HybridRetrievalProperties.class, RerankingProperties.class})
+@EnableConfigurationProperties({VectorSearchProperties.class, HybridRetrievalProperties.class, RerankingProperties.class, DeepRetrievalProperties.class})
 public class RetrievalConfig {
+
+    @Bean(destroyMethod = "close")
+    @ConditionalOnProperty(prefix = "rag.retrieval.deep", name = "enabled", havingValue = "true")
+    DeepQueryExpander deepQueryExpander(DeepRetrievalProperties properties, ResourceLoader resources, ChatModel model) throws java.io.IOException {
+        DeepApproval approval;
+        try (var input = resources.getResource(properties.approvalReport()).getInputStream()) {
+            approval = JsonMapper.builder().build().readValue(input, DeepApproval.class);
+        }
+        if (!approval.permits(properties.strategy())) {
+            throw new IllegalStateException("DEEP promotion denied: reviewed live quality/latency/cost evidence is required");
+        }
+        return DeepQueryExpander.create(model, properties.strategy(), properties.expansionTimeout(),
+                properties.variants(), properties.maxOutputTokens(), properties.maxConcurrentCalls());
+    }
 
     @Bean
     @ConditionalOnMissingBean(DocumentReranker.class)
@@ -73,7 +92,8 @@ public class RetrievalConfig {
             HybridRetrievalProperties hybridProperties,
             JdbcClient jdbcClient,
             @Qualifier("retrievalExecutor") ExecutorService executor,
-            @Qualifier("frenchQueryTransformer") ObjectProvider<QueryTransformer> transformer
+            @Qualifier("frenchQueryTransformer") ObjectProvider<QueryTransformer> transformer,
+            ObjectProvider<DeepQueryExpander> deepExpander
     ) {
         List<QueryTransformer> transformers = transformer.stream().toList();
         RetrievalPlan fast = new RetrievalPlan(
@@ -91,8 +111,17 @@ public class RetrievalConfig {
         RetrievalPlan balanced = new RetrievalPlan(transformers, List::of,
                 new HybridDocumentRetriever(dense, lexical, executor, hybridProperties.rrfK()),
                 new RankedDocumentJoiner(), List.of(postProcessor));
-        return new OndaRetrievalPipeline(Map.of(RetrievalProfile.FAST, fast, RetrievalProfile.BALANCED, balanced),
-                properties.profile(), meterRegistry);
+        Map<RetrievalProfile, RetrievalPlan> plans = new EnumMap<>(RetrievalProfile.class);
+        plans.put(RetrievalProfile.FAST, fast);
+        plans.put(RetrievalProfile.BALANCED, balanced);
+        deepExpander.ifAvailable(expander -> {
+            var syntheticDense = new HybridDocumentRetriever(dense, query -> List.of(), executor, hybridProperties.rrfK());
+            plans.put(RetrievalProfile.DEEP, new RetrievalPlan(List.of(), expander,
+                    query -> Boolean.TRUE.equals(query.context().get(MeasuredQueryExpander.HYPOTHETICAL))
+                            ? syntheticDense.retrieve(query) : balanced.retriever().retrieve(query),
+                    new RankedDocumentJoiner(), List.of(postProcessor)));
+        });
+        return new OndaRetrievalPipeline(plans, properties.profile(), meterRegistry);
     }
 
     @Bean(name = "retrievalExecutor", destroyMethod = "close")
