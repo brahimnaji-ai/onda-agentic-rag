@@ -29,6 +29,25 @@ import static org.mockito.Mockito.*;
 
 class RetrievalConfigTest {
 
+    @Test
+    void enabledProviderIsResilientAndConfigurationIsValidatedWithoutMakingNetworkCalls() {
+        contextRunner.withPropertyValues("rag.post-retrieval.reranking.enabled=true",
+                "rag.post-retrieval.reranking.api-key=test-key", "rag.post-retrieval.context-token-budget=1234",
+                "rag.post-retrieval.adjacent-chunks-enabled=true").run(context -> {
+            assertThat(context).hasNotFailed();
+            assertThat(context.getBean(ma.onda.rag.agent.application.retrieval.DocumentReranker.class))
+                    .isInstanceOf(ma.onda.rag.agent.infra.retrieval.ResilientDocumentReranker.class);
+            assertThat(context.getBean(PostRetrievalProperties.class).contextTokenBudget()).isEqualTo(1234);
+            assertThat(context.getBean(PostRetrievalProperties.class).adjacentChunksEnabled()).isTrue();
+        });
+        contextRunner.withPropertyValues("rag.post-retrieval.reranking.timeout=0s")
+                .run(context -> assertThat(context).hasFailed());
+        contextRunner.withPropertyValues("rag.post-retrieval.reranking.enabled=true")
+                .run(context -> assertThat(context).hasFailed());
+        contextRunner.withPropertyValues("rag.post-retrieval.context-token-budget=0")
+                .run(context -> assertThat(context).hasFailed());
+    }
+
     private final VectorStore vectorStore = mock(VectorStore.class);
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withUserConfiguration(RetrievalConfig.class, OndaDocumentPostProcessor.class)

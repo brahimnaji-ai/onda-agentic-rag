@@ -10,9 +10,13 @@ public record SourceRetrievalDTO(
         ScoreType scoreType,
         Integer rrfK,
         Arm dense,
-        Arm lexical
+        Arm lexical,
+        Double rrfScore,
+        Double rerankerScore,
+        String rerankerStatus,
+        Integer contextTokens
 ) {
-    public enum ScoreType { COSINE_SIMILARITY, RRF }
+    public enum ScoreType { COSINE_SIMILARITY, RRF, ADJACENT_CONTEXT }
 
     /** Rank is the original arm rank, not the final selected-source position. */
     public record Arm(Integer rank, Double score) {}

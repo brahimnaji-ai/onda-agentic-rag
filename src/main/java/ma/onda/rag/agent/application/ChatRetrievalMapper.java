@@ -44,16 +44,30 @@ final class ChatRetrievalMapper {
 
     private static SourceRetrievalDTO details(int executionId, RetrievalProfile profile,
                                                RetrievalResult.Source source, Document document) {
+        Object value = document == null ? null : document.getMetadata().get(HybridDocumentRetriever.DIAGNOSTICS_KEY);
+        Map<?, ?> diagnostics = value instanceof Map<?, ?> map ? map : Map.of();
+        Double rerankerScore = decimal(diagnostics.get("reranker_score"));
+        String rerankerStatus = diagnostics.get("reranker_status") instanceof String status ? status : null;
+        Integer contextTokens = integer(diagnostics.get("context_tokens"));
+        if ("ADJACENT_CONTEXT".equals(diagnostics.get("score_type"))) {
+            return new SourceRetrievalDTO(executionId, source.chunkId(), profile,
+                    SourceRetrievalDTO.ScoreType.ADJACENT_CONTEXT, null, null, null,
+                    null, null, rerankerStatus, contextTokens);
+        }
         if (profile == RetrievalProfile.FAST) {
             // FAST does not retain original dense ranks through joining and post-processing.
             return new SourceRetrievalDTO(executionId, source.chunkId(), profile,
                     SourceRetrievalDTO.ScoreType.COSINE_SIMILARITY, null,
-                    new SourceRetrievalDTO.Arm(null, source.relevanceScore()), null);
+                    new SourceRetrievalDTO.Arm(null, source.relevanceScore()), null,
+                    null, rerankerScore, rerankerStatus, contextTokens);
         }
-        Object value = document == null ? null : document.getMetadata().get(HybridDocumentRetriever.DIAGNOSTICS_KEY);
-        Map<?, ?> diagnostics = value instanceof Map<?, ?> map ? map : Map.of();
         return new SourceRetrievalDTO(executionId, source.chunkId(), profile, SourceRetrievalDTO.ScoreType.RRF,
-                integer(diagnostics.get("rrf_k")), arm(diagnostics, "dense"), arm(diagnostics, "lexical"));
+                integer(diagnostics.get("rrf_k")), arm(diagnostics, "dense"), arm(diagnostics, "lexical"),
+                decimal(diagnostics.get("rrf_score")), rerankerScore, rerankerStatus, contextTokens);
+    }
+
+    private static Double decimal(Object value) {
+        return value instanceof Number number ? number.doubleValue() : null;
     }
 
     private static SourceRetrievalDTO.Arm arm(Map<?, ?> diagnostics, String name) {

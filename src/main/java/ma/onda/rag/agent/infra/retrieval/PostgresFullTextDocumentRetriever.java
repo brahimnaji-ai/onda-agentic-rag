@@ -48,7 +48,7 @@ public final class PostgresFullTextDocumentRetriever implements DocumentRetrieve
                 }).list();
     }
 
-    private String metadataFilter(Query query) {
+    static String metadataFilter(Query query) {
         Object value = query.context().get(VectorStoreDocumentRetriever.FILTER_EXPRESSION);
         if (value == null || value.toString().isBlank()) {
             return "";

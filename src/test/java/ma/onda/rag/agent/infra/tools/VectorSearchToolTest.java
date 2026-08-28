@@ -14,11 +14,44 @@ import org.springframework.ai.tool.function.FunctionToolCallback;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
+import ma.onda.rag.agent.application.retrieval.EvidenceBudget;
+import ma.onda.rag.agent.infra.springai.OndaDocumentPostProcessor;
+import ma.onda.rag.agent.infra.springai.PostRetrievalProperties;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import org.springframework.ai.rag.retrieval.join.ConcatenationDocumentJoiner;
+import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class VectorSearchToolTest {
+
+    @Test
+    void generationPayloadFitsBudgetAcrossParallelCallbacksWithEscapedMultilingualCitations() throws Exception {
+        Document document = Document.builder().id("chunk").text("العربية: accès \"CMN\"\n✈️")
+                .metadata(Map.of("document_id", "doc-1", "source", "guide\"multilingue.pdf")).score(0.9).build();
+        int singlePayloadBudget = EvidenceBudget.tokens(document) + EvidenceBudget.ENVELOPE_TOKENS;
+        // Exercise both the shared token limit and the shared evidence-count limit.
+        for (var properties : List.of(new PostRetrievalProperties(4, singlePayloadBudget, false),
+                new PostRetrievalProperties(1, singlePayloadBudget * 4, false))) {
+            var realPipeline = new OndaRetrievalPipeline(List.of(), List::of, query -> List.of(document),
+                    new ConcatenationDocumentJoiner(), List.of(new OndaDocumentPostProcessor(properties)),
+                    new SimpleMeterRegistry());
+            var callback = FunctionToolCallback.builder("vectorSearchTool", new VectorSearchTool(realPipeline))
+                    .inputType(VectorSearchTool.Request.class).build();
+            var results = new RetrievalResults();
+            var context = new ToolContext(Map.of(RetrievalResults.TOOL_CONTEXT_KEY, results));
+            try (var executor = Executors.newFixedThreadPool(2)) {
+                var first = executor.submit(() -> callback.call("{\"query\":\"first\"}", context));
+                var second = executor.submit(() -> callback.call("{\"query\":\"second\"}", context));
+                var responses = List.of(first.get(), second.get());
+                assertThat(responses).filteredOn(value -> value.contains("chunkContent")).hasSize(1);
+                assertThat(responses).filteredOn(value -> value.contains("chunkContent")).allSatisfy(value ->
+                        assertThat(value.getBytes(StandardCharsets.UTF_8).length).isLessThanOrEqualTo(singlePayloadBudget));
+            }
+            assertThat(results.snapshot().stream().mapToInt(value -> value.sources().size()).sum()).isEqualTo(1);
+        }
+    }
 
     private final OndaRetrievalPipeline pipeline = mock(OndaRetrievalPipeline.class);
     private final VectorSearchTool tool = new VectorSearchTool(pipeline);

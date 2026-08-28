@@ -178,9 +178,11 @@ by stable chunk ID. Lexical search uses `websearch_to_tsquery('french', ...)` an
 | `FAST` | 8 | 0.5 | None | 4 |
 | `BALANCED` (application default) | 20 | 0.0 | 20 | 4 |
 
-In both profiles, `OndaDocumentPostProcessor` removes blank and normalized-text
-duplicate chunks before applying the context limit. Neither profile adds semantic
-reranking or LLM query expansion.
+In both profiles, `OndaDocumentPostProcessor` removes blank chunks, deduplicates by
+stable chunk ID, optionally reranks all candidates in one batch, selects whole
+chunks within the evidence-count and context-token limits, then optionally adds
+adjacent chunks using only the remaining budget. Identical text from different
+chunk IDs retains its separate provenance. Neither profile adds LLM query expansion.
 
 ```yaml
 rag:
@@ -198,7 +200,62 @@ rag:
       rrf-k: 60
   post-retrieval:
     max-documents: 4
+    context-token-budget: 4096
+    adjacent-chunks-enabled: false
+    reranking:
+      enabled: false
+      endpoint: https://api.cohere.com/v2/rerank
+      api-key: ${COHERE_API_KEY:}
+      model: rerank-v3.5
+      timeout: 2s
+      max-concurrent-calls: 4
+      failure-threshold: 3
+      open-duration: 30s
 ```
+
+#### Reranking and evidence budgets
+
+`DocumentReranker` is an application port that accepts a query and a bulk list of
+`(chunkId, text)` candidates. `CohereDocumentReranker` maps provider response indices
+back to stable IDs; citation metadata never leaves the application through this
+adapter. The default `rerank-v3.5` model supports multilingual pairs, including
+French and Arabic. See the [Cohere model overview](https://docs.cohere.com/docs/rerank-overview)
+and [bulk API contract](https://docs.cohere.com/v2/reference/rerank).
+
+Set `RERANKING_ENABLED=true` and `COHERE_API_KEY` to opt in. **Enabling this sends
+private query and chunk text to the configured provider**; approve its data handling
+before production use. `RERANKING_ENDPOINT` and `RERANKING_MODEL` are configurable.
+Missing credentials fail startup only when enabled. No live provider is needed for
+the default configuration or the unit tests.
+
+The adapter requests every candidate's score. Higher scores select first; ties
+retain RRF order. Missing/invalid scores, provider failures and timeouts fall back
+to the entire deduplicated RRF list (cosine order for FAST), then apply the same
+budget. The bounded worker pool has no queue. Timed-out work is interrupted but
+continues occupying its slot until it exits, even if it ignores interruption.
+After `failure-threshold` consecutive failed calls, the circuit opens for
+`open-duration`; one probe is allowed after that interval. A successful probe
+closes it, a failed probe reopens it. Circuit-open and bulkhead-full calls return
+fallback immediately. The managed adapter interrupts remaining workers on shutdown.
+
+`context-token-budget` is enforced conservatively using one token per UTF-8 byte
+of the serialized snippet payload, including citation fields, JSON escaping,
+separators and response-envelope overhead. This deliberately underfills context
+compared with model tokenization; it does not use a language-dependent chars/4
+estimate. Oversized chunks are skipped, not truncated, so a smaller later chunk
+can fit without changing its citation. Both limits are shared across parallel or
+repeated private-document tool calls in a single chat; a direct pipeline call has
+its own allowance. Empty tool envelopes, chat history, system prompts, and web
+tool output are outside this **private-document evidence** budget, not a total
+model-window limit.
+
+Adjacent expansion is disabled by default. When enabled, it fetches immediate
+neighbors of selected anchors from PostgreSQL, retaining the parent document,
+owner and original metadata filter. It never displaces a selected anchor or
+exceeds either limit, and it does not recurse. Missing chunk indices are skipped;
+an expansion failure retains selected evidence. Neighbors keep their own citation
+metadata and have `scoreType: ADJACENT_CONTEXT`, with no fabricated relevance or
+reranker score.
 
 Setting `rag.pre-retrieval.rewrite.enabled=true` opts into the earlier
 French-preserving rewrite experiment through a dedicated client with no tools.
@@ -254,6 +311,11 @@ and `lexical_score`. Existing source metadata remains intact. Tied fused scores
 sort by chunk ID, independent of which search finishes first. `RankedDocumentJoiner`
 preserves that order and keeps the best RRF score when a chunk appears in multiple
 expanded-query results.
+
+Post-processing adds `reranker_score` only on successful scoring,
+`reranker_status` (`SUCCESS`, `DISABLED`, `TIMEOUT`, `ERROR`, `CIRCUIT_OPEN`,
+`BULKHEAD_FULL`, or `INTERRUPTED`), and the conservative per-chunk `context_tokens`
+charge. It never replaces the cosine, lexical, or RRF scores with a reranker score.
 
 The retrieval executor is managed by Spring and closed on shutdown. Each query
 starts two candidate tasks; account for the extra database connections when
@@ -332,6 +394,10 @@ Example BALANCED response, with illustrative IDs and timings:
 candidate ranks. For `BALANCED`, `relevanceScore` is the fused RRF score;
 `dense.score` and `lexical.score` are their separate raw scores, and ranks are
 one-based positions in the original candidate lists. A missing arm is null.
+
+`retrieval.rrfScore`, `rerankerScore`, `rerankerStatus`, and `contextTokens` expose
+the corresponding post-processing diagnostics separately. `relevanceScore`
+retains its existing meaning even when evidence order is changed by reranking.
 
 Web sources have `retrieval: null` and retain their provider's relevance score.
 When the model does not call private-document retrieval, `retrievals` is empty;

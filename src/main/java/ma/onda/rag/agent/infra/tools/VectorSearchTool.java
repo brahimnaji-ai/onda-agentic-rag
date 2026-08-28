@@ -32,10 +32,19 @@ public class VectorSearchTool implements BiFunction<VectorSearchTool.Request, To
 
     @Override
     public Response apply(Request request, ToolContext context) {
-        RetrievalResult result = pipeline.retrieve(new RetrievalRequest(request == null ? null : request.query()));
         if (context != null && context.getContext().get(RetrievalResults.TOOL_CONTEXT_KEY) instanceof RetrievalResults results) {
-            results.add(result);
+            // Atomic selection/accounting for parallel or repeated tool calls in one chat.
+            synchronized (results) {
+                RetrievalResult result = pipeline.retrieve(new RetrievalRequest(
+                        request == null ? null : request.query(), null, results.budgetContext()));
+                results.add(result);
+                return response(result);
+            }
         }
+        return response(pipeline.retrieve(new RetrievalRequest(request == null ? null : request.query())));
+    }
+
+    private Response response(RetrievalResult result) {
         return new Response(result.sources().stream().map(source -> new DocumentSnippet(
                 source.documentId(), source.sourceFilename(), source.chunkContent(), source.relevanceScore())).toList());
     }

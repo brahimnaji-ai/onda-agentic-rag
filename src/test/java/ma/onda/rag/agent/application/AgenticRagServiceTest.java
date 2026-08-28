@@ -51,6 +51,31 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AgenticRagServiceTest {
 
     @Test
+    void mapsRerankerAndRecallScoresSeparatelyWithoutLosingCitationMetadata() {
+        var document = chunk("a", 0.03).mutate().metadata(Map.of("document_id", "doc-a", "source", "a.pdf",
+                "retrieval", Map.of("rrf_score", 0.03, "rrf_k", 60, "dense_rank", 1, "dense_score", 0.8,
+                        "lexical_rank", 2, "lexical_score", 7.0))).build();
+        var processor = new ma.onda.rag.agent.infra.springai.OndaDocumentPostProcessor(
+                new ma.onda.rag.agent.infra.springai.PostRetrievalProperties(4),
+                (q, candidates) -> new ma.onda.rag.agent.application.retrieval.DocumentReranker.Result(
+                        Map.of("a", 0.95), ma.onda.rag.agent.application.retrieval.DocumentReranker.Status.SUCCESS),
+                (q, anchor) -> List.of());
+        var selected = processor.process(new Query("q"), List.of(document));
+        var evidence = ChatRetrievalMapper.map(List.of(RetrievalResult.fromDocuments(selected, List.of("q"),
+                RetrievalProfile.BALANCED, Map.of())));
+        var source = evidence.sources().getFirst();
+        assertThat(source.documentId()).isEqualTo("doc-a");
+        assertThat(source.relevanceScore()).isEqualTo(0.03);
+        assertThat(source.retrieval().scoreType()).isEqualTo(SourceRetrievalDTO.ScoreType.RRF);
+        assertThat(source.retrieval().rrfScore()).isEqualTo(0.03);
+        assertThat(source.retrieval().dense()).isEqualTo(new SourceRetrievalDTO.Arm(1, 0.8));
+        assertThat(source.retrieval().lexical()).isEqualTo(new SourceRetrievalDTO.Arm(2, 7.0));
+        assertThat(source.retrieval().rerankerScore()).isEqualTo(0.95);
+        assertThat(source.retrieval().rerankerStatus()).isEqualTo("SUCCESS");
+        assertThat(source.retrieval().contextTokens()).isPositive();
+    }
+
+    @Test
     void agentControlsRetrievalAndCitationsStayWithEachChatIncludingAfterFailure() {
         OndaRetrievalPipeline pipeline = mock(OndaRetrievalPipeline.class);
         Document document = Document.builder().text("evidence").score(0.9)
