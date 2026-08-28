@@ -21,6 +21,11 @@ spring:
       hibernate:
         format_sql: true
 
+  flyway:
+    # The existing Docker schema predates Flyway. V1 must run after adoption.
+    baseline-on-migrate: true
+    baseline-version: 0
+
 
   security:
     oauth2:
@@ -77,8 +82,14 @@ rag:
     rewrite:
       enabled: false # FAST avoids an additional LLM call by default
   retrieval:
+    profile: BALANCED # Hybrid retrieval; set FAST for dense-only retrieval
     top-k: 8
     similarity-threshold: 0.5
+    balanced:
+      dense-candidates: 20
+      lexical-candidates: 20
+      similarity-threshold: 0.0
+      rrf-k: 60
   post-retrieval:
     max-documents: 4
 

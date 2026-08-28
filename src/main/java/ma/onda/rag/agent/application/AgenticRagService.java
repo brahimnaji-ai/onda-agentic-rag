@@ -54,9 +54,10 @@ public class AgenticRagService {
             persistAssistantResponse(request.conversationId(), answer);
 
             TokenUsageDTO tokenUsage = extractTokenUsage(aiResponse);
-            List<CitedSourceDTO> sources = extractCitedSources(retrievalResults);
+            var evidence = ChatRetrievalMapper.map(retrievalResults.snapshot());
+            List<CitedSourceDTO> sources = extractCitedSources(evidence.sources());
 
-            return new ChatResponse(answer, sources, tokenUsage);
+            return new ChatResponse(answer, sources, tokenUsage, evidence.retrievals());
         } finally {
             WebSearchTool.clearLastResults();
             OndaWebsiteSearchTool.clearLastResults();
@@ -108,11 +109,8 @@ public class AgenticRagService {
         return null;
     }
 
-    private List<CitedSourceDTO> extractCitedSources(RetrievalResults retrievalResults) {
-        List<CitedSourceDTO> sources = new ArrayList<>();
-        retrievalResults.snapshot().stream().flatMap(result -> result.sources().stream())
-                .forEach(source -> sources.add(new CitedSourceDTO("DOCUMENT", source.documentId(),
-                        source.sourceFilename(), null, source.chunkContent(), source.relevanceScore())));
+    private List<CitedSourceDTO> extractCitedSources(List<CitedSourceDTO> documentSources) {
+        List<CitedSourceDTO> sources = new ArrayList<>(documentSources);
         List<WebSearchTool.WebSearchSnippet> generalWebResults = WebSearchTool.getLastResults();
         if (generalWebResults != null) {
             generalWebResults.forEach(result -> sources.add(new CitedSourceDTO(

@@ -12,7 +12,7 @@ An enterprise-grade, agentic Retrieval-Augmented Generation backend for the **Of
 ## Highlights
 
 - **Agentic RAG** powered by Spring AI and Google Gemini
-- **Hybrid knowledge access** through pgvector semantic search and Tavily web search
+- **Hybrid document retrieval** through pgvector and PostgreSQL French full-text search, plus Tavily web search
 - **Document ingestion** for PDF, TXT, and Markdown files with Apache Tika
 - **Secure, stateless API** backed by Keycloak, OAuth 2.0, and JWT
 - **User-isolated data** for conversations and uploaded documents
@@ -59,7 +59,7 @@ Each business module is split into `api`, `application`, `domain`, and `infra` l
 |---|---|
 | Runtime | Java 21, Spring Boot 4.1, Maven |
 | AI | Spring AI 2.0, Google Gemini, Google GenAI embeddings |
-| Retrieval | PostgreSQL 17, pgvector, HNSW cosine similarity |
+| Retrieval | PostgreSQL 17, pgvector/HNSW, French full-text search/GIN, reciprocal-rank fusion |
 | Documents | Apache Tika, Spring AI `TokenTextSplitter` |
 | Security | Spring Security, OAuth 2.0 Resource Server, JWT, Keycloak 26 |
 | Persistence | Spring Data JPA, Hibernate, PostgreSQL |
@@ -135,6 +135,11 @@ Windows:
 
 The API starts at `http://localhost:8080`. Keycloak is available at `http://localhost:8081`.
 
+On startup, Flyway also upgrades an existing development `vector_store` with a
+stored French `search_vector` and a GIN index. No volume deletion, re-upload, or
+re-embedding is needed. See [Database migrations](#database-migrations) before
+upgrading a large or production database.
+
 ## Core Workflows
 
 ### Document ingestion
@@ -148,14 +153,12 @@ Default retrieval configuration:
 | Embedding dimensions | 768 |
 | Vector index | HNSW |
 | Distance | Cosine |
-| Dense candidates (top K) | 8 |
-| Similarity threshold | 0.5 |
 | Selected context documents | 4 |
 
 ### Modular private-document retrieval
 
 `VectorSearchTool` maps tool input/output and delegates to
-`agent.application.retrieval.OndaRetrievalPipeline`. The initial `FAST` profile runs:
+`agent.application.retrieval.OndaRetrievalPipeline`. Both retrieval profiles run:
 
 ```text
 QueryTransformer chain -> QueryExpander -> DocumentRetriever -> DocumentJoiner
@@ -163,10 +166,21 @@ QueryTransformer chain -> QueryExpander -> DocumentRetriever -> DocumentJoiner
 ```
 
 The default has no query transformers and expands to the single original query.
-`VectorStoreDocumentRetriever` retrieves dense candidates, `ConcatenationDocumentJoiner`
-joins results by chunk ID and score, and `OndaDocumentPostProcessor` removes blank
-and normalized-text duplicate chunks before applying the context limit. It does
-not perform semantic reranking, lexical search, or LLM query expansion.
+`FAST` uses `VectorStoreDocumentRetriever` for dense candidates and
+`ConcatenationDocumentJoiner` to join results. `BALANCED` uses
+`HybridDocumentRetriever`: dense retrieval and `PostgresFullTextDocumentRetriever`
+run concurrently, then reciprocal-rank fusion (RRF) combines their ranked lists
+by stable chunk ID. Lexical search uses `websearch_to_tsquery('french', ...)` and
+`ts_rank_cd`, searching both chunk content and its source filename.
+
+| Profile | Dense candidates | Dense similarity threshold | Lexical candidates | Final context limit |
+|---|---:|---:|---:|---:|
+| `FAST` | 8 | 0.5 | None | 4 |
+| `BALANCED` (application default) | 20 | 0.0 | 20 | 4 |
+
+In both profiles, `OndaDocumentPostProcessor` removes blank and normalized-text
+duplicate chunks before applying the context limit. Neither profile adds semantic
+reranking or LLM query expansion.
 
 ```yaml
 rag:
@@ -174,8 +188,14 @@ rag:
     rewrite:
       enabled: false
   retrieval:
+    profile: BALANCED # Switch to FAST for dense-only agent tool retrieval.
     top-k: 8
     similarity-threshold: 0.5
+    balanced:
+      dense-candidates: 20
+      lexical-candidates: 20
+      similarity-threshold: 0.0
+      rrf-k: 60
   post-retrieval:
     max-documents: 4
 ```
@@ -187,11 +207,13 @@ an empty expansion retains the transformed query. Provider failures propagate
 instead of returning a misleading successful empty result.
 
 Application callers can use `pipeline.retrieve(new RetrievalRequest("accès CMN"))`.
+An omitted/null profile uses `rag.retrieval.profile`; an explicit
+`new RetrievalRequest("accès CMN", RetrievalProfile.BALANCED, Map.of())` overrides it.
 The result contains selected Spring AI documents (including their metadata), typed
 source evidence, executed query texts, the profile, and stage/total durations.
 Null or blank input returns empty evidence without running retrieval. An optional
 application-supplied request context is preserved across query stages, including
-Spring AI vector-store filter expressions; the tool does not expose that context
+Spring AI vector-store filter expressions applied to both retrieval arms; the tool does not expose that context
 to the model. This feature does not introduce corpus authorization policy.
 
 Micrometer timer `rag.retrieval.stage` records `TRANSFORM`, `EXPAND`, `RETRIEVE`,
@@ -203,8 +225,9 @@ the explicit result and should not be logged.
 
 Each chat passes its own `RetrievalResults` through Spring AI `ToolContext`, so
 vector citations derive from explicit results even when tools execute on worker
-threads. The tool's `query` input and `snippets` output and the chat's `DOCUMENT`
-source format remain unchanged. Web and ONDA-web citation transports still use
+threads. The tool's `query` input and `snippets` output remain unchanged. Chat
+responses retain their existing source fields and add retrieval diagnostics (see below).
+Web and ONDA-web citation transports still use
 their existing `ThreadLocal` state; migrating those is separate work.
 
 No `RetrievalAugmentationAdvisor` is installed: the agent still chooses whether
@@ -215,6 +238,32 @@ The stage contracts and request context follow the
 [Spring AI modular RAG reference](https://docs.spring.io/spring-ai/reference/api/retrieval-augmented-generation.html)
 and [tool context reference](https://docs.spring.io/spring-ai/reference/api/tools.html#_tool_context).
 
+#### Hybrid scores and diagnostics
+
+For each chunk, `RRF = 1 / (k + denseRank) + 1 / (k + lexicalRank)`, with ranks
+starting at 1 and a missing arm contributing zero. The default `k` is 60. Raw
+cosine and lexical scores are never added or compared across arms. The output
+`Document.score` and source `relevanceScore` are RRF scores for `BALANCED`, including
+chunks found in just one arm; they are not probabilities or cosine similarities.
+`FAST` retains its existing cosine score semantics. Consumers should use the
+result profile to interpret scores rather than compare them across profiles.
+
+Each hybrid document carries `metadata.retrieval` with `score_type: RRF`,
+`rrf_score`, `rrf_k`, and the available `dense_rank`, `dense_score`, `lexical_rank`,
+and `lexical_score`. Existing source metadata remains intact. Tied fused scores
+sort by chunk ID, independent of which search finishes first. `RankedDocumentJoiner`
+preserves that order and keeps the best RRF score when a chunk appears in multiple
+expanded-query results.
+
+The retrieval executor is managed by Spring and closed on shutdown. Each query
+starts two candidate tasks; account for the extra database connections when
+sizing the connection pool. A failed arm fails the retrieval rather than silently
+returning partial evidence. The existing `RETRIEVE` timer includes both searches
+and fusion; metrics keep their bounded profile/stage tags.
+
+See the [PostgreSQL full-text controls](https://www.postgresql.org/docs/17/textsearch-controls.html)
+and [pgvector hybrid search guidance](https://github.com/pgvector/pgvector#hybrid-search).
+
 ### Agentic chat
 
 For every chat request, the service persists the user message, loads the ordered conversation history, and invokes Gemini. The model may call:
@@ -223,6 +272,76 @@ For every chat request, the service persists the user message, loads the ordered
 - `webSearchTool` for current external information when internal context is insufficient.
 
 The assistant response, cited internal sources, and token usage are returned to the caller, while the conversation history is persisted in PostgreSQL.
+
+#### Chat response retrieval details
+
+`POST /api/v1/chat` retains `answer`, `sources`, and `tokenUsage` and adds
+`retrievals`: one entry per completed private-document retrieval call. Its `id`
+is a response-local, one-based identifier (not a database ID or chronological
+start order when tools run concurrently). Each document source's
+`retrieval.executionId` links to that entry.
+
+Example BALANCED response, with illustrative IDs and timings:
+
+```json
+{
+  "answer": "La procédure ONDA-SEC-402 décrit les autorisations des visiteurs.",
+  "sources": [
+    {
+      "type": "DOCUMENT",
+      "documentId": "doc-1",
+      "title": "procedures.pdf",
+      "url": null,
+      "snippet": "La procédure ONDA-SEC-402 définit les autorisations des visiteurs.",
+      "relevanceScore": 0.03278688524590164,
+      "retrieval": {
+        "executionId": 1,
+        "chunkId": "chunk-1",
+        "profile": "BALANCED",
+        "scoreType": "RRF",
+        "rrfK": 60,
+        "dense": { "rank": 1, "score": 0.89 },
+        "lexical": { "rank": 1, "score": 0.2 }
+      }
+    }
+  ],
+  "tokenUsage": { "promptTokens": 120, "completionTokens": 30, "totalTokens": 150 },
+  "retrievals": [
+    {
+      "id": 1,
+      "profile": "BALANCED",
+      "executedQueries": ["ONDA-SEC-402"],
+      "selectedChunkCount": 1,
+      "timingsMs": {
+        "TRANSFORM": 0.125,
+        "EXPAND": 0.025,
+        "RETRIEVE": 12.0,
+        "JOIN": 0.25,
+        "POST_PROCESS": 0.1,
+        "TOTAL": 14.0
+      }
+    }
+  ]
+}
+```
+
+`type` still identifies the source kind (`DOCUMENT`, `WEB`, or `ONDA_WEB`);
+`retrieval.profile` identifies how a document was retrieved. For `FAST`,
+`scoreType` is `COSINE_SIMILARITY`, `dense.score` equals `relevanceScore`, and
+`rrfK`, `lexical`, and `dense.rank` are null because FAST does not retain original
+candidate ranks. For `BALANCED`, `relevanceScore` is the fused RRF score;
+`dense.score` and `lexical.score` are their separate raw scores, and ranks are
+one-based positions in the original candidate lists. A missing arm is null.
+
+Web sources have `retrieval: null` and retain their provider's relevance score.
+When the model does not call private-document retrieval, `retrievals` is empty;
+when a call finds nothing, its entry remains with `selectedChunkCount: 0`.
+Timings are numeric milliseconds, including fractional milliseconds, for the
+stages actually executed. They measure retrieval work, not total chat latency.
+Only allowed diagnostics are mapped: uploaded-user IDs, filters, and arbitrary
+document metadata are not returned. Executed queries can contain user text;
+avoid logging the entire response. These diagnostics describe retrieved evidence,
+not a guarantee that every returned source supports a specific answer sentence.
 
 ### Identity and authorization
 
@@ -298,6 +417,14 @@ On Windows:
 
 The suite contains unit, MVC, JPA slice, security, and integration tests. Testcontainers starts real PostgreSQL/pgvector and Keycloak instances for end-to-end scenarios, while AI models are replaced with deterministic test doubles so the build does not call external AI services.
 
+Hybrid retrieval tests cover RRF arithmetic, stable ordering, concurrent execution,
+metadata filters, and upgrading a populated pre-Flyway database. The labeled fixture
+at `src/test/resources/retrieval/hybrid-fixtures.json` covers identifiers, filenames,
+dates, airport codes, French word forms, and a semantic paraphrase. Controlled
+synthetic embeddings produce 1/6 relevant hits for `FAST` and 6/6 for `BALANCED`
+within the final four chunks. This verifies the hybrid mechanism, not real-world
+embedding-model quality; it is not a production recall benchmark.
+
 GitHub Actions runs the same Maven verification on every push and pull request targeting `main`.
 
 ## Data Model
@@ -311,6 +438,33 @@ The primary PostgreSQL tables are:
 - `vector_store` — text chunks, JSONB metadata, and 768-dimensional embeddings.
 
 The application uses `spring.jpa.hibernate.ddl-auto=validate`; the development schema is initialized by `docker/postgres/init.sql`.
+
+### Database migrations
+
+Flyway migrations live in `src/main/resources/db/migration`. On an existing
+development schema without Flyway history, `baseline-on-migrate: true` and
+`baseline-version: 0` register the schema before applying
+`V1__add_vector_store_full_text_search.sql`. Existing chunks, embeddings, and
+metadata are preserved. A second startup validates migration history without
+reapplying V1.
+
+V1 adds a stored generated `search_vector` over French content and source filenames
+(filename weight A, content weight D), plus `idx_vector_store_search_vector_gin`.
+Existing rows are backfilled; inserts and content/filename updates refresh the
+column automatically. On an empty database, V1 creates the vector table first;
+the domain tables still need the existing Docker bootstrap or their normal setup.
+
+This migration targets the repository's `public.vector_store` and 768-dimensional
+fresh-store schema. Custom vector schemas/table names require corresponding
+migrations and retriever configuration changes. Back up the target database and
+schedule the first migration: adding the stored column and building the index
+can lock the table and take time on large corpora. The database user must be able
+to alter the table and create the index (and install `vector` on a fresh database).
+Automatic baselining is intended to adopt the known development schema; verify
+the target database before enabling it in another environment. Do not edit V1
+after deployment; add a new versioned migration for later changes.
+
+See [PostgreSQL generated full-text columns](https://www.postgresql.org/docs/17/textsearch-tables.html).
 
 ## Project Structure
 

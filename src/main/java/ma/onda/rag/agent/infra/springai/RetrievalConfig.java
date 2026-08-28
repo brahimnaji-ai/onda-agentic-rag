@@ -2,6 +2,11 @@ package ma.onda.rag.agent.infra.springai;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import ma.onda.rag.agent.application.retrieval.OndaRetrievalPipeline;
+import ma.onda.rag.agent.application.retrieval.RetrievalPlan;
+import ma.onda.rag.agent.application.retrieval.RetrievalProfile;
+import ma.onda.rag.agent.infra.retrieval.HybridDocumentRetriever;
+import ma.onda.rag.agent.infra.retrieval.PostgresFullTextDocumentRetriever;
+import ma.onda.rag.agent.infra.retrieval.RankedDocumentJoiner;
 import ma.onda.rag.agent.infra.tools.VectorSearchProperties;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
@@ -18,11 +23,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Configuration(proxyBeanMethods = false)
-@EnableConfigurationProperties(VectorSearchProperties.class)
+@EnableConfigurationProperties({VectorSearchProperties.class, HybridRetrievalProperties.class})
 public class RetrievalConfig {
 
     @Bean
@@ -31,18 +40,34 @@ public class RetrievalConfig {
             VectorSearchProperties properties,
             OndaDocumentPostProcessor postProcessor,
             MeterRegistry meterRegistry,
+            HybridRetrievalProperties hybridProperties,
+            JdbcClient jdbcClient,
+            @Qualifier("retrievalExecutor") ExecutorService executor,
             @Qualifier("frenchQueryTransformer") ObjectProvider<QueryTransformer> transformer
     ) {
-        return new OndaRetrievalPipeline(
-                transformer.stream().toList(), List::of,
+        List<QueryTransformer> transformers = transformer.stream().toList();
+        RetrievalPlan fast = new RetrievalPlan(
+                transformers, List::of,
                 VectorStoreDocumentRetriever.builder().vectorStore(vectorStore)
                         .topK(properties.topK())
                         .similarityThreshold(properties.similarityThreshold())
                         .build(),
                 new ConcatenationDocumentJoiner(),
-                List.of(postProcessor),
-                meterRegistry
+                List.of(postProcessor)
         );
+        var dense = VectorStoreDocumentRetriever.builder().vectorStore(vectorStore)
+                .topK(hybridProperties.denseCandidates()).similarityThreshold(hybridProperties.similarityThreshold()).build();
+        var lexical = new PostgresFullTextDocumentRetriever(jdbcClient, hybridProperties.lexicalCandidates());
+        RetrievalPlan balanced = new RetrievalPlan(transformers, List::of,
+                new HybridDocumentRetriever(dense, lexical, executor, hybridProperties.rrfK()),
+                new RankedDocumentJoiner(), List.of(postProcessor));
+        return new OndaRetrievalPipeline(Map.of(RetrievalProfile.FAST, fast, RetrievalProfile.BALANCED, balanced),
+                properties.profile(), meterRegistry);
+    }
+
+    @Bean(name = "retrievalExecutor", destroyMethod = "close")
+    ExecutorService retrievalExecutor() {
+        return Executors.newVirtualThreadPerTaskExecutor();
     }
 
     @Bean("frenchQueryTransformer")

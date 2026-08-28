@@ -5,6 +5,7 @@ import ma.onda.rag.agent.application.retrieval.RetrievalProfile;
 import ma.onda.rag.agent.application.retrieval.RetrievalRequest;
 import ma.onda.rag.agent.application.retrieval.RetrievalResult;
 import ma.onda.rag.agent.application.retrieval.RetrievalStage;
+import ma.onda.rag.agent.infra.retrieval.HybridDocumentRetriever;
 import ma.onda.rag.conversation.api.ChatRequest;
 import ma.onda.rag.conversation.api.ChatResponse;
 import ma.onda.rag.conversation.api.dto.ConversationResponse;
@@ -20,6 +21,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
+
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -67,7 +70,8 @@ public class AgenticRagChatIntegrationTest extends AbstractIntegrationTest {
         assertThat(doc).isNotNull();
 
         // Exercise the configured FAST pipeline against actual pgvector and ingested metadata.
-        RetrievalResult retrieval = retrievalPipeline.retrieve(new RetrievalRequest("emergency evacuation"));
+        RetrievalResult retrieval = retrievalPipeline.retrieve(new RetrievalRequest(
+                "emergency evacuation", RetrievalProfile.FAST, Map.of()));
         assertThat(retrieval.profile()).isEqualTo(RetrievalProfile.FAST);
         assertThat(retrieval.executedQueries()).containsExactly("emergency evacuation");
         assertThat(retrieval.documents()).isNotEmpty();
@@ -77,6 +81,21 @@ public class AgenticRagChatIntegrationTest extends AbstractIntegrationTest {
             assertThat(source.chunkContent()).contains("Terminal 1 Gate 4");
         });
         assertThat(retrieval.timings()).containsOnlyKeys(RetrievalStage.values());
+
+        // Exercise the BALANCED bean wiring and Flyway-generated filename index after ingestion.
+        RetrievalResult hybrid = retrievalPipeline.retrieve(new RetrievalRequest(
+                "onda_security_manual.txt", RetrievalProfile.BALANCED, Map.of()));
+        assertThat(hybrid.profile()).isEqualTo(RetrievalProfile.BALANCED);
+        assertThat(hybrid.documents()).anySatisfy(chunk -> {
+            assertThat(chunk.getMetadata()).containsEntry("document_id", doc.id().toString());
+            var diagnostics = (Map<?, ?>) chunk.getMetadata().get(HybridDocumentRetriever.DIAGNOSTICS_KEY);
+            assertThat(diagnostics.get("score_type")).isEqualTo("RRF");
+            assertThat(diagnostics.get("lexical_rank")).isEqualTo(1);
+        });
+        assertThat(hybrid.sources()).anySatisfy(source -> {
+            assertThat(source.documentId()).isEqualTo(doc.id().toString());
+            assertThat(source.relevanceScore()).isBetween(0.0, 2.0 / 61);
+        });
 
         // Step 2: Create Conversation
         MvcResult convResult = mockMvc.perform(post("/api/v1/conversations")
@@ -96,6 +115,9 @@ public class AgenticRagChatIntegrationTest extends AbstractIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(chatRequest)))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.retrievals[0].profile").value("BALANCED"))
+                .andExpect(jsonPath("$.retrievals[0].timingsMs.TOTAL").isNumber())
+                .andExpect(jsonPath("$.sources[0].retrieval.scoreType").value("RRF"))
                 .andReturn();
 
         ChatResponse response = objectMapper.readValue(chatResult.getResponse().getContentAsString(), ChatResponse.class);
@@ -108,6 +130,8 @@ public class AgenticRagChatIntegrationTest extends AbstractIntegrationTest {
             assertThat(source.type()).isEqualTo("DOCUMENT");
             assertThat(source.documentId()).isEqualTo(doc.id().toString());
             assertThat(source.title()).isEqualTo("onda_security_manual.txt");
+            assertThat(source.retrieval().chunkId()).isNotBlank();
+            assertThat(source.retrieval().executionId()).isEqualTo(response.retrievals().getFirst().id());
         });
     }
 

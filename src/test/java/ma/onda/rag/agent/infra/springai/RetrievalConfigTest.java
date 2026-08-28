@@ -18,6 +18,7 @@ import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.filter.FilterExpressionTextParser;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
+import org.springframework.jdbc.core.simple.JdbcClient;
 
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ class RetrievalConfigTest {
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()
             .withUserConfiguration(RetrievalConfig.class, OndaDocumentPostProcessor.class)
             .withBean(VectorStore.class, () -> vectorStore)
+            .withBean(JdbcClient.class, () -> mock(JdbcClient.class))
             .withBean(MeterRegistry.class, SimpleMeterRegistry::new);
 
     @Test
@@ -54,6 +56,17 @@ class RetrievalConfigTest {
             assertThat(captor.getValue().getSimilarityThreshold()).isEqualTo(0.4);
             assertThat(captor.getValue().getFilterExpression())
                     .isEqualTo(new FilterExpressionTextParser().parse("uploaded_by == 'owner'"));
+        });
+    }
+
+    @Test
+    void configuredDefaultSelectsBalancedWhileExplicitFastRemainsAvailable() {
+        contextRunner.withPropertyValues("rag.retrieval.profile=BALANCED").run(context -> {
+            assertThat(context).hasNotFailed();
+            var pipeline = context.getBean(OndaRetrievalPipeline.class);
+            assertThat(pipeline.retrieve(new RetrievalRequest(null)).profile()).isEqualTo(RetrievalProfile.BALANCED);
+            assertThat(pipeline.retrieve(new RetrievalRequest(null, RetrievalProfile.FAST, Map.of())).profile())
+                    .isEqualTo(RetrievalProfile.FAST);
         });
     }
 
