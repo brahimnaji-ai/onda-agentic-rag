@@ -43,7 +43,9 @@ public class AgenticRagService {
         
         List<Message> messages = loadChatHistory(request.conversationId());
         
-        RetrievalResults retrievalResults = new RetrievalResults();
+        var userTurns = messages.stream().filter(UserMessage.class::isInstance).map(Message::getText).toList();
+        RetrievalResults retrievalResults = new RetrievalResults(userTurns.isEmpty() ? List.of()
+                : userTurns.subList(Math.max(0, userTurns.size() - 5), userTurns.size() - 1));
         WebSearchTool.clearLastResults();
         OndaWebsiteSearchTool.clearLastResults();
 

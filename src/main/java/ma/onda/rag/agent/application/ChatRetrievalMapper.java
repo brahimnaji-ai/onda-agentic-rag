@@ -29,7 +29,7 @@ final class ChatRetrievalMapper {
             Map<RetrievalStage, Double> timings = new EnumMap<>(RetrievalStage.class);
             result.timings().forEach((stage, duration) -> timings.put(stage, duration.toNanos() / 1_000_000.0));
             executions.add(new RetrievalExecutionDTO(executionId, result.profile(), result.executedQueries(),
-                    result.documents().size(), timings));
+                    result.documents().size(), timings, result.expansion()));
 
             Map<String, Document> documents = new HashMap<>();
             result.documents().forEach(document -> documents.put(document.getId(), document));

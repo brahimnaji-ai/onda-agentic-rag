@@ -57,21 +57,31 @@ public class OndaRetrievalPipeline {
         }
         Map<RetrievalStage, Duration> timings = new EnumMap<>(RetrievalStage.class);
         Retrieved retrieved = timed(RetrievalStage.TOTAL, input.profile(), timings, () -> execute(input, plan, timings));
-        return RetrievalResult.fromDocuments(retrieved.documents(), retrieved.queries(), input.profile(), timings);
+        var result = RetrievalResult.fromDocuments(retrieved.documents(), retrieved.queries(), input.profile(), timings);
+        return new RetrievalResult(result.documents(), result.sources(), result.executedQueries(), result.profile(),
+                result.timings(), retrieved.candidates(), retrieved.expansion());
     }
 
     private Retrieved execute(RetrievalRequest request, RetrievalPlan plan, Map<RetrievalStage, Duration> timings) {
         if (request.query() == null || request.query().isBlank()) {
-            return new Retrieved(List.of(), List.of());
+            return new Retrieved(List.of(), List.of(), List.of(), MeasuredQueryExpander.Diagnostics.none());
         }
         Query original = new Query(request.query(), List.of(), request.context());
         Query transformed = timed(RetrievalStage.TRANSFORM, request.profile(), timings, () -> transform(original, plan.transformers()));
-        List<Query> queries = timed(RetrievalStage.EXPAND, request.profile(), timings, () -> expand(transformed, plan.expander()));
+        var expansion = timed(RetrievalStage.EXPAND, request.profile(), timings, () -> expand(original, transformed, plan.expander()));
+        List<Query> queries = expansion.queries();
+        boolean[] retrievalFallback = {false};
         Map<Query, List<List<Document>>> candidates = timed(RetrievalStage.RETRIEVE, request.profile(), timings, () -> {
             Map<Query, List<List<Document>>> results = new LinkedHashMap<>();
             for (Query query : queries) {
-                List<Document> documents = plan.retriever().retrieve(query);
-                results.put(query, List.of(documents == null ? List.of() : documents));
+                try {
+                    List<Document> documents = plan.retriever().retrieve(query);
+                    results.put(query, List.of(documents == null ? List.of() : documents));
+                } catch (RuntimeException failure) {
+                    if (query.text().equals(original.text())) throw failure;
+                    retrievalFallback[0] = true;
+                    log.debug("Additional retrieval query failed; retaining original evidence");
+                }
             }
             return results;
         });
@@ -83,7 +93,12 @@ public class OndaRetrievalPipeline {
             }
             return documents;
         });
-        return new Retrieved(selected, queries.stream().map(Query::text).toList());
+        int hypothetical = (int) queries.stream().filter(q -> Boolean.TRUE.equals(q.context().get(MeasuredQueryExpander.HYPOTHETICAL))).count();
+        return new Retrieved(selected, queries.stream()
+                .filter(q -> !Boolean.TRUE.equals(q.context().get(MeasuredQueryExpander.HYPOTHETICAL)))
+                .map(Query::text).toList(), joined.stream().map(Document::getId).distinct().limit(20).toList(),
+                new MeasuredQueryExpander.Diagnostics(expansion.modelCalls(), queries.size(), hypothetical,
+                        retrievalFallback[0] ? "RETRIEVAL_ERROR" : expansion.status()));
     }
 
     private Query transform(Query original, List<QueryTransformer> transformers) {
@@ -100,14 +115,22 @@ public class OndaRetrievalPipeline {
         return current;
     }
 
-    private List<Query> expand(Query query, QueryExpander expander) {
-        List<Query> expanded = expander.expand(query);
-        if (expanded == null || expanded.isEmpty()) {
-            return List.of(query);
+    private MeasuredQueryExpander.Expansion expand(Query original, Query query, QueryExpander expander) {
+        var expanded = expander instanceof MeasuredQueryExpander measured ? measured.expandMeasured(query)
+                : new MeasuredQueryExpander.Expansion(java.util.Optional.ofNullable(expander.expand(query)).orElse(List.of()), 0, "NOT_USED");
+        Map<String, Query> queries = new LinkedHashMap<>();
+        queries.put(original.text(), original);
+        queries.putIfAbsent(query.text(), query);
+        for (Query candidate : expanded.queries()) {
+            if (candidate == null || candidate.text().isBlank()) continue;
+            Map<String, Object> context = new LinkedHashMap<>(original.context());
+            // Only this internal marker may be added; filters cannot be replaced by an expander.
+            if (Boolean.TRUE.equals(candidate.context().get(MeasuredQueryExpander.HYPOTHETICAL))) {
+                context.put(MeasuredQueryExpander.HYPOTHETICAL, true);
+            }
+            queries.putIfAbsent(candidate.text(), new Query(candidate.text(), List.of(), context));
         }
-        List<Query> queries = expanded.stream().filter(candidate -> candidate != null)
-                .map(candidate -> query.mutate().text(candidate.text()).build()).distinct().toList();
-        return queries.isEmpty() ? List.of(query) : queries;
+        return new MeasuredQueryExpander.Expansion(List.copyOf(queries.values()), expanded.modelCalls(), expanded.status());
     }
 
     private <T> T timed(
@@ -134,5 +157,6 @@ public class OndaRetrievalPipeline {
         }
     }
 
-    private record Retrieved(List<Document> documents, List<String> queries) {}
+    private record Retrieved(List<Document> documents, List<String> queries, List<String> candidates,
+                             MeasuredQueryExpander.Diagnostics expansion) {}
 }

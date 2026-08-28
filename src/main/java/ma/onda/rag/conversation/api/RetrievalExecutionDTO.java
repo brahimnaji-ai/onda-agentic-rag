@@ -12,7 +12,8 @@ public record RetrievalExecutionDTO(
         RetrievalProfile profile,
         List<String> executedQueries,
         int selectedChunkCount,
-        Map<RetrievalStage, Double> timingsMs
+        Map<RetrievalStage, Double> timingsMs,
+        ma.onda.rag.agent.application.retrieval.MeasuredQueryExpander.Diagnostics expansion
 ) {
     public RetrievalExecutionDTO {
         executedQueries = List.copyOf(executedQueries);

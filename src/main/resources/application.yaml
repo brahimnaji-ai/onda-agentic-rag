@@ -83,6 +83,16 @@ rag:
       enabled: false # FAST avoids an additional LLM call by default
   retrieval:
     profile: BALANCED # Hybrid retrieval; set FAST for dense-only retrieval
+    deep:
+      enabled: false # Requires reviewed live benchmark and approved quality/latency/cost limits.
+      multi-query-enabled: false
+      hyde-enabled: false # Never enable both strategies together.
+      strategy: MULTI_QUERY
+      approval-report: ""
+      expansion-timeout: 2s
+      variants: 2
+      max-output-tokens: 384
+      max-concurrent-calls: 2
     top-k: 8
     similarity-threshold: 0.5
     balanced:
