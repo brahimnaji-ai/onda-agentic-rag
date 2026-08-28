@@ -21,11 +21,8 @@ import java.util.function.Supplier;
 @Slf4j
 public class OndaRetrievalPipeline {
 
-    private final List<QueryTransformer> transformers;
-    private final QueryExpander expander;
-    private final DocumentRetriever retriever;
-    private final DocumentJoiner joiner;
-    private final List<DocumentPostProcessor> postProcessors;
+    private final Map<RetrievalProfile, RetrievalPlan> plans;
+    private final RetrievalProfile defaultProfile;
     private final MeterRegistry meterRegistry;
 
     public OndaRetrievalPipeline(
@@ -36,40 +33,52 @@ public class OndaRetrievalPipeline {
              List<DocumentPostProcessor> postProcessors,
              MeterRegistry meterRegistry
     ) {
-        this.transformers = List.copyOf(transformers);
-        this.expander = expander;
-        this.retriever = retriever;
-        this.joiner = joiner;
-        this.postProcessors = List.copyOf(postProcessors);
+        this(Map.of(RetrievalProfile.FAST, new RetrievalPlan(transformers, expander, retriever, joiner, postProcessors)),
+                RetrievalProfile.FAST, meterRegistry);
+    }
+
+    public OndaRetrievalPipeline(Map<RetrievalProfile, RetrievalPlan> plans, RetrievalProfile defaultProfile,
+                                 MeterRegistry meterRegistry) {
+        this.plans = Map.copyOf(plans);
+        if (!plans.containsKey(defaultProfile)) {
+            throw new IllegalArgumentException("The default retrieval profile must have a plan");
+        }
+        this.defaultProfile = defaultProfile;
         this.meterRegistry = meterRegistry;
     }
 
     public RetrievalResult retrieve(RetrievalRequest request) {
-        RetrievalRequest input = request == null ? new RetrievalRequest(null) : request;
+        RetrievalRequest supplied = request == null ? new RetrievalRequest(null) : request;
+        RetrievalProfile profile = supplied.profile() == null ? defaultProfile : supplied.profile();
+        RetrievalRequest input = new RetrievalRequest(supplied.query(), profile, supplied.context());
+        RetrievalPlan plan = plans.get(profile);
+        if (plan == null) {
+            throw new IllegalArgumentException("No retrieval plan configured for " + profile);
+        }
         Map<RetrievalStage, Duration> timings = new EnumMap<>(RetrievalStage.class);
-        Retrieved retrieved = timed(RetrievalStage.TOTAL, input.profile(), timings, () -> execute(input, timings));
+        Retrieved retrieved = timed(RetrievalStage.TOTAL, input.profile(), timings, () -> execute(input, plan, timings));
         return RetrievalResult.fromDocuments(retrieved.documents(), retrieved.queries(), input.profile(), timings);
     }
 
-    private Retrieved execute(RetrievalRequest request, Map<RetrievalStage, Duration> timings) {
+    private Retrieved execute(RetrievalRequest request, RetrievalPlan plan, Map<RetrievalStage, Duration> timings) {
         if (request.query() == null || request.query().isBlank()) {
             return new Retrieved(List.of(), List.of());
         }
         Query original = new Query(request.query(), List.of(), request.context());
-        Query transformed = timed(RetrievalStage.TRANSFORM, request.profile(), timings, () -> transform(original));
-        List<Query> queries = timed(RetrievalStage.EXPAND, request.profile(), timings, () -> expand(transformed));
+        Query transformed = timed(RetrievalStage.TRANSFORM, request.profile(), timings, () -> transform(original, plan.transformers()));
+        List<Query> queries = timed(RetrievalStage.EXPAND, request.profile(), timings, () -> expand(transformed, plan.expander()));
         Map<Query, List<List<Document>>> candidates = timed(RetrievalStage.RETRIEVE, request.profile(), timings, () -> {
             Map<Query, List<List<Document>>> results = new LinkedHashMap<>();
             for (Query query : queries) {
-                List<Document> documents = retriever.retrieve(query);
+                List<Document> documents = plan.retriever().retrieve(query);
                 results.put(query, List.of(documents == null ? List.of() : documents));
             }
             return results;
         });
-        List<Document> joined = timed(RetrievalStage.JOIN, request.profile(), timings, () -> joiner.join(candidates));
+        List<Document> joined = timed(RetrievalStage.JOIN, request.profile(), timings, () -> plan.joiner().join(candidates));
         List<Document> selected = timed(RetrievalStage.POST_PROCESS, request.profile(), timings, () -> {
             List<Document> documents = joined;
-            for (DocumentPostProcessor processor : postProcessors) {
+            for (DocumentPostProcessor processor : plan.postProcessors()) {
                 documents = processor.process(original, documents);
             }
             return documents;
@@ -77,7 +86,7 @@ public class OndaRetrievalPipeline {
         return new Retrieved(selected, queries.stream().map(Query::text).toList());
     }
 
-    private Query transform(Query original) {
+    private Query transform(Query original, List<QueryTransformer> transformers) {
         Query current = original;
         for (QueryTransformer transformer : transformers) {
             Query transformed = transformer.transform(current);
@@ -91,7 +100,7 @@ public class OndaRetrievalPipeline {
         return current;
     }
 
-    private List<Query> expand(Query query) {
+    private List<Query> expand(Query query, QueryExpander expander) {
         List<Query> expanded = expander.expand(query);
         if (expanded == null || expanded.isEmpty()) {
             return List.of(query);

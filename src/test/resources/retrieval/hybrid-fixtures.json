@@ -1,0 +1,18 @@
+{
+  "chunks": [
+    {"id":"00000000-0000-0000-0000-000000000001","content":"La procédure ONDA-SEC-402 définit les autorisations des visiteurs.","filename":"procedures.pdf","semantic":false},
+    {"id":"00000000-0000-0000-0000-000000000002","content":"CMN est le code de l'aéroport Mohammed V à Casablanca.","filename":"aeroports.pdf","semantic":false},
+    {"id":"00000000-0000-0000-0000-000000000003","content":"Le calendrier des exercices est disponible dans cette annexe.","filename":"plan_urgence_2026.pdf","semantic":false},
+    {"id":"00000000-0000-0000-0000-000000000004","content":"La prochaine inspection est prévue le 2026-09-15.","filename":"inspections.pdf","semantic":false},
+    {"id":"00000000-0000-0000-0000-000000000005","content":"Les contrôles des bagages sont obligatoires avant embarquement.","filename":"controles.pdf","semantic":false},
+    {"id":"00000000-0000-0000-0000-000000000006","content":"En cas d'évacuation, les passagers suivent les sorties vers les points de rassemblement.","filename":"securite.pdf","semantic":true}
+  ],
+  "queries": [
+    {"category":"identifier","query":"ONDA-SEC-402","relevantId":"00000000-0000-0000-0000-000000000001"},
+    {"category":"airport-code","query":"CMN","relevantId":"00000000-0000-0000-0000-000000000002"},
+    {"category":"filename","query":"plan_urgence_2026.pdf","relevantId":"00000000-0000-0000-0000-000000000003"},
+    {"category":"date","query":"2026-09-15","relevantId":"00000000-0000-0000-0000-000000000004"},
+    {"category":"french-terminology","query":"contrôle bagage","relevantId":"00000000-0000-0000-0000-000000000005"},
+    {"category":"semantic-paraphrase","query":"Comment quitter le bâtiment sans danger ?","relevantId":"00000000-0000-0000-0000-000000000006"}
+  ]
+}
