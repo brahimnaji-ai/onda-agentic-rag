@@ -1,0 +1,14 @@
+{
+  "budgetApproved": false,
+  "approvedBy": "",
+  "limits": {
+    "minimumHardNdcgGain": 0.05,
+    "maxP95Millis": 5000,
+    "maxP95Ratio": 2.0,
+    "maxMeanModelCalls": 1.0,
+    "maxMeanRerankerCalls": 1.0,
+    "maxFallbackRate": 0.05,
+    "minimumCitationCorrectness": 0.95,
+    "minimumGroundedness": 0.95
+  }
+}

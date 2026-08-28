@@ -1,0 +1,665 @@
+{
+  "version": "onda-v1",
+  "sources": [
+    {
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "sha256": "bae8b958512b49e82a1d3b7ad4ff469985fd350c916bc97c283015e407ed6dbb"
+    },
+    {
+      "documentId": "4386ecb0-a5f9-512c-a56a-cafacb0d922a",
+      "source": "057-CP+zone+entrée+RAK++AGA.pdf",
+      "sha256": "c635bc55587ea6bfd636218da9c13ea1b803f865932803e6dccf9649b3d447f0"
+    },
+    {
+      "documentId": "7ee88453-76db-52ec-94a4-e45f9c79a2dd",
+      "source": "060-CP+Reveal+Nvx+Terminal+CMN.pdf",
+      "sha256": "26ef341506c8511b4f906bca39646068c4fc9dfd0b6ae2b8a511c99c1d442dff"
+    },
+    {
+      "documentId": "e5a48457-eb00-5c11-9fa1-989f0dbe4614",
+      "source": "061-CP+portillons+automatiques+FV.pdf",
+      "sha256": "d1fbaf004e29c24d55b83f992fec63bbafaef10962a9e1ebd815e388d8284fd4"
+    },
+    {
+      "documentId": "e4ef5b6a-c645-5722-86b6-27d272fbac80",
+      "source": "063-Communiqué+de+presse+n°02-2025+VF.pdf",
+      "sha256": "1a6374c3aa0d747a3f38a79b1e37b0fbb7a4c272e0841831b9763bf852565447"
+    },
+    {
+      "documentId": "60f4c9da-f1da-5bb0-8914-90c3f885c393",
+      "source": "065-CP+Tps+d'attente+Airports+FR.pdf",
+      "sha256": "559f1348dec6d7dbf6992b17c7807778853f1b6ab928237aca4e1dd01f84f532"
+    },
+    {
+      "documentId": "cf00a7a3-9731-50fe-9b1d-2e1adb125bb5",
+      "source": "067-Cp+Pack+Check+FR.pdf",
+      "sha256": "28702ca5bae02c7b3ffa77d0ff3870d6b113a2252a4068684e62eeaf87e78e84"
+    },
+    {
+      "documentId": "2f539a01-025c-5af8-8e6e-df16a3188ec3",
+      "source": "072-CP+Trafic+aérien+2025+FR.pdf",
+      "sha256": "c8a0f34b8b482dfa8e36e4fdcd7346d6a63797945f6324778b64af4c8a34f09f"
+    },
+    {
+      "documentId": "0552d9a6-5b2c-512f-a0fe-37b60f7909de",
+      "source": "073-CP+Aéroport+Rba+-+Bus_taxis+FR.pdf",
+      "sha256": "593c3578ad3032b76d5f83236048d66e9fa3b16663321ef44857b9a1b80a6cf8"
+    },
+    {
+      "documentId": "200deca1-18e0-54d3-8e66-addd4bd55346",
+      "source": "075-CP+APOC+FR.pdf",
+      "sha256": "2d06cfd3a66441fc707a12e6bd3b5b1ae1a67f86a4f583fdb6ba839defacfc07"
+    }
+  ],
+  "chunks": [
+    {
+      "id": "1214f105-f78d-527b-b4dd-e036a8b8d280",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 2,
+      "chunkIndex": 0,
+      "text": "1 Le présent code intervient dans un contexte marqué par la mise en œuvre des termes de la nouvelle Constitution visant la consolidation de l’Etat de Droit, la consécration des principes de séparation des pouvoirs, le renforcement de la bonne gouvernance et la corrélation entre la responsabilité et la reddition des comptes. Cette Constitution érige la bonne gouvernance en un principe fon- damental dans le processus de consolidation et de renforcement des institutions d’un Etat moderne. A cet égard, la bonne gouvernance s’attache aux principes de transparence, de responsabilité, de lutte contre la corruption, d’éthique et de reddition des comptes. Au niveau de l’ONDA, la gouvernance « regroupe l’ensemble des relations entre les dirigeants de l’entité et ses partenaires dans l’objectif de création de valeur pour l’entité ». La Vision de la nouvelle Direction Générale s’articule essentiellement autour des bonnes pratiques de gouvernance dans le but : D’ancrer la culture de reddition des comptes ; De renforcer le climat de"
+    },
+    {
+      "id": "81e8d8c2-c7d1-5bcd-91ab-b91f3e63d64e",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 2,
+      "chunkIndex": 1,
+      "text": "l’objectif de création de valeur pour l’entité ». La Vision de la nouvelle Direction Générale s’articule essentiellement autour des bonnes pratiques de gouvernance dans le but : D’ancrer la culture de reddition des comptes ; De renforcer le climat de confiance avec les Parties Prenantes de l’ONDA ; D’améliorer la viabilité de l’ONDA et sa performance ainsi que sa qualité de service ; D’attirer l’investissement national et étranger dans le secteur aérien et aéroportuaire ; De contribuer au développement d’un tissu économique national compétitif. PREAMBULEPREAMBULE CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "91951f4a-a732-5d07-ae68-5b35c9068389",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 3,
+      "chunkIndex": 0,
+      "text": "2 C’est dans la perspective de diffusion et de consécration de ces bonnes Pratiques que l’ONDA a élaboré et lancé ce code visant à : Définir les règles et les bonnes manières et s’y conformer ; Instaurer un climat de confiance avec ses collaborateurs et leur montrer comment prendre les bonnes décisions ; Adopter les bons comportements et une conscience professionnelle dans l’accomplissement des missions. Le but de ce code n’est pas de remplacer les normes et réglementations, mais de définir les règles et les bonnes manières auxquelles, chaque collaborateur doit se conformer. L’ambition à travers ce code est de nous permettre d’ob- tenir de bons résultats de la bonne manière. Ce Code s’adresse à l’ensemble du personnel de l’Office National des Aéroports qui sont dénommés « Collaborateurs ». Les règles prévues au présent code s’appliquent, en tout temps et en tout lieu, par les collaborateurs lors de l’exercice de leurs fonctions pour l’Office National des Aéroports. CODE D’ETHIQUE ET"
+    },
+    {
+      "id": "560c8fb4-2e51-514b-8bbd-38ab9b187560",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 3,
+      "chunkIndex": 1,
+      "text": "National des Aéroports qui sont dénommés « Collaborateurs ». Les règles prévues au présent code s’appliquent, en tout temps et en tout lieu, par les collaborateurs lors de l’exercice de leurs fonctions pour l’Office National des Aéroports. CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "1753d4fe-b3fd-5ee8-b6ea-916f81342de0",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 4,
+      "chunkIndex": 0,
+      "text": "Références nationales : Constitution du 01 juillet 2011 Code de Bonne Gouvernance des Etablissements et Entreprises Publiques. Programme Gouvernemental sur la moralisation et la corruption. Références internationales : Déclaration universelle des droits de l’Homme. Déclaration de l’Organisation Internationale du Travail relative aux principes et droits fondamentaux au travail. Déclaration de Rio sur l’environnement et le développement. Convention des Nations Unies contre la corruption. REFERENCESREFERENCES 3 CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "ba14a967-ec95-5c99-bb14-05fb1736862f",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 5,
+      "chunkIndex": 0,
+      "text": "Ce code traduit les principes de bonne conduite communément proclamées par l’ensemble des collaborateurs de l’Office et qui doi- vent régir nos comportements et nos actions au quotidien vis-à-vis de notre établissement, notre environnement, nos collaborateurs et leur cercle professionnel et nos partenaires. En adhérant à ce Code et en le respectant, chacun de nous contribue à l’instauration et à la promotion d’une culture d’entreprise fondée sur des valeurs qui sont vecteurs de développement pérenne. La vocation de ce Code ne consiste pas seulement à fournir des règles de déontologie et de conduite professionnelle qui s’appliquer à toutes les situations imaginables, mais aussi à mettre en place les principes qui devraient guider les collaborateurs pour faire face à certaines situations dans l’exercice de leurs fonctions. L’ONDA estime qu’il est de son devoir d’aider son personnel à résoudre les problèmes d’éthique, et cherche à le faire avec intégrité en misant sur sa politique de la porte ouverte. Pour compléter ses règles"
+    },
+    {
+      "id": "cf158114-98f0-5be0-a4b8-bcedfcf52127",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 5,
+      "chunkIndex": 1,
+      "text": "dans l’exercice de leurs fonctions. L’ONDA estime qu’il est de son devoir d’aider son personnel à résoudre les problèmes d’éthique, et cherche à le faire avec intégrité en misant sur sa politique de la porte ouverte. Pour compléter ses règles et normes, l’ONDA a mis en place des procédures que chaque collaborateur se doit d’appliquer, témoignant de son professionnalisme et de son exemplarité. Les principaux objectifs de ce Code sont : Instaurer en permanence une dynamique interne de transparence, d’échange et de dialogue. Asseoir sur des bases solides l’évolution et la modernisation des relations professionnelles au sein de l’ONDA et veiller à la protection de l’environnement. Etre un facteur important dans l’appropriation, par tout le personnel de l’ONDA, des valeurs et objectifs communs, et ce, dans le cadre d’une vision partagée de la responsabilité et d’une perspective ambitieuse de croissance. PRINCIPAUX OBJECTIFSPRINCIPAUX OBJECTIFS 4 CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "1bf78398-bef2-555a-b2a2-259c300b25dc",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 5,
+      "chunkIndex": 2,
+      "text": "et objectifs communs, et ce, dans le cadre d’une vision partagée de la responsabilité et d’une perspective ambitieuse de croissance. PRINCIPAUX OBJECTIFSPRINCIPAUX OBJECTIFS 4 CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "506111fb-7f07-55eb-af63-b4627151f3e9",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 6,
+      "chunkIndex": 0,
+      "text": "5 Ce Code invite l’ONDA à adopter, soutenir et appliquer dans sa sphère d’influence, un ensemble de valeurs fondamentales, dans les domaines des droits de l’Homme, des normes de travail et de l’environnement, et de lutte contre la corruption. Les principes de ce Code sont les suivants : Inviter Les collaborateurs à promouvoir et à respecter la protection des droits de l’Homme dans leur sphère d’influence et veiller à ne pas se rendre complice de violations des droits de l’Homme ; Appliquer l’approche de précaution face aux problèmes touchant l’environnement et entreprendre des initiatives tendant à promouvoir une plus grande responsabilité en la matière ; Favoriser la mise au point et la diffusion de technologies respectueuses de l’environnement ; Agir contre la corruption sous toutes ses formes, y compris l’extorsion de fonds et les pots-de-vin. NOS PRINCIPESNOS PRINCIPES CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "df58c3e4-e028-5140-9a4d-0573436a18aa",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 6,
+      "chunkIndex": 1,
+      "text": "contre la corruption sous toutes ses formes, y compris l’extorsion de fonds et les pots-de-vin. NOS PRINCIPESNOS PRINCIPES CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "cf885926-ce8e-5017-8f68-008f59aad346",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 7,
+      "chunkIndex": 0,
+      "text": "6 Nos valeurs fondamentales guident nos comportements et servent de fondements aux décisions que nous prenons. Dans tout ce que nous entreprenons à l’ONDA, nous adoptons et incarnons les valeurs suivantes : Respect : Agir avec considération, courtoisie, honnêteté, écoute et respect à l’égard de l’autre. Esprit d’Equipe : Travailler ensemble pour une réussite collective en toute transparence et avec une attention particulière au respect de la dignité et de la vie personnelle des collaborateurs. Transparence : Eviter Toute forme d’opacité dans nos actes au quotidien. Loyauté : Se comporter en tout temps envers l’ONDA d’une manière loyale et diligente qui protège ses intérêts. Eviter tout agissement et toute déclaration publique susceptible de ternir l’image ou la réputation de l’ONDA. Intégrité : Se conduire de manière honnête et juste et traiter de manière égale ses collaborateurs et partenaires. Responsabilité : S’acquitter de nos tâches avec loyauté, professionnalisme, efficacité, efficience et objectivité. Excellence : S’inscrire en permanence dans la quête de"
+    },
+    {
+      "id": "254ec223-cc95-5d2f-953e-ec7d712acc65",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 7,
+      "chunkIndex": 1,
+      "text": "Intégrité : Se conduire de manière honnête et juste et traiter de manière égale ses collaborateurs et partenaires. Responsabilité : S’acquitter de nos tâches avec loyauté, professionnalisme, efficacité, efficience et objectivité. Excellence : S’inscrire en permanence dans la quête de la performance et jouir d’une exemplarité managériale. NOS VALEURSNOS VALEURS CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "5d023658-e815-545d-abc1-f9d0674679f8",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 8,
+      "chunkIndex": 0,
+      "text": "I- Principes respectes par l’Office National des Aéroports I. 1. Responsabilités vis-à-vis des Fournisseurs et des Concessionnaires : L’ONDA se soumet aux Lois en vigueur et à ses règlements des achats et des concessions afin de garantir une concurrence saine dans la sélection en toute transparence de ses fournisseurs et de ses concessionnaires. L’ONDA impose à ses fournisseurs, concessionnaires et autres partenaires de se conformer et de respecter ses règles de déontologie pour éviter tout risque de fraude et de corruption et œuvre pour la protection de la propriété intellectuelle et le respect de la confidentialité. L’ONDA s’interdit de fausser, directement ou indirectement, le libre jeu de la concurrence dans toutes ses transactions commerciales. Il garantit l’égalité le traitement de ses partenaires commerciaux en bannissant tout abus de pouvoir ou rétention d’information. I. 2. Responsabilités vis-à-vis des Clients : L’ONDA, entreprise de service, place la satisfaction de ses clients au centre de ses préoccupations. L’ONDA est déterminé à offrir des"
+    },
+    {
+      "id": "3147aeca-e3cc-5d5f-9069-2515165c8285",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 8,
+      "chunkIndex": 1,
+      "text": "ses partenaires commerciaux en bannissant tout abus de pouvoir ou rétention d’information. I. 2. Responsabilités vis-à-vis des Clients : L’ONDA, entreprise de service, place la satisfaction de ses clients au centre de ses préoccupations. L’ONDA est déterminé à offrir des prestations de qualité et à construire une relation client forte, empreinte d’éthique, d’intégrité, d’honnêteté et de professionnalisme. L’ONDA évalue la performance de ses services par un système d’écoute de ses clients pour mieux répondre à leurs besoins et anticiper leurs attentes. L’ONDA s’engage à promouvoir la culture qualité et à s’inscrire avec ses partenaires dans une démarche d’amélioration continue. 7 REGLES GENERALES DE BONNE CONDUITE REGLES GENERALES DE BONNE CONDUITE CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "b87834b9-d76b-5ca5-a182-c4cdbc59d943",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 9,
+      "chunkIndex": 0,
+      "text": "8 I. 3. Responsabilités vis-à-vis des collaborateurs Les Collaborateurs doivent contribuer à l’essor et à l’amélioration de l’image de l’ONDA en préconisant la synergie et l’esprit d’équipe, en faisant valoir leurs idées et en adhérant aux normes les plus élevées de qualité de service et d’intégrité. Respect de la législation du travail L’ONDA conscient de l’importance de son Capital Humain, mobilise tous les moyens à même de permettre à ses collaborateurs d’accomplir leur mission dans les meilleures conditions, et ce, dans le respect strict du code du travail et de son statut du personnel. Egalité des chances L’ONDA lutte contre toute forme de discrimination basée notamment sur les opinions politiques ou philosophiques, les activités syndicales, le sexe, le handicap, l’âge et l’origine sociale. L’ONDA garantit l’égalité des chances en matière de recrutement, d’accès à la formation, de rémunération, de mobilité interne et d’évolution professionnelle. Seules compétence, expérience et aptitudes personnelles sont prises en considération. L’ONDA veille à l’exercice de l’autorité"
+    },
+    {
+      "id": "9ef8dc96-127c-5b62-9c28-6fd6249ed2dc",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 9,
+      "chunkIndex": 1,
+      "text": "et l’origine sociale. L’ONDA garantit l’égalité des chances en matière de recrutement, d’accès à la formation, de rémunération, de mobilité interne et d’évolution professionnelle. Seules compétence, expérience et aptitudes personnelles sont prises en considération. L’ONDA veille à l’exercice de l’autorité hiérarchique sans porter atteinte à la dignité et à l’autonomie du collaborateur. Santé-sécurité L’ONDA exige que chaque collaborateur exerce son activité professionnelle dans le respect des règles de sécurité, d’hygiène et de santé. A ce titre, l’ONDA veille à la conformité des activités exercées aux règles en vigueur en matière d’hygiène, de santé et de sécurité sur ses sites ou par ses partenaires. L’ONDA observe toutes les lois et textes réglementaires en vigueur destinés à prévenir les risques professionnels et à promouvoir un environnement de travail sain et sûr. REGLES GENERALES DE BONNE CONDUITE REGLES GENERALES DE BONNE CONDUITE CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "df407381-7c2b-50ca-bc2f-ebe26526aad4",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 9,
+      "chunkIndex": 2,
+      "text": "à promouvoir un environnement de travail sain et sûr. REGLES GENERALES DE BONNE CONDUITE REGLES GENERALES DE BONNE CONDUITE CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "27746cf4-1daa-58b7-bc08-0119ef44af89",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 10,
+      "chunkIndex": 0,
+      "text": "9 REGLES GENERALES DE BONNE CONDUITE REGLES GENERALES DE BONNE CONDUITE II- Principes respectés par les collaborateurs Tous les collaborateurs s’engagent à respecter les principes suivants : II. 1. Respect des lois et des réglementations : Chaque collaborateur doit se conformer, en toutes circonstances, aux lois, normes et règlements qui lui sont applicables dans le cadre de ses activités professionnelles. A l’occasion de leurs rapports professionnels avec les fournisseurs et les partenaires, les collaborateurs : Sont tenus à agir conformément aux intérêt de l’ONDA. Ne peuvent se livrer à des opérations personnelles à caractère commercial. II. 2. Rapports entre collaborateurs et relations professionnelles : Chaque collaborateur doit prohiber et condamner tout har- cèlement moral ou sexuel et tout comportement de nature à créer un environnement de travail hostile. Il s’interdit tout écart de langage ou de comportement (tels les insultes, le langage grossier, les menaces, l’intimidation et les injures). Chaque collaborateur, dans le cadre de ses relations professionnelles, est tenu"
+    },
+    {
+      "id": "ea38463d-7445-526c-822f-e88a66dce254",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 10,
+      "chunkIndex": 1,
+      "text": "nature à créer un environnement de travail hostile. Il s’interdit tout écart de langage ou de comportement (tels les insultes, le langage grossier, les menaces, l’intimidation et les injures). Chaque collaborateur, dans le cadre de ses relations professionnelles, est tenu de : Veiller à l’émission de l’information nécessaire à la bonne exécution du travail et s’assurer en permanence de son exactitude et proscrire toute rétention d’information nécessaire au bon déroulement du travail ou tout refus de collaboration. remettre un travail de qualité et dans les délais requis en s’assurant qu’il réponde aux attentes et besoins de ses collègues. II. 3. Utilisation des Ressources Informatiques : Chaque collaborateur est tenu : D’utiliser Les ressources informatiques et de communication mises à sa disposition par l’ONDA à des fins professionnelles. CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "c6ad3442-bce1-5960-b1ee-c95a6431c9c3",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 10,
+      "chunkIndex": 2,
+      "text": "disposition par l’ONDA à des fins professionnelles. CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "a5c0d1d1-b380-5655-8060-e45c09fb4528",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 11,
+      "chunkIndex": 0,
+      "text": "10 REGLES GENERALES DE BONNE CONDUITE REGLES GENERALES DE BONNE CONDUITE De respecter scrupuleusement la politique de sécurité informatique pour ne pas compromettre la fonctionnalité et la protection des systèmes informatiques. Il doit en toutes circonstances respecter les termes de la charte informatique de l’établissement. II. 4. Protection du Patrimoine Chaque collaborateur a le devoir de préserver les biens et les ressources de l’établissement tels que le mobilier, les installations, les équipements et les véhicules qui doivent être utilisés de manière responsable et appro- priée et à des fins professionnelles et de prévenir toute dégradation de son environnement professionnel. II.5. Communication et diffusion de l’information Chaque collaborateur doit se soucier de la réputation de l’ONDA, contribuer à sa notoriété positive et véhiculer une bonne image de marque. Chaque collaborateur combat la rumeur par l’utilisation des outils de communication interne mis à sa disposition. Il doit également s’abstenir de tout dénigrement public soit envers ses collègues ou envers l’établissement. Pour toute"
+    },
+    {
+      "id": "8dae205d-130c-5cda-b3c2-cbed9dd49002",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 11,
+      "chunkIndex": 1,
+      "text": "et véhiculer une bonne image de marque. Chaque collaborateur combat la rumeur par l’utilisation des outils de communication interne mis à sa disposition. Il doit également s’abstenir de tout dénigrement public soit envers ses collègues ou envers l’établissement. Pour toute communication vers l’extérieur (conférences, publications,...), les collaborateurs doivent être dûment autorisés. Cette communication doit se faire selon les standards les plus élevés d’éthique. La communication avec les médias est faite par l’entité investie de cette responsabilité et après accord préalable de la Direction Générale. Dans ses interactions personnelles dans les réseaux sociaux (Face- book, blogs, forums de discussion,...), un collaborateur peut faire état de son emploi à l’ONDA, de sa fonction mais ne peut publier des images liées à son travail ni discuter de l’ONDA. Il ne doit, en aucun cas ou circonstances utiliser les NTIC (photos, enregistrements, SMS,...) pour nuire à ses collègues ou partenaires. CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "9d6a90bf-fe46-5137-94e4-e2d3f7ab66da",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 11,
+      "chunkIndex": 2,
+      "text": "travail ni discuter de l’ONDA. Il ne doit, en aucun cas ou circonstances utiliser les NTIC (photos, enregistrements, SMS,...) pour nuire à ses collègues ou partenaires. CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "c0c7acbe-cc5d-5862-89d2-7f94cfb28799",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 12,
+      "chunkIndex": 0,
+      "text": "11 II.6. Confidentialité Chaque collaborateur s’engage à protéger les informations personnelles, financières et autres à caractère sensible ou non, recueillies ou conservées par l’ONDA concernant ses collègues ou les clients et fournisseurs de l’ONDA. Il doit protéger tout do- cument confidentiel qualifié en tant que tel et s’interdire de divulguer des informations confidentielles qu’il peut détenir en raison de sa fonction ou incidemment en raison de son appar - tenance à l’ONDA. Tout collaborateur se doit de ne divulguer l’information que si elle est rendue publique pour éviter tout délit d’initié. Il s’engage également à respecter le devoir de confidentialité même après son départ de l’Office. II.7. Conflits d’intérêts Chaque collaborateur a l’obligation d’éviter : Tout conflit d’intérêts lorsqu’il est amené à participer à la sélection d’un client, d’un fournisseur ou tout autre partenaire. Toute situation où ses intérêts personnels ou financiers entreraient en conflit avec ceux de l’ONDA. II.8. Protection de l’environnement Tous les collaborateurs sont invités expressément à"
+    },
+    {
+      "id": "e01fe944-bbb7-5a0d-a5fe-06d83a8586e4",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 12,
+      "chunkIndex": 1,
+      "text": "amené à participer à la sélection d’un client, d’un fournisseur ou tout autre partenaire. Toute situation où ses intérêts personnels ou financiers entreraient en conflit avec ceux de l’ONDA. II.8. Protection de l’environnement Tous les collaborateurs sont invités expressément à respecter et à minimiser l’impact de leurs activités sur l’environnement. Les collaborateurs doivent adopter les bonnes pratiques et les comportements visant à éviter tout gaspillage d’énergie ou de ressources naturelles et ce, par la mise en place un processus d’amélioration continue de gestion et de maîtrise des impacts environnementaux de son activité. CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "4303aa4b-bca0-568e-9a04-ea42c4541942",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 13,
+      "chunkIndex": 0,
+      "text": "12 II.9. Lutte contre la corruption, cadeaux et autres avantages : Chaque collaborateur doit s’engager pleinement dans la lutte contre la corruption sous toutes ses formes. Chaque collaborateur doit s’interdire de solliciter ou accepter tout avantage ou cadeau de nature à impacter et influencer son impartialité, et doit adopter à cet égard une totale transparence en dénonçant tout acte ou toute tentative de corruption. II.9.1. Cadeaux et faveurs : Un conflit d’intérêts survient quand un collaborateur sollicite ou accepte directement ou indirectement un cadeau ou une faveur d’une personne ou d’une entreprise qui entretient ou pourrait en- tretenir des relations d’affaires avec elle en qualité de client, de fournisseur, de partenaire ou de co-contractant. Dans ce contexte, les termes « cadeaux » et « faveurs » désignent tout service, tout prêt, toute réduction ou somme d’argent ainsi que tout article de valeur offert à titre gracieux. Ils ne visent pas les objets promotionnels de valeur symbolique que les entreprises utilisent"
+    },
+    {
+      "id": "3873c95d-3b2e-5907-90e1-a3a5d00308da",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 13,
+      "chunkIndex": 1,
+      "text": "cadeaux » et « faveurs » désignent tout service, tout prêt, toute réduction ou somme d’argent ainsi que tout article de valeur offert à titre gracieux. Ils ne visent pas les objets promotionnels de valeur symbolique que les entreprises utilisent habituellement, les repas d’affaires ordinaires ni les diver - tissements raisonnables correspondant aux coutumes du milieu, dans la mesure où il s’agit d’événements sporadiques. II.9.2. Commissions : Les collaborateurs n’acceptent jamais de commissions quand, dans le cadre d’une entente de services, ils recommandent à un client un logiciel, du matériel ou tout autre équipement d’un fournisseur externe. II.9.3. Détournement de débouchés : Un conflit d’intérêts se produit quand, sans que l’ONDA soit au courant ou ait donné son accord, un collaborateur s’approprie ou détourne au profit d’une autre personne ou d’une autre entreprise les retom- bées d’un projet commercial ou d’une occasion de développement possible ou avérée dont il a eu connaissance ou qu’il a contribué à développer dans le"
+    },
+    {
+      "id": "4ae4e14c-33cc-51a8-892e-a1009b3a8639",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 13,
+      "chunkIndex": 2,
+      "text": "collaborateur s’approprie ou détourne au profit d’une autre personne ou d’une autre entreprise les retom- bées d’un projet commercial ou d’une occasion de développement possible ou avérée dont il a eu connaissance ou qu’il a contribué à développer dans le cadre de son travail. II.9.4. Passe-droit : Les collaborateurs ne perçoivent jamais de contre partie de la part des entreprises ou de leurs représentants pour obtenir les contrats, marchés et bons de commande. CODE D ’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "df4a4f81-cb7d-5474-8c18-0a4e00dd34cc",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 14,
+      "chunkIndex": 0,
+      "text": "13 MISE EN APPLICATIONMISE EN APPLICATION Il incombe, tout particulièrement, aux dirigeants de l’ONDA de donner l’exemple à l’ensemble des collaborateurs en adhérant à des normes élevées de conduite professionnelle. Il leur revient aussi d’assurer l’application des principes et valeurs décrits dans ce Code et dans les autres directives de l’ONDA. Ils sont notam- ment chargés des responsabilités suivantes : a/. Diffusion du Code : Il est du devoir des dirigeants de l’ONDA de s’assurer que tous les collaborateurs ont reçu un exemplaire du Code, comprennent ses dispositions et s’y conforment. b/. Soutien : Les dirigeants de l’ONDA doivent offrir de l’aide et des explications à tout collaborateur qui a des questions ou des doutes ou fait face à une situation difficile. Ils ont aussi la responsabilité de prodiguer promptement des conseils aux collaborateurs dont la conduite contrevient au Code. c/. Application : Lorsqu’un collaborateur enfreint le Code, son Directeur hiérarchique se doit de prendre rapidement des mesures énergiques, en"
+    },
+    {
+      "id": "3c18de3b-b9ba-5c75-91b5-d471a9c86003",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 14,
+      "chunkIndex": 1,
+      "text": "situation difficile. Ils ont aussi la responsabilité de prodiguer promptement des conseils aux collaborateurs dont la conduite contrevient au Code. c/. Application : Lorsqu’un collaborateur enfreint le Code, son Directeur hiérarchique se doit de prendre rapidement des mesures énergiques, en concertation avec la Direction Générale ou son représentant désigné à cet effet. Si un di- rigeant sait qu’un collaborateur s’apprête à transgresser le Code et s’abstient d’agir, le dirigeant sera tenu solidairement responsable de l’infraction. Tout Collaborateur se trouvant confronté à un manquement au Code, ayant une incidence directe ou indirecte sur les activités et les intérêts de l’ONDA est tenu de le signaler et est invité à : Contacter son supérieur hiérarchique direct ; Ou S’adresser au Correspondant Code ; Ou Informer la Direction du Capital Humain . Si le collaborateur signale un fait grave, une enquête sera menée et les mesures qui s’imposent seront prises. CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "7b64b8e1-73f4-5bef-a192-acfd09a07fac",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 14,
+      "chunkIndex": 2,
+      "text": "; Ou Informer la Direction du Capital Humain . Si le collaborateur signale un fait grave, une enquête sera menée et les mesures qui s’imposent seront prises. CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "708edfa5-3afa-553c-b994-2652e45ee0db",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 15,
+      "chunkIndex": 0,
+      "text": "Une instance permanente dénommée « comité d’éthique et de bonne conduite » est instituée, au sein de l’Office National des Aéroports. Ses attributions, sa composition et ses modalités de fonctionnement sont fixées ci-après : Attributions : Donner son avis sur toute question d’ordre éthique dont il est saisi ; Valider les procédures d’application des dispositions du code ainsi que les amendements y afférents ; Statuer sur les affaires qui lui sont soumises. Composition : Ce comité sera présidé par le Directeur Général de l’Office National des Aéroports. Les membres seront désignés par décision directoriale. Le comité peut faire appel à toute personne dont la contribution est jugée utile. Secrétariat et Fréquence des réunions du comité : Le secrétariat et la coordination des travaux du comité sont assurés par la Direction Capital Humain qui établit et conserve les Procès verbaux des réunions du comité. Le comité peut être saisi pour toute question se rapportant à l’éthique au sein de l’Office. Il"
+    },
+    {
+      "id": "43d1d657-95b2-50aa-99cf-f21ed7895fec",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 15,
+      "chunkIndex": 1,
+      "text": "coordination des travaux du comité sont assurés par la Direction Capital Humain qui établit et conserve les Procès verbaux des réunions du comité. Le comité peut être saisi pour toute question se rapportant à l’éthique au sein de l’Office. Il se réunit une fois par an et autant de fois que c’est nécessaire, à l’initiative de son président. Le comité présente une fois par an un rapport sur les manquements aux dispositions du code. 14 COMITE D’ETHIQUE ET DE BONNE CONDUITE COMITE D’ETHIQUE ET DE BONNE CONDUITE CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "34230cd9-eb19-54ad-8d56-25025269e6ce",
+      "documentId": "c18ef2f7-7a68-540e-98cc-e191c9c4921e",
+      "source": "013-Code+d'ethique+FV.pdf",
+      "page": 16,
+      "chunkIndex": 0,
+      "text": "Nous nous inscrivons dans une démarche de conformité légale dans tous les domaines de nos interventions et en toutes circonstances ; Nous œuvrons pour consolider une culture d’intégrité, de responsabilité et de performance ; Nous favorisons l’esprit d’équipe, le professionnalisme et le développement d’une culture d’entreprise entre les collaborateurs ; Nous veillons au respect des règles de sécurité, d’hygiène et de santé dans le lieu de travail ; Nous nous engageons à améliorer sans cesse la qualité des services prestés aux clients ; Nous sommes soucieux de l’image de marque de notre établissement ; Nous veillons à la préservation de l’environnement. 15 LES 7 POINTS CLÉ À RETENIRLES 7 POINTS CLÉ À RETENIR CODE D’ETHIQUE ET DE BONNE CONDUITE"
+    },
+    {
+      "id": "73eaea0d-ac63-50bb-ba02-499ae85cbf46",
+      "documentId": "4386ecb0-a5f9-512c-a56a-cafacb0d922a",
+      "source": "057-CP+zone+entrée+RAK++AGA.pdf",
+      "page": 1,
+      "chunkIndex": 0,
+      "text": "AÉROPORTS 2030 : NOUVELLE ZONE DÉPART DANS LES AÉROPORTS MARRAKECH MENARA ET AGADIR AL MASSIRA L’Office National des Aéroports poursuit la modernisation de ses infrastructures, dans le cadre de la stratégie « Aéroports 2030 », en repensant les accès aux aéroports Marrakech Menara et Agadir Al Massira. Deux infrastructures aéroportuaires majeures, au cœur de l’attractivité touristique du Royaume. Chaque année, des millions de touristes accèdent au Maroc par voie aérienne, et une grande partie transite par les aéroports de Marrakech et d’Agadi r. Véritables portes d’entrée sur les destinations les plus prisées du pays, ces infrastructures jouent un rôle central dans le rayonnement touristique national. Aussi, l’ONDA poursuit le dé ploiement de sa stratégie Aéroports 2030 avec la transformation des zones et entrées extérieures des aéroports de Marrakech Menara et Agadir Al Massira. Les nouveaux aménagements offrent désormais aux passagers un cadre d’accueil plus fluide, plus intuitif et plus agréable grâce à une refonte des zones de circulation et des"
+    },
+    {
+      "id": "7191d965-e167-5922-9622-adf022397d16",
+      "documentId": "4386ecb0-a5f9-512c-a56a-cafacb0d922a",
+      "source": "057-CP+zone+entrée+RAK++AGA.pdf",
+      "page": 1,
+      "chunkIndex": 1,
+      "text": "zones et entrées extérieures des aéroports de Marrakech Menara et Agadir Al Massira. Les nouveaux aménagements offrent désormais aux passagers un cadre d’accueil plus fluide, plus intuitif et plus agréable grâce à une refonte des zones de circulation et des déposes -minute, une signalétique modernisée pour orienter rapidement les voyageurs et des accès directs aux terminaux selon les compagnies. Les espaces d’accueil ont ainsi été entièrement repensés pour fluidifier les arrivées et les départs, améliorer la qualité de service et répondre aux attentes des voyageurs comme de leurs accompagnants. L’ensemble de ces mesures a été rendu possible grâce à la mobilisation concertée entre le ministère de l’Intérieur, la direction de l'immigration et de la surveillance des frontières, la DGSN, la Gendarmerie Royale, la Douane, la Wilaya de Marrakech, la Wilaya d’Agadir et enfin de l’ONDA. En facilitant les premiers et les derniers instants de l’expérience aéroportuaire, ces aménagements marquent une nouvelle étape dans l’engagement de l’ONDA pour des aéroports plus"
+    },
+    {
+      "id": "234f4be9-a8ae-581a-9184-39761994f4fc",
+      "documentId": "4386ecb0-a5f9-512c-a56a-cafacb0d922a",
+      "source": "057-CP+zone+entrée+RAK++AGA.pdf",
+      "page": 1,
+      "chunkIndex": 2,
+      "text": "Gendarmerie Royale, la Douane, la Wilaya de Marrakech, la Wilaya d’Agadir et enfin de l’ONDA. En facilitant les premiers et les derniers instants de l’expérience aéroportuaire, ces aménagements marquent une nouvelle étape dans l’engagement de l’ONDA pour des aéroports plus «smart», plus connectés et centrés sur les attentes des voyageurs. Ces transformations s’inscrivent dans le cadre de la stratégie Aéroports 2030, qui vise à hisser les aéroports marocains aux meilleurs standards internationaux."
+    },
+    {
+      "id": "6decadec-46f6-5779-9525-28bfe89e234d",
+      "documentId": "7ee88453-76db-52ec-94a4-e45f9c79a2dd",
+      "source": "060-CP+Reveal+Nvx+Terminal+CMN.pdf",
+      "page": 1,
+      "chunkIndex": 0,
+      "text": "Reveal du nouveau terminal de l’Aéroport Mohammed V L’ONDA lance la construction d’un nouveau terminal en mode HUB. Unique en son genre, ce projet qui s’inscrit dans le cadre de la stratégie «Aéroports 2030», est une véritable prouesse technique qui traduit les nouvelles ambitions du Maroc. D’une capacité de 20 millions de passagers par an, il devrait voir le jour en 2029. Coût de l’investissement estimé : 15 milliards de dirhams. L'Office National des Aéroports -ONDA- s’apprête à lancer un grand chantier pour un nouveau terminal à l'aéroport Mohammed V de Casablanca. Ce projet constitue une véritable prouesse technique et un chef d’œuvre architectural, représentant une révolution infrastructurelle sans précédent dans le secteur aéroportuaire marocain. Son design est inspiré des vagues de l’Atlantique. Conçu en forme de « H », ce projet ambitieux vise à répondre aux exigences d’un fonctionnement HUB conforme aux standards internationaux, notamment en termes de temps de connexion de traitement des bagages et de taux d’utilisation"
+    },
+    {
+      "id": "72468625-ca0f-5501-83fe-ea4b01d11fdc",
+      "documentId": "7ee88453-76db-52ec-94a4-e45f9c79a2dd",
+      "source": "060-CP+Reveal+Nvx+Terminal+CMN.pdf",
+      "page": 1,
+      "chunkIndex": 1,
+      "text": "vagues de l’Atlantique. Conçu en forme de « H », ce projet ambitieux vise à répondre aux exigences d’un fonctionnement HUB conforme aux standards internationaux, notamment en termes de temps de connexion de traitement des bagages et de taux d’utilisation des passerelles. Il permettra également de répondre aux besoins de l’évolution prévisionnelle du trafic aérien, en particulier celui lié au programme de développement de Royal Air Maroc. Ce nouveau terminal sera connecté à la ligne à grande vitesse (LGV) entre Kenitra–Marrakech, offrant aux voyageurs un accès rapide et fluide vers les principales villes du Maroc. À l’image des plus grands aéroports internationaux tels que Paris-Charles de Gaulle, Londres-Heathrow ou encore Hong Kong International, cette infrastructure moderne vise à renforcer l’intermodalité des transports et à améliorer l’expérience des passagers. Cette connexion ferroviaire permettra non seulement de réduire considérablement les temps de trajet entre Casablanca et d’autres pôles stratégiques, mais aussi de soutenir la croissance du trafic aérien en facilitant l’accès à"
+    },
+    {
+      "id": "1f93c883-9ca9-5005-a12a-3fe2d82f7065",
+      "documentId": "7ee88453-76db-52ec-94a4-e45f9c79a2dd",
+      "source": "060-CP+Reveal+Nvx+Terminal+CMN.pdf",
+      "page": 1,
+      "chunkIndex": 2,
+      "text": "des transports et à améliorer l’expérience des passagers. Cette connexion ferroviaire permettra non seulement de réduire considérablement les temps de trajet entre Casablanca et d’autres pôles stratégiques, mais aussi de soutenir la croissance du trafic aérien en facilitant l’accès à l’aéroport pour les voyageurs nationaux et internationaux. Le nouveau terminal comprendra également une nouvelle piste parallèle de 3700 m sur 45 m avec ses voies de circulation et les infrastructures aéronautiques associées ; ainsi que des parkings avions ; une nouvelle tour de contrôle d’une hauteur d’environ 42 m. Les différentes composantes du terminal offriront une expérience qualitative entièrement réinventée aux voyageurs, optimisant leur mobilité, leur confort et"
+    },
+    {
+      "id": "0f83fc00-5db7-54f4-aa67-1fe4e93c80f7",
+      "documentId": "7ee88453-76db-52ec-94a4-e45f9c79a2dd",
+      "source": "060-CP+Reveal+Nvx+Terminal+CMN.pdf",
+      "page": 2,
+      "chunkIndex": 0,
+      "text": "leur accueil. Il sera disposé sur trois niveaux principaux et intègrera une oasis de verdure, des zones de commerce, une grande zone de Duty Free, des salons VIP et un hôtel, tous dotées de vues imprenables sur les pistes. Les différents appels d’offre pour la construction seront lancés dans les mois à venir. Celui du terrassement a déjà été lancé. La livraison du nouveau terminal est prévue en 2029. Avec ce projet iconique, l'ONDA réaffirme ses ambitions pour répondre aux nouveaux défis du pays, notamment en préparation à la Coupe du Monde de football 2030. Il concrétise la nouvelle stratégie « Aéroport 2030 », marquant une véritable révolution en termes d’infrastructures aéroportuaires au Maroc et contribue à renforcer la position du Maroc comme Hub stratégique pour les échanges mondiaux. ---------------------------------- Un véritable manifeste architectural... INSPIRATION Un terminal, porte de l’Atlantique Conçu comme un manifeste architectural, le nouveau terminal de Casablanca puise son inspiration dans les forces naturelles de l’océan Atlantique."
+    },
+    {
+      "id": "c963793e-3c1e-5b70-9f68-8a3bad7232dd",
+      "documentId": "7ee88453-76db-52ec-94a4-e45f9c79a2dd",
+      "source": "060-CP+Reveal+Nvx+Terminal+CMN.pdf",
+      "page": 2,
+      "chunkIndex": 1,
+      "text": "du Maroc comme Hub stratégique pour les échanges mondiaux. ---------------------------------- Un véritable manifeste architectural... INSPIRATION Un terminal, porte de l’Atlantique Conçu comme un manifeste architectural, le nouveau terminal de Casablanca puise son inspiration dans les forces naturelles de l’océan Atlantique. Les lignes courbes et fluides de son architecture évoquent la puissance et la délicatesse du mouvement de l’eau, symbolisant l’équilibre entre force et sérénité. Ce terminal incarne la vision d’un « Maroc, porte de l’Atlantique » où la fluidité des formes résonne avec l’énergie des vagues. Les vastes espaces ouverts, inspirés par l’horizon sans limite de l’Atlantique, traduisent l’aspiration du Maroc à s’imposer comme un carrefour stratégique des échanges mondiaux. CULTURE L’identité marocaine dans toute sa diversité Le nouveau terminal ne se limite pas à son rôle d’infrastructure de transport. Il s’impose comme la porte d’entrée du Maroc, une représentation contemporaine de l’identité culturelle marocaine dans toute sa diversité. L’architecture puise dans les formes, les couleurs et les matériaux qui"
+    },
+    {
+      "id": "9cd38026-ec2c-521f-bf48-2ea662d73dd1",
+      "documentId": "7ee88453-76db-52ec-94a4-e45f9c79a2dd",
+      "source": "060-CP+Reveal+Nvx+Terminal+CMN.pdf",
+      "page": 2,
+      "chunkIndex": 2,
+      "text": "ne se limite pas à son rôle d’infrastructure de transport. Il s’impose comme la porte d’entrée du Maroc, une représentation contemporaine de l’identité culturelle marocaine dans toute sa diversité. L’architecture puise dans les formes, les couleurs et les matériaux qui reflètent la diversité du Royaume : les motifs géométriques d’inspiration andalouse, les tapis berbères des montagnes de l’Atlas et les arcs élégants des médinas se fondent dans une vision harmonieuse et avant-gardiste."
+    },
+    {
+      "id": "f3f89617-2478-552d-8757-d650706bdd90",
+      "documentId": "7ee88453-76db-52ec-94a4-e45f9c79a2dd",
+      "source": "060-CP+Reveal+Nvx+Terminal+CMN.pdf",
+      "page": 3,
+      "chunkIndex": 0,
+      "text": "ESPACES VERTS Des oasis et des palmiers, pour une halte sereine Les jardins occupent une place centrale dans le projet du terminal. En intégrant deux zones arborées et végétalisées, sous forme d’oasis, au sein de l’aéroport, l’ONDA entend offrir aux voyageurs une expérience immersive, moderne, valorisant le patrimoine naturel marocain. Ces oasis offrent un contraste apaisant avec l’architecture contemporaine et moderne du terminal et créent un espace de calme et de décompression avant ou après un vol, un environnement où les voyageurs sont invités à se détendre et à profiter d’une halte sereine. MATERIAUX Une ode à l’architecture marocaine traditionnelle La toiture recouvrant le terminal représente un véritable chef-d’œuvre architectural. Le calepinage du « soffite », les parties en surplomb, se réfère au « bejmat ». Il est conçu avec une trame hexagonale, revêtue d’ocre, telle une ode à l’architecture marocaine traditionnelle et un hommage aux provinces du Sud. Cette référence au zellige en terre cuite apporte également une touche"
+    },
+    {
+      "id": "a6ada4b7-7727-5fd2-bc7d-d80d931e6b00",
+      "documentId": "7ee88453-76db-52ec-94a4-e45f9c79a2dd",
+      "source": "060-CP+Reveal+Nvx+Terminal+CMN.pdf",
+      "page": 3,
+      "chunkIndex": 1,
+      "text": "se réfère au « bejmat ». Il est conçu avec une trame hexagonale, revêtue d’ocre, telle une ode à l’architecture marocaine traditionnelle et un hommage aux provinces du Sud. Cette référence au zellige en terre cuite apporte également une touche chaleureuse et accueillante à l’aéroport, avec une texture subtile et naturelle, contrastant avec la contemporanéité du geste architectural."
+    },
+    {
+      "id": "728fb598-ae5a-5fc2-a7a0-6334a6bad8e6",
+      "documentId": "e5a48457-eb00-5c11-9fa1-989f0dbe4614",
+      "source": "061-CP+portillons+automatiques+FV.pdf",
+      "page": 1,
+      "chunkIndex": 0,
+      "text": "AÉROPORTS 2030 : LE DOUBLE CONTRÔLE REMPLACÉ PAR DES PORTILLONS AUTOMATIQUES • Mise en place de portillons automatiques à l’aéroport de Casablanca Mohammed V • Suppression du double contrôle • Généralisation de cette mesure à tous les aéroports avant Juin 2025 Une étape supplémentaire vient d’être franchie pour améliorer la fluidité dans les aéroports du pays. Le double contrôle au départ et à l’arrivée des passagers internationaux, qui imposait aux voyageurs de présenter leur passeport une deuxième fois après l’apposition du tampon d’entrée, a été supprimé ce week-end à l'aéroport de Casablanca Mohammed V. Cette évolution a été rendue possible grâce à la mise en place de portillons automatiques, permettant un contrôle plus rapide et sécurisé. Cette mesure a été rendue possible grâce aux efforts conjugués des équipes de la Direction Générale de la Sûreté Nationale (DGSN), la Direction de l'Immigration et de la Surveillance des Frontières au Ministère de l’Intérieur et de l’ONDA. Avec cette modernisation, les passagers bénéficieront"
+    },
+    {
+      "id": "68ed1a0d-ca15-5620-85f8-79f7c928b6a9",
+      "documentId": "e5a48457-eb00-5c11-9fa1-989f0dbe4614",
+      "source": "061-CP+portillons+automatiques+FV.pdf",
+      "page": 1,
+      "chunkIndex": 1,
+      "text": "rendue possible grâce aux efforts conjugués des équipes de la Direction Générale de la Sûreté Nationale (DGSN), la Direction de l'Immigration et de la Surveillance des Frontières au Ministère de l’Intérieur et de l’ONDA. Avec cette modernisation, les passagers bénéficieront d’un passage plus fluide aux frontières, réduisant ainsi les files d’attente et améliorant l’expérience du voyage. Cette mesure sera progressivement étendue à l’ensemble des aéroports du Royaume avant la saison estivale, le temps que chaque infrastructure aéroportuaire soit équipée de ces nouveaux dispositifs. L’objectif pour l’ONDA reste de conjuguer efficacité et sécurité, en adoptant des solutions technologiques avancées pour accompagner la croissance du trafic aérien international tout en garantissant un contrôle optimal aux frontières. La dynamique de la stratégie Aéroports 2030 est en marche."
+    },
+    {
+      "id": "2ea1bbae-5992-5917-b6cf-b1e2abbd2542",
+      "documentId": "e5a48457-eb00-5c11-9fa1-989f0dbe4614",
+      "source": "061-CP+portillons+automatiques+FV.pdf",
+      "page": 1,
+      "chunkIndex": 2,
+      "text": "2030 est en marche."
+    },
+    {
+      "id": "115ac40c-8592-5047-9e65-3c8f54b1d2d7",
+      "documentId": "e4ef5b6a-c645-5722-86b6-27d272fbac80",
+      "source": "063-Communiqué+de+presse+n°02-2025+VF.pdf",
+      "page": 1,
+      "chunkIndex": 0,
+      "text": "AÉROPORT MOHAMMED V : UNE ENTRÉE PLUS FLUIDE POUR LES VOYAGEURS Dans un souci d’amélioration continue de l’expérience client, les dispositifs d’inspections - scanner et portique- aux entrées de l’aéroport Mohammed V de Casablanca ont été déplacés, supprimant ainsi les longues files d’attente. Cette réorganisation permettra une circulation plus fluide, offrant aux passagers un parcours plus confortable dès leur arrivée. Les voyageurs empruntant l’aéroport Mohammed V de Casablanca peuvent désormais accéder plus rapidement par l’ensemble des points d’entrée de l’aéroport. Cette avancée a été rendue possible grâce à la mobilisation des différentes autorités en charge de la sécurité aéroportuaire, notamment le Ministère de l’Intérieur , la Direction Générale de la Sûreté Nationale (DGSN), et la Gendarmerie Royale. Leur coordination a permis de repenser le dispositif de contrôle tout en maintenant des normes de sécurité strictes. Cette initiative s’inscrit dans le cadre de la stratégie « Aéroports 2030 », qui vise notamment à moderniser et à optimiser l’expérience des passagers à"
+    },
+    {
+      "id": "5b825d46-f35c-5024-b8f8-10ea09ee92eb",
+      "documentId": "e4ef5b6a-c645-5722-86b6-27d272fbac80",
+      "source": "063-Communiqué+de+presse+n°02-2025+VF.pdf",
+      "page": 1,
+      "chunkIndex": 1,
+      "text": "permis de repenser le dispositif de contrôle tout en maintenant des normes de sécurité strictes. Cette initiative s’inscrit dans le cadre de la stratégie « Aéroports 2030 », qui vise notamment à moderniser et à optimiser l’expérience des passagers à travers plusieurs axes, dont la fluidité des contrôles, le confort des installations et l’innovation technologique. Ce nouveau dispositif sera progressivement déployé dans les autres aéroports du Royaume, à commencer par l’aéroport de Marrakech dans les tous prochains jours. D’autres mesures viendront très prochainement renforcer cette dynamique, toujours dans l’objectif d’améliorer l’expérience des voyageurs et de faire des aéroports marocains des références en matière d’efficacité et de qualité de service. Avec ces améliorations, l’ONDA confirme sa volonté de renforcer l’efficacité et l’attractivité de ses plateformes aéroportuaires, tout en garantissant un haut niveau de sécurité et de service aux voyageurs."
+    },
+    {
+      "id": "cfb4d6c0-50b0-5bf5-ae91-b3a7e864ceea",
+      "documentId": "e4ef5b6a-c645-5722-86b6-27d272fbac80",
+      "source": "063-Communiqué+de+presse+n°02-2025+VF.pdf",
+      "page": 1,
+      "chunkIndex": 2,
+      "text": "l’attractivité de ses plateformes aéroportuaires, tout en garantissant un haut niveau de sécurité et de service aux voyageurs."
+    },
+    {
+      "id": "09795004-e993-5923-9fa4-7a4c212b9536",
+      "documentId": "60f4c9da-f1da-5bb0-8914-90c3f885c393",
+      "source": "065-CP+Tps+d'attente+Airports+FR.pdf",
+      "page": 1,
+      "chunkIndex": 0,
+      "text": "COMMUNIQUE DE PRESSE AIRPORTS OF MOROCCO ACCELERE LA FLUIDITE DANS SES AEROPORTS : CASABLANCA ET MARRAKECH MONTRENT LA VOIE Au premier semestre 2026, les temps de passage aux contrôles aux frontières enregistrent une baisse historique pouvant atteindre 70 % dans certains aéroports. Avec un temps moyen limité 3,6 minutes au départ, Airports of Morocco confirme les premiers résultats de sa stratégie Aéroports 2030. Un résultat rendu possible grâce à la mobilisation exceptionnelle de la direction Générale de la Sureté Nationale et du Ministère de l’intérieur. Les aéroports marocains poursuivent leur montée en performance. Les indicateurs du premier semestre 2026 mettent en évidence une amélioration significative des temps de passage aux contrôles aux frontières, reflet des actions engagées pour fluidifier le parcours des voyageurs tout en accompagnant la forte croissance du trafic aérien. À l’échelle nationale, le temps moyen de passage aux contrôles des passeports aux postes aux frontières (PAF) au départ atteint 3,6 minutes, en baisse de 24 % sur"
+    },
+    {
+      "id": "c309560c-185d-5824-9228-49b89b8f8594",
+      "documentId": "60f4c9da-f1da-5bb0-8914-90c3f885c393",
+      "source": "065-CP+Tps+d'attente+Airports+FR.pdf",
+      "page": 1,
+      "chunkIndex": 1,
+      "text": "parcours des voyageurs tout en accompagnant la forte croissance du trafic aérien. À l’échelle nationale, le temps moyen de passage aux contrôles des passeports aux postes aux frontières (PAF) au départ atteint 3,6 minutes, en baisse de 24 % sur un an. A l’arrivée, ce taux s’établit"
+    },
+    {
+      "id": "a08b01c7-99c6-537a-91ad-88cf02e12f5b",
+      "documentId": "60f4c9da-f1da-5bb0-8914-90c3f885c393",
+      "source": "065-CP+Tps+d'attente+Airports+FR.pdf",
+      "page": 2,
+      "chunkIndex": 0,
+      "text": "désormais à 9,6 minutes, soit une amélioration de 22 % par rapport à 2025. Casablanca Mohammed V, premier aéroport du Royaume et principal hub aérien régional, illustre cette dynamique. Les voyageurs y franchissent les contrôles d’arrivée en 5,4 minutes en moyenne, contre près de 12 minutes un an auparavant, soit une amélioration de 54 %. Au départ, le temps de passage est ramené à 2,25 minutes, contre environ 7,5 minutes au premier semestre 2025, représentant une réduction de 70 %. À Marrakech Menara, deuxième aéroport du Royaume et porte d’entrée touristique majeure de la destination Maroc, le temps moyen de passage s’établit à 6,86 minutes à l’arrivée (-16 %) et à 5,09 minutes au départ (-22,5 %), confirmant la capacité de l’aéroport à conjuguer fluidité et montée en charge. Cette dynamique se confirme sur l’ensemble du réseau aéroportuaire. À Tanger, le temps de passage à l’arrivée est ramené à 11,93 minutes, soit une amélioration de 52 %. Fès se distingue"
+    },
+    {
+      "id": "dfb8ea2b-e877-5666-a3d7-8c85197fdc2e",
+      "documentId": "60f4c9da-f1da-5bb0-8914-90c3f885c393",
+      "source": "065-CP+Tps+d'attente+Airports+FR.pdf",
+      "page": 2,
+      "chunkIndex": 1,
+      "text": "de l’aéroport à conjuguer fluidité et montée en charge. Cette dynamique se confirme sur l’ensemble du réseau aéroportuaire. À Tanger, le temps de passage à l’arrivée est ramené à 11,93 minutes, soit une amélioration de 52 %. Fès se distingue avec seulement 1,53 minute au départ, l’un des meilleurs temps du réseau, tandis qu’Agadir maintient un temps moyen inférieur à 10 minutes à l’arrivée. Ces résultats confirment les progrès continus réalisés sur les principales plateformes du Royaume. Ces résultats sont le fruit d’une mobilisation étroite de l’ensemble des acteurs de la chaîne aéroportuaire. Et plus particulièrement à la mobilisation de la Direction Générale de la Sûreté Nationale (DGSN) et du Ministère de l’Intérieur dont les actions ont permis de renforcer et d’optimiser les contrôles aux frontières tout en garantissant les plus hauts standards de sûreté et de sécurité. L’ambition d’Airports of Morocco est de faire des aéroports marocains des références régionales en matière de qualité de service et d’efficacité opérationnelle."
+    },
+    {
+      "id": "148c1219-b695-51a2-9239-5dcf6dffb32a",
+      "documentId": "60f4c9da-f1da-5bb0-8914-90c3f885c393",
+      "source": "065-CP+Tps+d'attente+Airports+FR.pdf",
+      "page": 2,
+      "chunkIndex": 2,
+      "text": "et d’optimiser les contrôles aux frontières tout en garantissant les plus hauts standards de sûreté et de sécurité. L’ambition d’Airports of Morocco est de faire des aéroports marocains des références régionales en matière de qualité de service et d’efficacité opérationnelle. Cette ambition s’inscrit pleinement dans la stratégie Aéroports 2030, qui place"
+    },
+    {
+      "id": "02a56ee5-2c3e-5483-b450-83ecacb921d9",
+      "documentId": "60f4c9da-f1da-5bb0-8914-90c3f885c393",
+      "source": "065-CP+Tps+d'attente+Airports+FR.pdf",
+      "page": 3,
+      "chunkIndex": 0,
+      "text": "l’expérience passager au cœur de la transformation des infrastructures aéroportuaires nationales."
+    },
+    {
+      "id": "68f7959d-eb14-520c-a6be-1c8e7b01efd4",
+      "documentId": "cf00a7a3-9731-50fe-9b1d-2e1adb125bb5",
+      "source": "067-Cp+Pack+Check+FR.pdf",
+      "page": 1,
+      "chunkIndex": 0,
+      "text": "COMMUNIQUE DE PRESSE AIRPORTS OF MOROCCO GENERALISE LA CARTE D’EMBARQUEMENT 100 % MOBILE Airports of Morocco introduit une nouvelle façon de voyager en permettant aux passagers d’utiliser une carte d’embarquement entièrement numérique, accessible directement depuis leur smartphone. Jamais le passage à l’aéroport n’a été aussi simple ! En quelques clics, les voyageurs peuvent désormais se retrouver en salle d’embarquement. Le Pack chek fait son entrée dans les dispositifs déployés par Airports of Morocco. Cette innovation accompagne l’évolution des usages, où le téléphone mobile est devenu le point de départ de chaque voyage. Réservation, enregistrement, informations de vol : les principales étapes s’effectuent déjà en ligne. Le Pax Check prolonge cette expérience jusqu’à l’aéroport en intégrant la carte d’embarquement dans un parcours entièrement dématérialisé. Après leur enregistrement en ligne via l’application de leur compagnie aérienne, les voyageurs reçoivent leur carte d’embarquement sous la forme d’un QR code sécurisé. Les vérifications documentaires, réalisées en amont par les compagnies aériennes conformément aux exigences"
+    },
+    {
+      "id": "d54d793e-e36e-598f-bad7-14a295ebd0f8",
+      "documentId": "cf00a7a3-9731-50fe-9b1d-2e1adb125bb5",
+      "source": "067-Cp+Pack+Check+FR.pdf",
+      "page": 1,
+      "chunkIndex": 1,
+      "text": "parcours entièrement dématérialisé. Après leur enregistrement en ligne via l’application de leur compagnie aérienne, les voyageurs reçoivent leur carte d’embarquement sous la forme d’un QR code sécurisé. Les vérifications documentaires, réalisées en amont par les compagnies aériennes conformément aux exigences réglementaires en vigueur, permettent ensuite un passage plus fluide aux différents points de contrôle et aux sas automatisés, sans qu’il soit nécessaire de présenter une carte d’embarquement imprimée."
+    },
+    {
+      "id": "0e59ef7b-0429-5ef7-a104-76766c91c072",
+      "documentId": "cf00a7a3-9731-50fe-9b1d-2e1adb125bb5",
+      "source": "067-Cp+Pack+Check+FR.pdf",
+      "page": 2,
+      "chunkIndex": 0,
+      "text": "En simplifiant les différentes étapes du parcours, le Pax Check réduit ainsi les manipulations de documents, facilite la circulation dans les terminaux et contribue à rendre l’expérience aéroportuaire plus confortable. Cette évolution s’accompagne du maintien des plus hauts standards de sûreté et de sécurité, dans le respect des référentiels nationaux et internationaux. Le dispositif sera progressivement déployé auprès de l’ensemble des compagnies aériennes ayant satisfait aux prérequis techniques, opérationnels et réglementaires nécessaires à son intégration. La dématérialisation de la carte d’embarquement constitue une première brique d’un parcours aéroportuaire de plus en plus numérique, pensé pour répondre à l’évolution des usages comme à la croissance du trafic aérien."
+    },
+    {
+      "id": "914f2f82-2c18-5b9e-838e-be860e1920c8",
+      "documentId": "2f539a01-025c-5af8-8e6e-df16a3188ec3",
+      "source": "072-CP+Trafic+aérien+2025+FR.pdf",
+      "page": 1,
+      "chunkIndex": 0,
+      "text": "COMMUNIQUE DE PRESSE 36,3 MILLIONS : RECORD DU TRAFIC AERIEN POUR L’ONDA L’EFFET AEROPORT 2030 ET CAN Avec 36,3 millions de passagers enregistrés en 2025, en hausse de 11 % par rapport à 2024, le trafic aérien national confirme une trajectoire de croissance solide et durable. Ces performances traduisent l’impact concret de la stratégie Aéroport 2030 et le travail engagé par l’ONDA pour accompagner la montée en puissance du Maroc comme hub aérien régional et destination internationale majeure. L’année 2025 marque une étape structurante pour le transport aérien marocain. Le trafic national atteint 36,3 millions de passagers, contre 32,7 millions en 2024, confirmant une dynamique de croissance robuste, tirée par les grands hubs et relayée par une progression soutenue des aéroports régionaux. Cette croissance soutenue en 2025 a été boosté par le succès rencontré par la Coupe d’Afrique des Nations 2025 et le flux d’arrivées de fans du monde entier que cela a engendré. Cette évolution positive reflète également la"
+    },
+    {
+      "id": "af7efeea-0230-509e-8f32-bb22d7d60ded",
+      "documentId": "2f539a01-025c-5af8-8e6e-df16a3188ec3",
+      "source": "072-CP+Trafic+aérien+2025+FR.pdf",
+      "page": 1,
+      "chunkIndex": 1,
+      "text": "aéroports régionaux. Cette croissance soutenue en 2025 a été boosté par le succès rencontré par la Coupe d’Afrique des Nations 2025 et le flux d’arrivées de fans du monde entier que cela a engendré. Cette évolution positive reflète également la pertinence des choix stratégiques engagés dans le cadre de la stratégie « Aéroport 2030 », basée sur l’anticipation de la demande, l’adaptation des infrastructures, l’amélioration continue de l’expérience passager et le renforcement de la connectivité aérienne du Royaume."
+    },
+    {
+      "id": "7709833d-7dde-588d-b02f-625248570363",
+      "documentId": "2f539a01-025c-5af8-8e6e-df16a3188ec3",
+      "source": "072-CP+Trafic+aérien+2025+FR.pdf",
+      "page": 2,
+      "chunkIndex": 0,
+      "text": "Plusieurs seuils symboliques ont été franchis en 2025, illustrant le changement d’échelle du réseau aéroportuaire national. L’aéroport de Casablanca dépasse les 11 millions de passagers dès le mois de décembre, consolidant son rôle de hub national et continental. Des résultats soutenues par le plan de développement de la Royal Air Maroc. L’aéroport de Marrakech atteint, pour la première fois, le cap des 10 millions de passagers annuels, confirmant son positionnement comme plateforme touristique de premier plan. L’aéroport de Rabat-Salé enregistre une croissance exceptionnelle de 26 %, franchissant le seuil des 2 millions de passagers, révélant un fort potentiel de captation du trafic et d’attractivité institutionnelle et économique. La croissance du trafic demeure largement portée par les cinq principaux aéroports du Royaume, qui concentrent près de 90 % du volume national. Casablanca représente à lui seul 32 % du trafic, Marrakech 28 %, Agadir 10 %, tandis que Tanger et Rabat affichent des progressions particulièrement soutenues, respectivement de 17 % et"
+    },
+    {
+      "id": "78185ef7-7f1c-516a-8fb5-281d5785e32f",
+      "documentId": "2f539a01-025c-5af8-8e6e-df16a3188ec3",
+      "source": "072-CP+Trafic+aérien+2025+FR.pdf",
+      "page": 2,
+      "chunkIndex": 1,
+      "text": "Royaume, qui concentrent près de 90 % du volume national. Casablanca représente à lui seul 32 % du trafic, Marrakech 28 %, Agadir 10 %, tandis que Tanger et Rabat affichent des progressions particulièrement soutenues, respectivement de 17 % et 26 % par rapport à 2024. Le secteur touristique et les arrivées internationales contribuent grandement à ces résultats. Parallèlement, la dynamique observée dans les aéroports régionaux témoigne d’un rééquilibrage progressif du trafic et d’une meilleure intégration territoriale du réseau aéroportuaire. Des plateformes comme Essaouira, Béni Mellal, Errachidia ou Laâyoune enregistrent des taux de croissance significatifs, traduisant l’effet levier des investissements, de l’ouverture de nouvelles lignes et du développement touristique régional. Ces résultats confirment l’efficacité du travail mené par l’ONDA et ses équipes, en étroite coordination avec l’ensemble des partenaires du secteur : ministère de l’Intérieur, Direction Générale de la Sûreté Nationale, Gendarmerie Royale, Administration des Douanes et Impôts Indirects et le ministère du Transport de la Logisque. Ils illustrent une"
+    },
+    {
+      "id": "84ee467c-6362-5c44-a868-ea46d407410d",
+      "documentId": "2f539a01-025c-5af8-8e6e-df16a3188ec3",
+      "source": "072-CP+Trafic+aérien+2025+FR.pdf",
+      "page": 2,
+      "chunkIndex": 2,
+      "text": "ses équipes, en étroite coordination avec l’ensemble des partenaires du secteur : ministère de l’Intérieur, Direction Générale de la Sûreté Nationale, Gendarmerie Royale, Administration des Douanes et Impôts Indirects et le ministère du Transport de la Logisque. Ils illustrent une vision structurée et alignée sur les ambitions nationales à l’horizon 2030, visant à renforcer la compétitivité du Maroc, soutenir le développement économique des territoires et accompagner durablement la croissance du trafic aérien."
+    },
+    {
+      "id": "c6751d72-b9d6-536e-8383-f3982d9219c9",
+      "documentId": "2f539a01-025c-5af8-8e6e-df16a3188ec3",
+      "source": "072-CP+Trafic+aérien+2025+FR.pdf",
+      "page": 3,
+      "chunkIndex": 0,
+      "text": "Avec cette performance 2025, le réseau aéroportuaire marocain consolide ses fondamentaux et s’inscrit dans une trajectoire de croissance maîtrisée, au service de l’attractivité, de la connectivité et du rayonnement du Royaume."
+    },
+    {
+      "id": "875de64f-ad34-5aa6-ab97-bef3106f89ac",
+      "documentId": "0552d9a6-5b2c-512f-a0fe-37b60f7909de",
+      "source": "073-CP+Aéroport+Rba+-+Bus_taxis+FR.pdf",
+      "page": 1,
+      "chunkIndex": 0,
+      "text": "COMMUNIQUE DE PRESSE L’ONDA RENFORCE L’OFFRE DE BUS ET TAXIS DE L’AEROPORT DE RABAT-SALE En marge de la Coupe d’Afrique des Nations et dans une dynamique continue d’amélioration de l’expérience passager, l’ONDA met en œuvre plusieurs mesures au niveau de l’Aéroport de Rabat-Salé, visant à faciliter les déplacements et à renforcer la connexion entre l’aéroport et la capitale. L’ONDA renforce l’offre de bus reliant l’aéroport de Rabat-Salé à la capitale afin d’accompagner l’augmentation des flux et d’offrir aux passagers des temps d’attente réduits. Dorénavant, la cadence passe à un bus toutes les 15 minutes, au tarif unique de 25 dirhams avec la possibilité de payer par carte bancaire. Ce nouveau service, a été initié en collaboration avec la Wilaya de Rabat-Salé et s’inscrit dans le cadre de l’amélioration continue de l’expérience client prévue par la stratégie Aéroports 2030, qui vise à offrir des services innovants et un parcours passager fluide dès l’arrivée à l’aéroport. Dès leur arrivée, les passagers bénéficient"
+    },
+    {
+      "id": "b7a73006-b59b-50f0-938a-6c15e8a176e7",
+      "documentId": "0552d9a6-5b2c-512f-a0fe-37b60f7909de",
+      "source": "073-CP+Aéroport+Rba+-+Bus_taxis+FR.pdf",
+      "page": 1,
+      "chunkIndex": 1,
+      "text": "Rabat-Salé et s’inscrit dans le cadre de l’amélioration continue de l’expérience client prévue par la stratégie Aéroports 2030, qui vise à offrir des services innovants et un parcours passager fluide dès l’arrivée à l’aéroport. Dès leur arrivée, les passagers bénéficient désormais d’un accès simplifié à l’information et aux services de transport grâce à l’installation d’un kiosque dans le hall public de l’aéroport. Ce point de contact permet d’orienter les voyageurs, de répondre à leurs besoins immédiats et de leur proposer une solution de transport collective claire et accessible. Pensée comme un prolongement naturel du parcours aéroportuaire, cette offre revisitée contribue à fluidifier les déplacements dès la sortie de l’aéroport et à installer une première impression positive de Rabat, Ville Lumière, où la mobilité devient une expérience simple, lisible et rassurante. L’aménagement d’un circuit dédié sur l’esplanade de l’aéroport vient compléter ce dispositif en fluidifiant la circulation et en sécurisant les"
+    },
+    {
+      "id": "d243aa4e-96e2-51e2-9d7f-7f3856096256",
+      "documentId": "0552d9a6-5b2c-512f-a0fe-37b60f7909de",
+      "source": "073-CP+Aéroport+Rba+-+Bus_taxis+FR.pdf",
+      "page": 1,
+      "chunkIndex": 2,
+      "text": "où la mobilité devient une expérience simple, lisible et rassurante. L’aménagement d’un circuit dédié sur l’esplanade de l’aéroport vient compléter ce dispositif en fluidifiant la circulation et en sécurisant les"
+    },
+    {
+      "id": "8b9e9a05-6548-56b8-8d10-861d0d58cd6d",
+      "documentId": "0552d9a6-5b2c-512f-a0fe-37b60f7909de",
+      "source": "073-CP+Aéroport+Rba+-+Bus_taxis+FR.pdf",
+      "page": 2,
+      "chunkIndex": 0,
+      "text": "parcours. Cette organisation optimise la régularité des dessertes, améliore la ponctualité et contribue à une expérience de déplacement plus sereine. En complément, le service Wetaxi est opérationnel à l’Aéroport de Rabat-Salé depuis ce 5 janvier, dans le cadre d’un protocole conclu entre l’ONDA et les autorités locales. Cette solution digitale et réglementée offre aux passagers une alternative moderne, fiable et traçable, facilitant les déplacements vers le centre-ville de Rabat, Salé et les principaux pôles urbains, tout en apportant davantage de souplesse et de confort dans l’organisation de leur trajet avec possibilité de payer par carte bancaire également. Ces services ont vu leur déploiement accéléré afin d’être opérationnelle pendant la Coupe d’Afrique des Nations 2025, offrant ainsi au grand public marocain et aux visiteurs une activation anticipée pour ce grand évènement sportif. L’ensemble de ces initiatives entrent dans le cadre de la stratégie « Aéroport 2030 » et participe à une meilleure continuité du parcours passager au-delà de l’aéroport et à"
+    },
+    {
+      "id": "0e96fb4d-fe31-59cf-b305-1e64cd83f5c9",
+      "documentId": "0552d9a6-5b2c-512f-a0fe-37b60f7909de",
+      "source": "073-CP+Aéroport+Rba+-+Bus_taxis+FR.pdf",
+      "page": 2,
+      "chunkIndex": 1,
+      "text": "et aux visiteurs une activation anticipée pour ce grand évènement sportif. L’ensemble de ces initiatives entrent dans le cadre de la stratégie « Aéroport 2030 » et participe à une meilleure continuité du parcours passager au-delà de l’aéroport et à une intégration harmonieuse de l’aéroport dans son environnement urbain. En simplifiant l’accès à la ville, en diversifiant les solutions de mobilité et en améliorant la qualité de service, L’ONDA escompte contribuer à l’attractivité de Rabat, Ville Lumière."
+    },
+    {
+      "id": "cb2063a1-ce2c-5fab-8e97-4b9bbfa05562",
+      "documentId": "200deca1-18e0-54d3-8e66-addd4bd55346",
+      "source": "075-CP+APOC+FR.pdf",
+      "page": 1,
+      "chunkIndex": 0,
+      "text": "COMMUNIQUE DE PRESSE INEDIT : L’ONDA LANCE UN CENTRE DE COMMANDEMENT OPERATIONNEL AU SEIN DE L’AEROPORT MOHAMMED V L’Office National des Aéroports vient de mettre en service un Airport Operational Center (APOC) à l’aéroport international Mohammed V de Casablanca. Ce centre stratégique marque une avancée structurante dans l’organisation opérationnelle du premier aéroport du Royaume et contribuera à la fluidité durant la CAN 2025 et les grands événements internationaux futurs que le Maroc accueillera. Installé au cœur de l’aéroport Mohammed V, le nouveau centre névralgique de la gestion des Opérations aéroportuaires est un centre de supervision et de coordination réunissant, dans un espace unique, l’ensemble des acteurs clés de l’exploitation aéroportuaire, à savoir, les services du ministère de l’Intérieur, la Direction Générale de la Sûreté Nationale, la Gendarmerie Royale, l’Administration des Douanes et Impôts Indirects, les compagnies aériennes, les assistants en escale (Handlers), l’exploitant aéroportuaire, les services de la navigation aérienne et du contrôle du trafic aérien, les équipes de maintenance"
+    },
+    {
+      "id": "26806618-e84a-54e9-a38b-f5364f88e4f5",
+      "documentId": "200deca1-18e0-54d3-8e66-addd4bd55346",
+      "source": "075-CP+APOC+FR.pdf",
+      "page": 1,
+      "chunkIndex": 1,
+      "text": "Générale de la Sûreté Nationale, la Gendarmerie Royale, l’Administration des Douanes et Impôts Indirects, les compagnies aériennes, les assistants en escale (Handlers), l’exploitant aéroportuaire, les services de la navigation aérienne et du contrôle du trafic aérien, les équipes de maintenance et les services IT. Fonctionnant en continu, vingt-quatre heures sur vingt-quatre et sept jours sur sept, l’APOC devient le centre névralgique en couvrant l’ensemble des processus clés de l’aéroport Mohammed V, depuis la planification et la coordination des opérations avions, la gestion des pistes, des postes de stationnement et de la circulation au sol, jusqu’au pilotage des flux bagages départs et arrivées, au suivi des ressources, à la coordination des parcours passagers, à la fluidité aux points de contrôle et à l’embarquement. Il intègre également la gestion de la mobilité, de la circulation et du stationnement, le suivi des infrastructures critiques et des opérations de"
+    },
+    {
+      "id": "8ad0fba9-2798-598c-8669-81f3a5cdfc13",
+      "documentId": "200deca1-18e0-54d3-8e66-addd4bd55346",
+      "source": "075-CP+APOC+FR.pdf",
+      "page": 1,
+      "chunkIndex": 2,
+      "text": "à l’embarquement. Il intègre également la gestion de la mobilité, de la circulation et du stationnement, le suivi des infrastructures critiques et des opérations de"
+    },
+    {
+      "id": "cc6c5df7-d8d8-54c9-b1db-4e5fb18e3d59",
+      "documentId": "200deca1-18e0-54d3-8e66-addd4bd55346",
+      "source": "075-CP+APOC+FR.pdf",
+      "page": 2,
+      "chunkIndex": 0,
+      "text": "maintenance, ainsi que la coordination opérationnelle des dispositifs de sûreté et de sécurité. Concrètement, pour les passagers, l’APOC se traduit par des temps d’attente optimisés, une expérience plus fluide et une information en temps réel. Pour les compagnies aériennes, il offre une meilleure coordination des ressources, une réduction des retards et une efficacité opérationnelle renforcée. Dans un contexte de croissance soutenue du trafic aérien, estimée à plus de 12% par an, et de complexification croissante des opérations, l’APOC apporte une réponse concrète aux enjeux de performance et de résilience de l’aéroport Mohammed V, hub majeur pour le trafic national, africain et international. À travers la mise en service de ce centre, l’ONDA réaffirme son engagement en faveur d’un pilotage moderne, proactif et coordonné de ses infrastructures, en parfaite cohérence avec la stratégie « Aéroports 2030 ». Son lancement prend une dimension particulière avec la Coupe d’Afrique des Nations, et les évènements majeurs à venir. L’APOC permettra d’anticiper les pics d’activité"
+    },
+    {
+      "id": "e6f92d55-c37e-597c-bf0c-1f20d3bed842",
+      "documentId": "200deca1-18e0-54d3-8e66-addd4bd55346",
+      "source": "075-CP+APOC+FR.pdf",
+      "page": 2,
+      "chunkIndex": 1,
+      "text": "proactif et coordonné de ses infrastructures, en parfaite cohérence avec la stratégie « Aéroports 2030 ». Son lancement prend une dimension particulière avec la Coupe d’Afrique des Nations, et les évènements majeurs à venir. L’APOC permettra d’anticiper les pics d’activité liés à cet afflux exceptionnel, d’assurer un accueil fluide et maîtrisé, et de garantir une expérience passager conforme aux standards internationaux."
+    }
+  ]
+}
