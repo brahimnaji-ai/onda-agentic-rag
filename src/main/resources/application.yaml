@@ -21,6 +21,11 @@ spring:
       hibernate:
         format_sql: true
 
+  flyway:
+    # The existing Docker schema predates Flyway. V1 must run after adoption.
+    baseline-on-migrate: true
+    baseline-version: 0
+
 
   security:
     oauth2:
