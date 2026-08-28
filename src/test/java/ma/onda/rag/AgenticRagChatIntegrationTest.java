@@ -115,6 +115,9 @@ public class AgenticRagChatIntegrationTest extends AbstractIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(chatRequest)))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.retrievals[0].profile").value("BALANCED"))
+                .andExpect(jsonPath("$.retrievals[0].timingsMs.TOTAL").isNumber())
+                .andExpect(jsonPath("$.sources[0].retrieval.scoreType").value("RRF"))
                 .andReturn();
 
         ChatResponse response = objectMapper.readValue(chatResult.getResponse().getContentAsString(), ChatResponse.class);
@@ -127,6 +130,8 @@ public class AgenticRagChatIntegrationTest extends AbstractIntegrationTest {
             assertThat(source.type()).isEqualTo("DOCUMENT");
             assertThat(source.documentId()).isEqualTo(doc.id().toString());
             assertThat(source.title()).isEqualTo("onda_security_manual.txt");
+            assertThat(source.retrieval().chunkId()).isNotBlank();
+            assertThat(source.retrieval().executionId()).isEqualTo(response.retrievals().getFirst().id());
         });
     }
 
