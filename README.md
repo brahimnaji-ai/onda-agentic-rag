@@ -58,7 +58,7 @@ Each business module is split into `api`, `application`, `domain`, and `infra` l
 | Area | Technologies |
 |---|---|
 | Runtime | Java 21, Spring Boot 4.1, Maven |
-| AI | Spring AI 2.0, Google Gemini, Google GenAI embeddings |
+| AI | Spring AI 2.0, Google Gemini, Ollama `nomic-embed-text` embeddings |
 | Retrieval | PostgreSQL 17, pgvector/HNSW, French full-text search/GIN, reciprocal-rank fusion |
 | Documents | Apache Tika, Spring AI `TokenTextSplitter` |
 | Security | Spring Security, OAuth 2.0 Resource Server, JWT, Keycloak 26 |
@@ -144,7 +144,7 @@ upgrading a large or production database.
 
 ### Document ingestion
 
-Users with the `INGESTOR` role can upload PDF, TXT, or Markdown files up to 50 MB. Documents are parsed with Apache Tika, split into chunks, embedded with Google GenAI, and stored in pgvector with source metadata.
+Users with the `INGESTOR` role can upload PDF, TXT, or Markdown files up to 50 MB. Documents are parsed with Apache Tika, split into chunks, embedded with Ollama `nomic-embed-text` (768 dimensions), and stored in pgvector with source metadata.
 
 Default retrieval configuration:
 
@@ -157,8 +157,14 @@ Default retrieval configuration:
 
 ### Modular private-document retrieval
 
+The gated DEEP profile and its 60-question frozen ONDA evaluation set are documented
+in [evaluation/onda-v1/README.md](evaluation/onda-v1/README.md). Multi-query expansion
+and HyDE are separate opt-in experiments; neither is enabled in production without
+a passing reviewed benchmark and agreed limits. The current [benchmark decision](evaluation/onda-v1/BENCHMARK.md)
+retains BALANCED.
+
 `VectorSearchTool` maps tool input/output and delegates to
-`agent.application.retrieval.OndaRetrievalPipeline`. Both retrieval profiles run:
+`agent.application.retrieval.OndaRetrievalPipeline`. All retrieval profiles run:
 
 ```text
 QueryTransformer chain -> QueryExpander -> DocumentRetriever -> DocumentJoiner
@@ -166,6 +172,7 @@ QueryTransformer chain -> QueryExpander -> DocumentRetriever -> DocumentJoiner
 ```
 
 The default has no query transformers and expands to the single original query.
+The original query is now always retained even when rewriting or expansion is enabled.
 `FAST` uses `VectorStoreDocumentRetriever` for dense candidates and
 `ConcatenationDocumentJoiner` to join results. `BALANCED` uses
 `HybridDocumentRetriever`: dense retrieval and `PostgresFullTextDocumentRetriever`
@@ -259,7 +266,8 @@ reranker score.
 
 Setting `rag.pre-retrieval.rewrite.enabled=true` opts into the earlier
 French-preserving rewrite experiment through a dedicated client with no tools.
-This adds an LLM call. A missing transformed query retains the previous query;
+This adds an LLM call and a second retrieval query when rewriting changes the text.
+A missing transformed query retains the previous query;
 an empty expansion retains the transformed query. Provider failures propagate
 instead of returning a misleading successful empty result.
 
