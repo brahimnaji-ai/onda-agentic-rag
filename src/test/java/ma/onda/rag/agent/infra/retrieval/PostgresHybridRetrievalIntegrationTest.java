@@ -219,6 +219,36 @@ class PostgresHybridRetrievalIntegrationTest {
                 .param("embedding", Arrays.toString(vector(chunk.semantic()))).update();
     }
 
+    @Test
+    void adjacentChunksStayWithinDocumentOwnerAndOriginalFilter() {
+        var extra = List.of(
+                new Chunk("00000000-0000-0000-0000-000000000080", "previous", "neighbors.pdf", false),
+                new Chunk("00000000-0000-0000-0000-000000000081", "next", "neighbors.pdf", false),
+                new Chunk("00000000-0000-0000-0000-000000000082", "other owner", "neighbors.pdf", false),
+                new Chunk("00000000-0000-0000-0000-000000000083", "other document", "neighbors.pdf", false),
+                new Chunk("00000000-0000-0000-0000-000000000084", "not adjacent", "neighbors.pdf", false));
+        try {
+            for (int i = 0; i < extra.size(); i++) {
+                insert(extra.get(i), i == 2 ? "other-owner" : "fixture-owner");
+                jdbc.sql("UPDATE public.vector_store SET metadata = metadata || CAST(:metadata AS jsonb) WHERE id = CAST(:id AS uuid)")
+                        .param("id", extra.get(i).id())
+                        .param("metadata", JSON.writeValueAsString(Map.of("document_id", i == 3 ? "other-doc" : "parent",
+                                "chunk_index", i == 0 ? 0 : i == 4 ? 8 : 2))).update();
+            }
+            var anchor = Document.builder().id("anchor").text("anchor").metadata(Map.of("document_id", "parent",
+                    "uploaded_by", "fixture-owner", "chunk_index", 1)).build();
+            var neighbors = new PostgresAdjacentChunkRetriever(jdbc);
+            assertThat(neighbors.retrieve(new Query("q"), anchor)).extracting(Document::getId)
+                    .containsExactly(extra.get(0).id(), extra.get(1).id());
+            var excluded = new Query("q", List.of(), Map.of(VectorStoreDocumentRetriever.FILTER_EXPRESSION,
+                    "source == 'excluded.pdf'"));
+            assertThat(neighbors.retrieve(excluded, anchor)).isEmpty();
+            assertThat(neighbors.retrieve(new Query("q"), new Document("no chunk index"))).isEmpty();
+        } finally {
+            extra.forEach(chunk -> delete(chunk.id()));
+        }
+    }
+
     private static void delete(String id) {
         jdbc.sql("DELETE FROM public.vector_store WHERE id = CAST(:id AS uuid)").param("id", id).update();
     }

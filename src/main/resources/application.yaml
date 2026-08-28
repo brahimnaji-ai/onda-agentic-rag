@@ -92,6 +92,17 @@ rag:
       rrf-k: 60
   post-retrieval:
     max-documents: 4
+    context-token-budget: 4096
+    adjacent-chunks-enabled: false
+    reranking:
+      enabled: ${RERANKING_ENABLED:false}
+      endpoint: ${RERANKING_ENDPOINT:https://api.cohere.com/v2/rerank}
+      api-key: ${COHERE_API_KEY:}
+      model: ${RERANKING_MODEL:rerank-v3.5}
+      timeout: 2s
+      max-concurrent-calls: 4
+      failure-threshold: 3
+      open-duration: 30s
 
 # ===== properties for Tavily integration =====
 tavily:

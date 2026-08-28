@@ -2,6 +2,11 @@ package ma.onda.rag.agent.infra.springai;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import ma.onda.rag.agent.application.retrieval.OndaRetrievalPipeline;
+import ma.onda.rag.agent.application.retrieval.DocumentReranker;
+import ma.onda.rag.agent.infra.retrieval.AdjacentChunkRetriever;
+import ma.onda.rag.agent.infra.retrieval.CohereDocumentReranker;
+import ma.onda.rag.agent.infra.retrieval.PostgresAdjacentChunkRetriever;
+import ma.onda.rag.agent.infra.retrieval.ResilientDocumentReranker;
 import ma.onda.rag.agent.application.retrieval.RetrievalPlan;
 import ma.onda.rag.agent.application.retrieval.RetrievalProfile;
 import ma.onda.rag.agent.infra.retrieval.HybridDocumentRetriever;
@@ -20,10 +25,14 @@ import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.http.client.JdkClientHttpRequestFactory;
+import org.springframework.web.client.RestClient;
+import java.net.http.HttpClient;
 
 import java.util.List;
 import java.util.Map;
@@ -31,8 +40,29 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Configuration(proxyBeanMethods = false)
-@EnableConfigurationProperties({VectorSearchProperties.class, HybridRetrievalProperties.class})
+@EnableConfigurationProperties({VectorSearchProperties.class, HybridRetrievalProperties.class, RerankingProperties.class})
 public class RetrievalConfig {
+
+    @Bean
+    @ConditionalOnMissingBean(DocumentReranker.class)
+    DocumentReranker documentReranker(RerankingProperties properties) {
+        if (!properties.enabled()) {
+            return (query, candidates) -> DocumentReranker.Result.unavailable(DocumentReranker.Status.DISABLED);
+        }
+        var http = HttpClient.newBuilder().connectTimeout(properties.timeout()).build();
+        var factory = new JdkClientHttpRequestFactory(http);
+        factory.setReadTimeout(properties.timeout());
+        var provider = new CohereDocumentReranker(RestClient.builder().requestFactory(factory).build(),
+                properties.endpoint(), properties.apiKey(), properties.model());
+        return new ResilientDocumentReranker(provider, properties.timeout(), properties.maxConcurrentCalls(),
+                properties.failureThreshold(), properties.openDuration());
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(AdjacentChunkRetriever.class)
+    AdjacentChunkRetriever adjacentChunkRetriever(JdbcClient jdbc) {
+        return new PostgresAdjacentChunkRetriever(jdbc);
+    }
 
     @Bean
     OndaRetrievalPipeline ondaRetrievalPipeline(

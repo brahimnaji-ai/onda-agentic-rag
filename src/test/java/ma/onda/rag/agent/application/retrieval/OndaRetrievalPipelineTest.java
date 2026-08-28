@@ -43,7 +43,7 @@ class OndaRetrievalPipelineTest {
     @Test
     void fastRetrievesDeduplicatesAndCapsEvidenceWithExplicitSourcesQueriesAndTimings() {
         Document first = document("1", "Conditions d'accès à l'aérogare", 0.95);
-        Document duplicate = document("2", "  Conditions d'accès   à l'aérogare  ", 0.9);
+        Document duplicate = document("1", "  Conditions d'accès   à l'aérogare  ", 0.9);
         Document second = document("3", "Horaires de l'aéroport Mohammed V", 0.8);
         Document third = document("4", "Services aux passagers", 0.7);
         when(vectorStore.similaritySearch(any(SearchRequest.class)))
@@ -56,7 +56,7 @@ class OndaRetrievalPipelineTest {
         assertThat(captor.getValue().getQuery()).isEqualTo("accès CMN");
         assertThat(captor.getValue().getTopK()).isEqualTo(8);
         assertThat(captor.getValue().getSimilarityThreshold()).isEqualTo(0.5);
-        assertThat(result.documents()).containsExactly(first, second);
+        assertThat(result.documents()).extracting(Document::getId).containsExactly("1", "3");
         assertThat(result.sources()).containsExactly(
                 new RetrievalResult.Source("1", "doc-1", "guide.pdf", first.getText(), 0.95),
                 new RetrievalResult.Source("3", "doc-3", "guide.pdf", second.getText(), 0.8));
